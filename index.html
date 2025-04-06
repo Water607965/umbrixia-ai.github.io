@@ -3,64 +3,101 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Umbrixia — AI SHSAT Tutor</title>
+  <title>Umbrixia AI Tutor</title>
   <link rel="stylesheet" href="style.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet" />
 </head>
 <body>
-  <header class="hero">
-    <div class="container">
-      <h1 class="logo">Umbrixia</h1>
-      <p class="tagline">Your Ultimate AI-Powered SHSAT Tutor</p>
-      <p class="cta">
-        <strong>Trial:</strong> 10 Questions •
-        <strong>Subscribe:</strong> $20/month or $100 lifetime
-      </p>
-      <a href="#auth-section" class="cta-button">Unlock Full Access</a>
+  <header>
+    <h1 class="logo">Umbrixia</h1>
+    <p class="subtitle">Your AI-Powered SHSAT Chat Assistant</p>
+    <div class="pricing">
+      <strong>Trial:</strong> 10 questions •
+      <strong>Full Access:</strong> $20/month or $100 lifetime
     </div>
   </header>
 
   <main>
-    <section id="trial-warning" class="notice"></section>
-
-    <section id="chatbox" class="card fade-in container">
-      <div id="chat" class="chat-window">
+    <section id="chatbox">
+      <div id="chat">
         <div class="message bot">
-          <strong>Bot:</strong> Welcome to Umbrixia! Ask me a question or pick an SHSAT example below.
+          <strong>Bot:</strong> Welcome! Ask me a SHSAT question or pick an example:
         </div>
         <div class="examples">
           <button onclick="presetQuestion('If –x + 4 = 13, what is the value of x?')">Algebra</button>
           <button onclick="presetQuestion('A train travels 60 miles in 1.5 hours. What is its average speed?')">Word Problem</button>
           <button onclick="presetQuestion('Read this passage and identify the author\'s tone: ...')">ELA Tone</button>
-          <button onclick="presetQuestion('A prism has a volume of 120 cubic units. If its base is 10 sq units, what is the height?')">Geometry</button>
         </div>
       </div>
-      <div class="chat-input">
-        <input type="text" id="userInput" placeholder="Ask your SHSAT question..." autocomplete="off" />
-        <button onclick="sendMessage()">Send</button>
-      </div>
+      <input type="text" id="userInput" placeholder="Type your SHSAT question..." />
+      <button onclick="sendMessage()">Send</button>
     </section>
 
-    <section id="auth-section" class="card fade-in container">
-      <h2>Ready for Unlimited AI Tutoring?</h2>
-      <p class="small">Enter your email to begin your subscription and unlock your full learning journey.</p>
-      <form id="signup-form" class="signup-form">
-        <input type="email" id="email" placeholder="Enter your email" required />
+    <section id="trial-warning"></section>
+
+    <section id="auth-section">
+      <h2>Unlock Full Access</h2>
+      <form id="signup-form">
+        <input type="email" id="email" placeholder="Enter your email to subscribe" required />
         <button type="submit">Subscribe via Stripe</button>
       </form>
-      <div id="signup-status" class="status-msg"></div>
+      <div id="signup-status"></div>
     </section>
   </main>
 
   <footer>
-    <div class="container">
-      <p>&copy; 2025 Umbrixia.ai. All rights reserved.</p>
-      <p class="footer-note">Built for students. Trusted by parents. Powered by OpenAI.</p>
-    </div>
+    <p>&copy; 2025 Umbrixia.ai • Built for Students. Powered by OpenAI.</p>
   </footer>
 
-  <script src="scripts.js"></script>
+  <script>
+    function presetQuestion(text) {
+      document.getElementById("userInput").value = text;
+      sendMessage();
+    }
+
+    async function sendMessage() {
+      let userInput = document.getElementById("userInput").value.trim();
+      let chat = document.getElementById("chat");
+      let button = document.querySelector("button");
+
+      if (!userInput) return;
+      button.disabled = true;
+      button.innerText = "Thinking...";
+
+      chat.innerHTML += `<p class="message user"><strong>You:</strong> ${userInput}</p>`;
+      document.getElementById("userInput").value = "";
+
+      try {
+        let response = await fetch("https://umbrixia-ai-github-io.onrender.com/chat", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ message: userInput })
+        });
+
+        if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+
+        let result = await response.json();
+        chat.innerHTML += `<p class="message bot"><strong>Bot:</strong> ${result.response}</p>`;
+
+      } catch (error) {
+        console.error("Error:", error);
+        chat.innerHTML += `<p class="message bot"><strong>Bot:</strong> Failed to connect. Check if backend is running.</p>`;
+      }
+
+      button.disabled = false;
+      button.innerText = "Send";
+    }
+
+    // Optional: Stripe form mock
+    const signupForm = document.getElementById("signup-form");
+    signupForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const email = document.getElementById("email").value;
+      document.getElementById("signup-status").innerText = `Thanks, ${email}! Redirecting to checkout...`;
+      // TODO: Connect to Stripe
+    });
+  </script>
 </body>
 </html>
