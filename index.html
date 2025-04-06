@@ -1,64 +1,66 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Chatbot</title>
-    <style>
-        body { font-family: Arial, sans-serif; text-align: center; padding: 20px; background-color: #121212; color: #ffffff; }
-        #chatbox { width: 90%; max-width: 600px; margin: auto; padding: 20px; border: 1px solid #ccc; background: #1e1e1e; border-radius: 10px; }
-        input, button { padding: 10px; width: 100%; margin-top: 10px; background: #333; color: #fff; border: none; border-radius: 5px; }
-        input { text-align: center; }
-        button:hover { background: #444; cursor: pointer; }
-        #chat { text-align: left; max-height: 400px; overflow-y: auto; padding: 10px; }
-        .message { margin: 5px 0; }
-        .user { color: #4caf50; }
-        .bot { color: #03a9f4; }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Umbrixia — AI SHSAT Tutor</title>
+  <link rel="stylesheet" href="style.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet" />
 </head>
 <body>
-    <h1>AI Chatbot</h1>
-    <div id="chatbox">
-        <div id="chat"></div>
-        <input type="text" id="userInput" placeholder="Type a message..." />
-        <button onclick="sendMessage()">Send</button>
+  <header class="hero">
+    <div class="container">
+      <h1 class="logo">Umbrixia</h1>
+      <p class="tagline">Your Ultimate AI-Powered SHSAT Tutor</p>
+      <p class="cta">
+        <strong>Trial:</strong> 10 Questions •
+        <strong>Subscribe:</strong> $20/month or $100 lifetime
+      </p>
+      <a href="#auth-section" class="cta-button">Unlock Full Access</a>
     </div>
+  </header>
 
-    <script>
-        async function sendMessage() {
-            let userInput = document.getElementById("userInput").value.trim();
-            let chat = document.getElementById("chat");
-            let button = document.querySelector("button");
+  <main>
+    <section id="trial-warning" class="notice"></section>
 
-            if (!userInput) return;
-            button.disabled = true;
-            button.innerText = "Thinking...";
+    <section id="chatbox" class="card fade-in container">
+      <div id="chat" class="chat-window">
+        <div class="message bot">
+          <strong>Bot:</strong> Welcome to Umbrixia! Ask me a question or pick an SHSAT example below.
+        </div>
+        <div class="examples">
+          <button onclick="presetQuestion('If –x + 4 = 13, what is the value of x?')">Algebra</button>
+          <button onclick="presetQuestion('A train travels 60 miles in 1.5 hours. What is its average speed?')">Word Problem</button>
+          <button onclick="presetQuestion('Read this passage and identify the author\'s tone: ...')">ELA Tone</button>
+          <button onclick="presetQuestion('A prism has a volume of 120 cubic units. If its base is 10 sq units, what is the height?')">Geometry</button>
+        </div>
+      </div>
+      <div class="chat-input">
+        <input type="text" id="userInput" placeholder="Ask your SHSAT question..." autocomplete="off" />
+        <button onclick="sendMessage()">Send</button>
+      </div>
+    </section>
 
-            chat.innerHTML += `<p class="message user"><strong>You:</strong> ${userInput}</p>`;
-            document.getElementById("userInput").value = "";
+    <section id="auth-section" class="card fade-in container">
+      <h2>Ready for Unlimited AI Tutoring?</h2>
+      <p class="small">Enter your email to begin your subscription and unlock your full learning journey.</p>
+      <form id="signup-form" class="signup-form">
+        <input type="email" id="email" placeholder="Enter your email" required />
+        <button type="submit">Subscribe via Stripe</button>
+      </form>
+      <div id="signup-status" class="status-msg"></div>
+    </section>
+  </main>
 
-            try {
-                let response = await fetch("https://umbrixia-ai-github-io.onrender.com/chat", {  // ✅ Connects to local backend
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ message: userInput })
-                });
+  <footer>
+    <div class="container">
+      <p>&copy; 2025 Umbrixia.ai. All rights reserved.</p>
+      <p class="footer-note">Built for students. Trusted by parents. Powered by OpenAI.</p>
+    </div>
+  </footer>
 
-                if (!response.ok) {
-                    throw new Error(`HTTP error! Status: ${response.status}`);
-                }
-
-                let result = await response.json();
-                chat.innerHTML += `<p class="message bot"><strong>Bot:</strong> ${result.response}</p>`;
-
-            } catch (error) {
-                console.error("Error:", error);
-                chat.innerHTML += `<p class="message bot"><strong>Bot:</strong> Failed to connect. Check if backend is running.</p>`;
-            }
-
-            button.disabled = false;
-            button.innerText = "Send";
-        }
-    </script>
+  <script src="scripts.js"></script>
 </body>
 </html>
