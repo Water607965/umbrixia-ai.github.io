@@ -38,7 +38,7 @@
             document.getElementById("userInput").value = "";
 
             try {
-                let response = await fetch("http://localhost:5000/chat", {  // ✅ Connects to local backend
+                let response = await fetch("https://umbrixia-ai-github-io.onrender.com/", {  // ✅ Connects to local backend
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ message: userInput })
