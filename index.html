@@ -12,41 +12,42 @@
 <body>
   <header>
     <h1 class="logo">Umbrixia</h1>
-    <p class="subtitle">Your AI-Powered SHSAT Chat Assistant</p>
+    <p class="subtitle">Your AI-Powered ISEE, SHSAT, and SAT Tutor</p>
     <div class="pricing">
       <strong>Trial:</strong> 10 questions •
       <strong>Full Access:</strong> $20/month or $100 lifetime
     </div>
+    <div id="server-status">Checking server status...</div>
   </header>
 
   <section class="features-section fade-in">
-  <h2 class="section-title">What Makes Umbrixia Stand Out?</h2>
-  <div class="features-grid">
-    <div class="feature-card">
-      <h3>🔬 Precision AI</h3>
-      <p>Trained on SHSAT-style questions for exact-match guidance with full explanations.</p>
+    <h2 class="section-title">What Makes Umbrixia Stand Out?</h2>
+    <div class="features-grid">
+      <div class="feature-card">
+        <h3>🔬 Precision AI</h3>
+        <p>Trained on ISEE, SHSAT, and SAT-style questions for exact-match guidance with full explanations.</p>
+      </div>
+      <div class="feature-card">
+        <h3>📈 Student Dashboard</h3>
+        <p>Visualize strengths, weaknesses, and track improvement across subjects.</p>
+      </div>
+      <div class="feature-card">
+        <h3>🧠 Smart Feedback</h3>
+        <p>Every answer includes step-by-step reasoning to deepen conceptual understanding.</p>
+      </div>
+      <div class="feature-card">
+        <h3>💡 Diagnostic Insights</h3>
+        <p>Start with a 3-question quiz to instantly personalize your tutoring path.</p>
+      </div>
     </div>
-    <div class="feature-card">
-      <h3>📈 Student Dashboard</h3>
-      <p>Visualize strengths, weaknesses, and track improvement across subjects.</p>
-    </div>
-    <div class="feature-card">
-      <h3>🧠 Smart Feedback</h3>
-      <p>Every answer includes step-by-step reasoning to deepen conceptual understanding.</p>
-    </div>
-    <div class="feature-card">
-      <h3>💡 Diagnostic Insights</h3>
-      <p>Start with a 3-question quiz to instantly personalize your tutoring path.</p>
-    </div>
-  </div>
-</section>
+  </section>
 
   <main class="layout">
     <!-- Pitch Left -->
     <section class="pitch">
       <h2>Why Umbrixia?</h2>
       <ul>
-        <li>Built specifically for SHSAT preparation</li>
+        <li>Built specifically for ISEE, SHSAT, and SAT preparation</li>
         <li>AI provides real-time explanations</li>
         <li>Adaptive help tailored to strengths and weaknesses</li>
         <li>Affordable and powerful learning companion</li>
@@ -58,7 +59,7 @@
     <section id="chatbox">
       <div id="chat">
         <div class="message bot">
-          <strong>Bot:</strong> Welcome! Ask me a SHSAT question or pick an example:
+          <strong>Bot:</strong> Welcome! Ask me an ISEE, SHSAT, or SAT question or pick an example:
         </div>
         <div class="examples">
           <button onclick="presetQuestion('If -x + 4 = 13, what is the value of x?')">Algebra</button>
@@ -66,13 +67,10 @@
           <button onclick="presetQuestion('Read this passage and identify the author\'s tone: ...')">ELA Tone</button>
         </div>
       </div>
-      <input type="text" id="userInput" placeholder="Type your SHSAT question..." />
+      <input type="text" id="userInput" placeholder="Type your ISEE, SHSAT, or SAT question..." />
       <button onclick="sendMessage()">Send</button>
     </section>
   </main>
-
-  
-
 
   <section id="trial-warning"></section>
 
@@ -86,9 +84,8 @@
   </section>
 
   <section class="testimonial-banner fade-in">
-  <p>“Umbrixia helped my daughter raise her SHSAT score by 120 points — and she actually enjoyed studying.”<br><span>- Parent from NYC</span></p>
-</section>
-
+    <p>“Umbrixia helped my daughter raise her SHSAT score by 120 points — and she actually enjoyed studying.”<br><span>- Parent from NYC</span></p>
+  </section>
 
   <footer>
     <p>&copy; 2025 Umbrixia.ai • Built for Students. Powered by OpenAI.</p>
@@ -152,7 +149,17 @@
       document.getElementById("signup-status").innerText = `Thanks, ${email}! Redirecting to checkout...`;
       // TODO: Connect to Stripe
     });
+
+    // Server status check
+    fetch('https://umbrixia-ai-github-io.onrender.com/')
+      .then(() => {
+        document.getElementById("server-status").innerText = "✅ AI Server: Online";
+      })
+      .catch(() => {
+        document.getElementById("server-status").innerText = "⚠️ AI Server: Offline";
+        document.getElementById("server-status").style.color = "orange";
+      });
   </script>
-  <script src="scripts.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>
