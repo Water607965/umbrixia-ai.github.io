@@ -49,14 +49,46 @@ header {
   color: #ffffff;
 }
 
+/* Layout (Pitch Left, Chat Right) */
+.layout {
+  display: flex;
+  justify-content: space-between;
+  gap: 40px;
+  max-width: 1200px;
+  margin: 0 auto;
+  flex-wrap: wrap;
+}
+
+.pitch {
+  flex: 1 1 40%;
+  background: #1a1a1a;
+  padding: 20px;
+  border-radius: 12px;
+  border: 1px solid #333;
+}
+
+.pitch h2 {
+  font-size: 1.8rem;
+  margin-bottom: 15px;
+  color: #4f46e5;
+  text-align: left;
+}
+
+.pitch ul {
+  list-style-type: disc;
+  padding-left: 20px;
+  color: #ddd;
+  font-size: 1rem;
+}
+
 /* Chatbox Section */
 #chatbox {
+  flex: 1 1 55%;
   background: #1e1e1e;
   padding: 20px;
   border: 1px solid #333;
   border-radius: 12px;
-  max-width: 700px;
-  margin: 0 auto 30px;
+  margin-bottom: 30px;
 }
 
 #chat {
@@ -154,7 +186,7 @@ button:hover {
   border-radius: 10px;
   border: 1px solid #333;
   max-width: 600px;
-  margin: 0 auto 60px;
+  margin: 40px auto 60px;
   text-align: center;
 }
 
@@ -209,17 +241,16 @@ footer {
 }
 
 /* Mobile */
-@media (max-width: 600px) {
-  .examples {
+@media (max-width: 768px) {
+  .layout {
     flex-direction: column;
   }
 
-  button,
-  #userInput {
-    font-size: 1rem;
+  #chatbox, .pitch, #auth-section {
+    width: 100%;
   }
 
-  #chatbox, #auth-section {
-    width: 95%;
+  .examples {
+    flex-direction: column;
   }
 }
