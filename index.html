@@ -62,9 +62,15 @@
           <strong>Bot:</strong> Welcome! Ask me an ISEE, SHSAT, or SAT question or pick an example:
         </div>
         <div class="examples">
-          <button onclick="presetQuestion('If -x + 4 = 13, what is the value of x?')">Algebra</button>
-          <button onclick="presetQuestion('A train travels 60 miles in 1.5 hours. What is its average speed?')">Word Problem</button>
-          <button onclick="presetQuestion('Read this passage and identify the author\'s tone: ...')">ELA Tone</button>
+          <label for="exam-select">Choose Exam:</label>
+          <select id="exam-select" onchange="switchExam()">
+            <option value="shsat">SHSAT</option>
+            <option value="isee">ISEE</option>
+            <option value="sat">SAT</option>
+          </select>
+          <div id="example-buttons">
+            <!-- Dynamically injected buttons go here -->
+          </div>
         </div>
       </div>
       <input type="text" id="userInput" placeholder="Type your ISEE, SHSAT, or SAT question..." />
@@ -92,6 +98,36 @@
   </footer>
 
   <script>
+    const examExamples = {
+      shsat: [
+        "If -x + 4 = 13, what is the value of x?",
+        "A train travels 60 miles in 1.5 hours. What is its average speed?",
+        "Read the following passage and identify the author's tone: 'The stars twinkled like scattered diamonds as the ship creaked toward the horizon.'"
+      ],
+      isee: [
+        "What is the synonym of the word 'benevolent'?",
+        "If a triangle has two equal sides and the third side is 8 cm, what type of triangle is it?",
+        "Read the sentence: 'Despite the ominous clouds, the air buzzed with excitement.' What is the mood?"
+      ],
+      sat: [
+        "Solve for x: 3(x - 2) = 15",
+        "A student reads 180 pages in 4 hours. At this rate, how many pages will they read in 7 hours?",
+        "Read the excerpt and answer: What rhetorical device does the author use in the phrase 'the ticking clock of climate change'?"
+      ]
+    };
+
+    function switchExam() {
+      const selected = document.getElementById("exam-select").value;
+      const container = document.getElementById("example-buttons");
+      container.innerHTML = "";
+      examExamples[selected].forEach(q => {
+        const btn = document.createElement("button");
+        btn.textContent = q.length > 60 ? q.slice(0, 57) + "..." : q;
+        btn.onclick = () => presetQuestion(q);
+        container.appendChild(btn);
+      });
+    }
+
     function presetQuestion(text) {
       document.getElementById("userInput").value = text;
       sendMessage();
@@ -116,6 +152,7 @@
       button.innerText = "Thinking...";
 
       chat.innerHTML += `<p class="message user"><strong>You:</strong> ${message}</p>`;
+      chat.scrollTop = chat.scrollHeight;
       userInputElem.value = "";
 
       try {
@@ -129,6 +166,7 @@
 
         let result = await response.json();
         chat.innerHTML += `<p class="message bot"><strong>Bot:</strong> ${result.response}</p>`;
+        chat.scrollTop = chat.scrollHeight;
 
         usageCount++;
         localStorage.setItem("umbrixiaTrialCount", usageCount);
@@ -136,6 +174,7 @@
       } catch (error) {
         console.error("Error:", error);
         chat.innerHTML += `<p class="message bot"><strong>Bot:</strong> Failed to connect. Check if backend is running.</p>`;
+        chat.scrollTop = chat.scrollHeight;
       }
 
       button.disabled = false;
@@ -159,6 +198,9 @@
         document.getElementById("server-status").innerText = "⚠️ AI Server: Offline";
         document.getElementById("server-status").style.color = "orange";
       });
+
+    // Load SHSAT examples by default
+    window.onload = switchExam;
   </script>
   <script src="script.js"></script>
 </body>
