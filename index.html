@@ -20,9 +20,10 @@
     <div id="server-status">Checking server status...</div>
   </header>
 
-  <div id="login-area">
-  <button id="login-btn" disabled>Log In / Sign Up</button>
+ <div id="login-area">
+  <button id="login-btn" disabled>Loading...</button>
 </div>
+
 
 
   <section class="features-section fade-in">
@@ -100,14 +101,15 @@
 
   
   
-<!-- ✅ Load Auth0 SDK first -->
+<!-- Load Auth0 SDK first -->
 <script src="https://cdn.auth0.com/js/auth0-spa-js/1.28/auth0-spa-js.production.js"></script>
 
-<!-- ✅ Then load your auth.js directly so login() is defined -->
+<!-- Then load your login logic -->
 <script src="auth.js"></script>
 
-<!-- ✅ Then load everything else -->
+<!-- Then everything else -->
 <script src="script.js"></script>
+
 
 
 
