@@ -10,12 +10,14 @@ async function initAuth() {
   try {
     auth0 = await createAuth0Client(config);
 
+    // Handle redirect callback if returning from Auth0 login
     if (window.location.search.includes("code=") && window.location.search.includes("state=")) {
       await auth0.handleRedirectCallback();
       window.history.replaceState({}, document.title, "/");
     }
 
     const isAuthenticated = await auth0.isAuthenticated();
+
     const loginArea = document.getElementById("login-area");
 
     if (isAuthenticated) {
@@ -33,16 +35,18 @@ async function initAuth() {
     }
 
   } catch (err) {
-    console.error("Auth0 init error:", err);
+    console.error("❌ Auth0 failed to initialize:", err);
+    const btn = document.getElementById("login-btn");
+    if (btn) {
+      btn.innerText = "Auth Failed";
+      btn.disabled = true;
+    }
   }
 }
 
 function login() {
-  if (auth0) {
-    auth0.loginWithRedirect();
-  } else {
-    console.error("Auth0 not ready yet.");
-  }
+  if (!auth0) return console.error("❌ Auth0 not initialized yet");
+  auth0.loginWithRedirect();
 }
 
 function logout() {
