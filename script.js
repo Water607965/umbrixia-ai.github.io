@@ -1,5 +1,3 @@
-let auth0 = null;
-
 // Replace with your actual domain and client ID
 const config = {
   domain: "dev-u1qim7tdcejrp6qi.us.auth0.com",
