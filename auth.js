@@ -1,57 +1,57 @@
 let auth0 = null;
 
 const config = {
-  domain: "dev-u1qim7tdcejrp6qi.us.auth0.com", // Replace with your actual Auth0 domain
-  client_id: "xBkyc88waMGEiBtKC4L1qvn7QqFCGmzD", // Replace with your actual client ID
+  domain: "dev-u1qim7tdcejrp6qi.us.auth0.com",
+  client_id: "xBkyc88waMGEiBtKC4L1qvn7QqFCGmzD",
   redirect_uri: window.location.origin
 };
 
 async function initAuth() {
-  if (typeof createAuth0Client !== "function") {
-    console.error("❌ Auth0 SDK not loaded yet.");
-    return;
-  }
+  try {
+    auth0 = await createAuth0Client(config);
 
-  auth0 = await createAuth0Client(config);
+    // Handle redirect after login
+    if (window.location.search.includes("code=") && window.location.search.includes("state=")) {
+      await auth0.handleRedirectCallback();
+      window.history.replaceState({}, document.title, "/");
+    }
 
-  if (window.location.search.includes("code=") && window.location.search.includes("state=")) {
-    await auth0.handleRedirectCallback();
-    window.history.replaceState({}, document.title, "/");
-  }
+    const isAuthenticated = await auth0.isAuthenticated();
+    const loginArea = document.getElementById("login-area");
 
-  const isAuthenticated = await auth0.isAuthenticated();
-
-  if (isAuthenticated) {
-    const user = await auth0.getUser();
-    document.getElementById("login-area").innerHTML = `
-      <p>👋 Welcome, ${user.name}</p>
-      <button onclick="logout()">Log Out</button>
-    `;
-  } else {
-    document.getElementById("login-area").innerHTML = `
-      <button onclick="login()">Log In / Sign Up</button>
-    `;
+    if (isAuthenticated) {
+      const user = await auth0.getUser();
+      loginArea.innerHTML = `
+        <p>👋 Welcome, ${user.name}</p>
+        <button id="logout-btn">Log Out</button>
+      `;
+      document.getElementById("logout-btn").addEventListener("click", logout);
+    } else {
+      loginArea.innerHTML = `
+        <button id="login-btn">Log In / Sign Up</button>
+      `;
+      document.getElementById("login-btn").addEventListener("click", login);
+    }
+  } catch (err) {
+    console.error("❌ Error initializing Auth0:", err);
   }
 }
 
 function login() {
-  if (auth0) auth0.loginWithRedirect();
-  else console.error("Auth0 not initialized");
+  auth0?.loginWithRedirect();
 }
 
 function logout() {
-  if (auth0) auth0.logout({ returnTo: window.location.origin });
-  else console.error("Auth0 not initialized");
+  auth0?.logout({ returnTo: window.location.origin });
 }
 
-// Wait for the DOM AND the Auth0 SDK to be ready before calling init
 window.addEventListener("load", async () => {
   if (typeof createAuth0Client === "function") {
     await initAuth();
   } else {
-    const interval = setInterval(() => {
+    const waitForSDK = setInterval(() => {
       if (typeof createAuth0Client === "function") {
-        clearInterval(interval);
+        clearInterval(waitForSDK);
         initAuth();
       }
     }, 100);
