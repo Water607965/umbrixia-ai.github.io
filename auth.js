@@ -10,7 +10,6 @@ async function initAuth() {
   try {
     auth0 = await createAuth0Client(config);
 
-    // Handle redirect after login
     if (window.location.search.includes("code=") && window.location.search.includes("state=")) {
       await auth0.handleRedirectCallback();
       window.history.replaceState({}, document.title, "/");
@@ -32,28 +31,22 @@ async function initAuth() {
       `;
       document.getElementById("login-btn").addEventListener("click", login);
     }
+
   } catch (err) {
-    console.error("❌ Error initializing Auth0:", err);
+    console.error("Auth0 init error:", err);
   }
 }
 
 function login() {
-  auth0?.loginWithRedirect();
+  if (auth0) {
+    auth0.loginWithRedirect();
+  } else {
+    console.error("Auth0 not ready yet.");
+  }
 }
 
 function logout() {
-  auth0?.logout({ returnTo: window.location.origin });
+  auth0.logout({ returnTo: window.location.origin });
 }
 
-window.addEventListener("load", async () => {
-  if (typeof createAuth0Client === "function") {
-    await initAuth();
-  } else {
-    const waitForSDK = setInterval(() => {
-      if (typeof createAuth0Client === "function") {
-        clearInterval(waitForSDK);
-        initAuth();
-      }
-    }, 100);
-  }
-});
+window.addEventListener("load", initAuth);
