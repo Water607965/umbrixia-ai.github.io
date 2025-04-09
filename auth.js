@@ -1,3 +1,5 @@
+console.log("✅ auth.js loaded successfully");
+
 let auth0 = null;
 
 const config = {
@@ -7,33 +9,57 @@ const config = {
 };
 
 async function initAuth() {
-  auth0 = await createAuth0Client(config);
+  console.log("🔐 Initializing Auth0...");
 
-  if (window.location.search.includes("code=") && window.location.search.includes("state=")) {
-    await auth0.handleRedirectCallback();
-    window.history.replaceState({}, document.title, "/");
-  }
+  try {
+    auth0 = await createAuth0Client(config);
 
-  const isAuthenticated = await auth0.isAuthenticated();
-  const loginArea = document.getElementById("login-area");
+    // Handle redirect back from Auth0 login
+    if (window.location.search.includes("code=") && window.location.search.includes("state=")) {
+      console.log("🔄 Handling redirect callback...");
+      await auth0.handleRedirectCallback();
+      window.history.replaceState({}, document.title, "/");
+    }
 
-  if (isAuthenticated) {
-    const user = await auth0.getUser();
-    loginArea.innerHTML = `
-      <p>👋 Welcome, ${user.name}</p>
-      <button onclick="logout()">Log Out</button>
-    `;
-  } else {
-    loginArea.innerHTML = `
-      <button onclick="login()">Log In / Sign Up</button>
-    `;
+    const isAuthenticated = await auth0.isAuthenticated();
+    console.log("✅ Authenticated:", isAuthenticated);
+
+    const loginArea = document.getElementById("login-area");
+
+    if (isAuthenticated) {
+      const user = await auth0.getUser();
+      console.log("👤 User info:", user);
+
+      loginArea.innerHTML = `
+        <p>👋 Welcome, ${user.name}</p>
+        <button onclick="logout()">Log Out</button>
+      `;
+    } else {
+      loginArea.innerHTML = `
+        <button onclick="login()">Log In / Sign Up</button>
+      `;
+    }
+  } catch (err) {
+    console.error("❌ Auth0 Initialization Error:", err);
   }
 }
 
 function login() {
-  if (auth0) auth0.loginWithRedirect();
+  if (auth0) {
+    console.log("➡️ Redirecting to Auth0 login...");
+    auth0.loginWithRedirect();
+  } else {
+    console.error("❌ Auth0 not initialized");
+  }
 }
 
 function logout() {
-  if (auth0) auth0.logout({ returnTo: window.location.origin });
+  if (auth0) {
+    console.log("🚪 Logging out...");
+    auth0.logout({ returnTo: window.location.origin });
+  } else {
+    console.error("❌ Auth0 not initialized");
+  }
 }
+
+initAuth();
