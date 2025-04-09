@@ -15,26 +15,25 @@ async function initAuth() {
   }
 
   const isAuthenticated = await auth0.isAuthenticated();
+  const loginArea = document.getElementById("login-area");
 
   if (isAuthenticated) {
     const user = await auth0.getUser();
-    document.getElementById("login-area").innerHTML = `
+    loginArea.innerHTML = `
       <p>👋 Welcome, ${user.name}</p>
       <button onclick="logout()">Log Out</button>
     `;
   } else {
-    document.getElementById("login-area").innerHTML = `
+    loginArea.innerHTML = `
       <button onclick="login()">Log In / Sign Up</button>
     `;
   }
 }
 
 function login() {
-  auth0.loginWithRedirect();
+  if (auth0) auth0.loginWithRedirect();
 }
 
 function logout() {
-  auth0.logout({ returnTo: window.location.origin });
+  if (auth0) auth0.logout({ returnTo: window.location.origin });
 }
-
-initAuth();
