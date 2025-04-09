@@ -8,44 +8,40 @@ const config = {
 
 async function initAuth() {
   try {
+    // Initialize Auth0 client
     auth0 = await createAuth0Client(config);
 
-    // Handle redirect callback if returning from Auth0 login
+    // Handle redirect callback
     if (window.location.search.includes("code=") && window.location.search.includes("state=")) {
       await auth0.handleRedirectCallback();
       window.history.replaceState({}, document.title, "/");
     }
 
+    // Check login state
     const isAuthenticated = await auth0.isAuthenticated();
-
-    const loginArea = document.getElementById("login-area");
+    const loginBtn = document.getElementById("login-btn");
 
     if (isAuthenticated) {
       const user = await auth0.getUser();
-      loginArea.innerHTML = `
+      document.getElementById("login-area").innerHTML = `
         <p>👋 Welcome, ${user.name}</p>
         <button id="logout-btn">Log Out</button>
       `;
       document.getElementById("logout-btn").addEventListener("click", logout);
     } else {
-      loginArea.innerHTML = `
-        <button id="login-btn">Log In / Sign Up</button>
-      `;
-      document.getElementById("login-btn").addEventListener("click", login);
+      loginBtn.innerText = "Log In / Sign Up";
+      loginBtn.disabled = false;
+      loginBtn.addEventListener("click", login);
     }
-
   } catch (err) {
-    console.error("❌ Auth0 failed to initialize:", err);
-    const btn = document.getElementById("login-btn");
-    if (btn) {
-      btn.innerText = "Auth Failed";
-      btn.disabled = true;
-    }
+    console.error("Auth0 failed to initialize:", err);
+    const loginBtn = document.getElementById("login-btn");
+    loginBtn.innerText = "Auth Failed";
+    loginBtn.disabled = true;
   }
 }
 
 function login() {
-  if (!auth0) return console.error("❌ Auth0 not initialized yet");
   auth0.loginWithRedirect();
 }
 
@@ -53,4 +49,4 @@ function logout() {
   auth0.logout({ returnTo: window.location.origin });
 }
 
-window.addEventListener("load", initAuth);
+initAuth();
