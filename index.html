@@ -100,14 +100,22 @@
     <p>&copy; 2025 Umbrixia.ai • Built for Students. Powered by OpenAI.</p>
   </footer>
 
-<!-- ✅ Load the Auth0 SDK FIRST -->
-<script src="https://cdn.auth0.com/js/auth0-spa-js/1.28/auth0-spa-js.production.js"></script>
+<!-- ✅ Load Auth0 SDK first -->
+<script src="https://cdn.auth0.com/js/auth0-spa-js/1.28/auth0-spa-js.production.js"
+  onload="loadAuth()"></script>
 
-<!-- ✅ Then load your Auth0 logic -->
-<script src="auth.js"></script>
+<!-- ✅ Only run auth.js after SDK is ready -->
+<script>
+  function loadAuth() {
+    const script = document.createElement("script");
+    script.src = "auth.js";
+    document.body.appendChild(script);
+  }
+</script>
 
-<!-- ✅ Then load your chatbot logic -->
+<!-- ✅ Load your chatbot code LAST -->
 <script src="script.js"></script>
+
 
 
 
