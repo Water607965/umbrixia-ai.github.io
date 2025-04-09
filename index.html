@@ -99,9 +99,21 @@
 
   
   
-  <script src="https://cdn.auth0.com/js/auth0-spa-js/1.28/auth0-spa-js.production.js"></script>
-<script src="auth.js"></script> <!-- New file containing your Auth0 code -->
+ <!-- ✅ Step 1: Load the Auth0 SDK FIRST -->
+<script src="https://cdn.auth0.com/js/auth0-spa-js/1.28/auth0-spa-js.production.js"></script>
+
+<!-- ✅ Step 2: Wait until DOM is ready, then load your custom Auth0 code -->
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    const authScript = document.createElement("script");
+    authScript.src = "auth.js"; // Your actual Auth0 integration logic
+    document.body.appendChild(authScript);
+  });
+</script>
+
+<!-- ✅ Step 3: Finally load your chatbot & UI logic -->
 <script src="script.js"></script>
+
 
 </body>
 </html>
