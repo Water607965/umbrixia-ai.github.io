@@ -8,16 +8,14 @@ const config = {
 
 async function initAuth() {
   try {
-    // Initialize Auth0 client
     auth0 = await createAuth0Client(config);
 
-    // Handle redirect callback
+    // Handle redirect callback if returning from Auth0
     if (window.location.search.includes("code=") && window.location.search.includes("state=")) {
       await auth0.handleRedirectCallback();
       window.history.replaceState({}, document.title, "/");
     }
 
-    // Check login state
     const isAuthenticated = await auth0.isAuthenticated();
     const loginBtn = document.getElementById("login-btn");
 
@@ -25,19 +23,15 @@ async function initAuth() {
       const user = await auth0.getUser();
       document.getElementById("login-area").innerHTML = `
         <p>👋 Welcome, ${user.name}</p>
-        <button id="logout-btn">Log Out</button>
+        <button onclick="logout()">Log Out</button>
       `;
-      document.getElementById("logout-btn").addEventListener("click", logout);
     } else {
-      loginBtn.innerText = "Log In / Sign Up";
       loginBtn.disabled = false;
+      loginBtn.textContent = "Log In / Sign Up";
       loginBtn.addEventListener("click", login);
     }
-  } catch (err) {
-    console.error("Auth0 failed to initialize:", err);
-    const loginBtn = document.getElementById("login-btn");
-    loginBtn.innerText = "Auth Failed";
-    loginBtn.disabled = true;
+  } catch (e) {
+    console.error("Auth0 failed to initialize:", e);
   }
 }
 
