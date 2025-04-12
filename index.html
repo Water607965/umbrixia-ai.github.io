@@ -12,8 +12,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet" />
 </head>
 <body>
-
-  <!-- ✅ Sticky Navbar -->
+  <!-- ✅ Navigation -->
   <nav class="navbar">
     <div class="navbar-container">
       <div class="navbar-logo">Umbrixia</div>
@@ -49,12 +48,21 @@
 
   <!-- ✅ Stat Boxes -->
   <section class="stat-boxes">
-    <div class="stat-box"><strong>+120 pts</strong><br>Average score gain</div>
-    <div class="stat-box"><strong>10K+</strong><br>Questions solved</div>
-    <div class="stat-box"><strong>95%</strong><br>Accuracy rate</div>
+    <div class="stat-box">
+      <strong>+120 pts</strong>
+      <p>Average score gain</p>
+    </div>
+    <div class="stat-box">
+      <strong>10K+</strong>
+      <p>Questions solved</p>
+    </div>
+    <div class="stat-box">
+      <strong>95%</strong>
+      <p>Accuracy rate</p>
+    </div>
   </section>
 
-  <!-- ✅ Hero Pitch Section -->
+  <!-- ✅ Hero Pitch -->
   <section class="hero-pitch fade-in">
     <div class="hero-content">
       <h1 class="hero-title">A Smarter Way to Study</h1>
@@ -68,7 +76,7 @@
     </div>
   </section>
 
-  <!-- ✅ Features Section -->
+  <!-- ✅ Features -->
   <section class="features-section fade-in" id="features">
     <h2 class="section-title">What Makes Umbrixia Stand Out?</h2>
     <div class="features-grid">
@@ -91,59 +99,50 @@
     </div>
   </section>
 
-  <!-- ✅ Decorative Curve Divider -->
-  <div class="curve-divider"></div>
+  <!-- ✅ Why Umbrixia & Success Graph -->
+  <section class="pitch">
+    <h2>Why Umbrixia?</h2>
+    <ul>
+      <li>Purpose-built for ISEE, SHSAT, and SAT mastery</li>
+      <li>Step-by-step intelligent explanations</li>
+      <li>AI adapts as you improve</li>
+      <li>Elegant and distraction-free interface</li>
+      <li>Loved by parents, trusted by students</li>
+    </ul>
+    <div class="pulse-ring" style="margin-top: 20px;">
+      <a href="#auth-section" class="cta-btn">Subscribe Now</a>
+    </div>
 
-  <!-- ✅ Pitch + Graph Section -->
-  <main class="layout">
-    <section class="pitch">
-      <h2>Why Umbrixia?</h2>
-      <ul>
-        <li>Purpose-built for ISEE, SHSAT, and SAT mastery</li>
-        <li>Step-by-step intelligent explanations</li>
-        <li>AI adapts as you improve</li>
-        <li>Elegant and distraction-free interface</li>
-        <li>Loved by parents, trusted by students</li>
-      </ul>
-
-      <!-- ✅ Callout Bubble -->
-      <div class="callout-bubble">No more guesswork — just results.</div>
-
-      <!-- ✅ Graph -->
-      <section class="success-graph">
-        <h2 class="graph-title">When Smart Work Meets Hard Work</h2>
-        <p class="graph-subtitle">They intersect and erupt into exponential success. See the difference Umbrixia makes.</p>
-        <div class="graph-container">
-          <img src="umbrixia_growth_curve.png" alt="Success Graph - Umbrixia" />
-        </div>
-      </section>
-    </section>
-
-    <!-- ✅ Chat Interface -->
-    <section id="chatbox">
-      <div id="chat">
-        <div class="message bot">
-          <strong>Bot:</strong> Welcome! Ask me an ISEE, SHSAT, or SAT question or pick an example:
-        </div>
-        <div class="examples">
-          <label for="exam-select">Choose Exam:</label>
-          <select id="exam-select" onchange="switchExam()">
-            <option value="shsat">SHSAT</option>
-            <option value="isee">ISEE</option>
-            <option value="sat">SAT</option>
-          </select>
-          <div id="example-buttons"></div>
-        </div>
+    <section class="success-graph">
+      <h2 class="graph-title">When Smart Work Meets Hard Work</h2>
+      <p class="graph-subtitle">They intersect and erupt into exponential success. See the difference Umbrixia makes.</p>
+      <div class="graph-container">
+        <img src="umbrixia_growth_curve.png" alt="Success Graph - Umbrixia" />
       </div>
-      <input type="text" id="userInput" placeholder="Type your ISEE, SHSAT, or SAT question..." />
-      <button onclick="sendMessage()">Send</button>
     </section>
-  </main>
+  </section>
 
-  <!-- ✅ Trial Notice -->
-  <section id="trial-warning"></section>
+  <!-- ✅ Chat Interface -->
+  <section id="chatbox">
+    <div id="chat">
+      <div class="message bot">
+        <strong>Bot:</strong> Welcome! Ask me an ISEE, SHSAT, or SAT question or pick an example:
+      </div>
+      <div class="examples">
+        <label for="exam-select">Choose Exam:</label>
+        <select id="exam-select" onchange="switchExam()">
+          <option value="shsat">SHSAT</option>
+          <option value="isee">ISEE</option>
+          <option value="sat">SAT</option>
+        </select>
+        <div id="example-buttons"></div>
+      </div>
+    </div>
+    <input type="text" id="userInput" placeholder="Type your ISEE, SHSAT, or SAT question..." />
+    <button onclick="sendMessage()">Send</button>
+  </section>
 
-  <!-- ✅ Auth Section -->
+  <!-- ✅ Pricing & Auth Section -->
   <section id="auth-section">
     <h2>Unlock Full Access</h2>
     <form id="signup-form">
@@ -151,13 +150,6 @@
       <button type="submit">Subscribe via Stripe</button>
     </form>
     <div id="signup-status"></div>
-  </section>
-
-  <!-- ✅ Final CTA Section -->
-  <section class="bottom-cta">
-    <h2>Ready to elevate your prep?</h2>
-    <p>Start your free demo and unlock smarter learning with Umbrixia.</p>
-    <a class="cta-btn" href="#chatbox">Try Demo</a>
   </section>
 
   <!-- ✅ Footer -->
