@@ -1413,6 +1413,151 @@ section::before {
   color: #ccc;
 }
 
+/* --- BONUS POLISH: NOTION x APPLE FLARE --- */
+
+/* 1. Glowing CTA Pulse */
+.pulse-ring {
+  position: relative;
+  display: inline-block;
+}
+.pulse-ring::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 160%;
+  height: 160%;
+  background: radial-gradient(circle, rgba(255, 85, 85, 0.2), transparent);
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  animation: pulse 2.5s ease-out infinite;
+  z-index: 0;
+}
+.pulse-ring a {
+  position: relative;
+  z-index: 1;
+}
+
+/* 2. Stat Box Animations */
+.stat-boxes {
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+  margin: 40px auto;
+  flex-wrap: wrap;
+}
+.stat-box {
+  background: #1a1a1a;
+  border: 1px solid #333;
+  padding: 28px 20px;
+  border-radius: 12px;
+  font-size: 1.1rem;
+  color: #f2f2f2;
+  text-align: center;
+  min-width: 160px;
+  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.4);
+  transition: transform 0.3s ease-in-out;
+}
+.stat-box:hover {
+  transform: translateY(-6px) scale(1.02);
+  background: #222;
+}
+
+/* 3. Curved Section Divider */
+.curve-divider {
+  width: 100%;
+  height: 100px;
+  background: linear-gradient(to bottom, #0d0d0d 0%, #1a1a1a 100%);
+  clip-path: ellipse(75% 100% at 50% 0%);
+}
+
+/* 4. Graph Responsiveness */
+.graph-container img {
+  width: 100%;
+  max-width: 600px;
+  display: block;
+  margin: 0 auto;
+  border-radius: 14px;
+  box-shadow: 0 0 30px rgba(255, 0, 0, 0.1);
+}
+
+/* 5. Callout Bubble */
+.callout-bubble {
+  margin: 40px auto;
+  background: #181818;
+  border-left: 4px solid #4f46e5;
+  padding: 20px 24px;
+  font-size: 1rem;
+  color: #ddd;
+  font-style: italic;
+  max-width: 640px;
+  border-radius: 10px;
+}
+
+/* 6. Bottom CTA Section */
+.bottom-cta {
+  background: linear-gradient(to right, #1a1a1a, #111);
+  padding: 60px 20px;
+  text-align: center;
+  color: white;
+  margin-top: 60px;
+  border-top: 1px solid #2a2a2a;
+}
+.bottom-cta h2 {
+  font-size: 2rem;
+  margin-bottom: 14px;
+}
+.bottom-cta p {
+  font-size: 1.05rem;
+  color: #ccc;
+  margin-bottom: 20px;
+}
+.bottom-cta .cta-btn {
+  background: #4f46e5;
+  padding: 14px 28px;
+  font-size: 1rem;
+  border-radius: 8px;
+  color: white;
+  text-decoration: none;
+  transition: background 0.3s ease;
+}
+.bottom-cta .cta-btn:hover {
+  background: #6a5bff;
+}
+
+/* 7. Subtle Page Scroll Animation */
+section, .stat-box, .feature-card {
+  animation: slideUp 0.6s ease forwards;
+  opacity: 0;
+}
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* 8. CTA Glow Pulse */
+@keyframes pulse {
+  0% {
+    transform: translate(-50%, -50%) scale(0.95);
+    opacity: 0.6;
+  }
+  50% {
+    transform: translate(-50%, -50%) scale(1.05);
+    opacity: 0.3;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(0.95);
+    opacity: 0.6;
+  }
+}
+
+
 
 
 
