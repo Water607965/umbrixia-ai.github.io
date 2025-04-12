@@ -787,5 +787,45 @@ button:hover, .examples button:hover {
   to { opacity: 1; transform: translateY(0); }
 }
 
+/* Success Graph Section */
+.success-graph {
+  padding: 60px 20px;
+  text-align: center;
+  background: #0d0d0d;
+  border-top: 1px solid #222;
+}
+
+.graph-title {
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: white;
+  margin-bottom: 10px;
+}
+
+.graph-subtitle {
+  font-size: 1rem;
+  color: #ccc;
+  margin-bottom: 30px;
+}
+
+.graph-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.graph-container img {
+  max-width: 100%;
+  width: 700px;
+  height: auto;
+  border-radius: 16px;
+  box-shadow: 0 0 40px rgba(255, 0, 0, 0.35);
+  transition: transform 0.3s ease;
+}
+
+.graph-container img:hover {
+  transform: scale(1.015);
+}
+
 
 
