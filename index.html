@@ -9,17 +9,21 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet" />
 </head>
-  <!-- ✅ Sticky Navbar (place at the very top of <body> or inside <header>) -->
-<nav class="sticky-nav">
-  <div class="nav-left">Umbrixia</div>
-  <ul class="nav-links">
-    <li><a href="#features">Features</a></li>
-    <li><a href="#chatbox">Demo</a></li>
-    <li><a href="#auth-section">Pricing</a></li>
-    <li><a href="#testimonials">Testimonials</a></li>
-  </ul>
-</nav>
 <body>
+  <!-- ✅ Fixed Header/Navbar -->
+  <nav class="navbar">
+    <div class="navbar-container">
+      <div class="navbar-logo">Umbrixia</div>
+      <ul class="navbar-menu">
+        <li><a href="#features">Features</a></li>
+        <li><a href="#chatbox">Demo</a></li>
+        <li><a href="#auth-section">Pricing</a></li>
+        <li><a href="#testimonials">Testimonials</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- ✅ Hero Section -->
   <header class="hero-section">
     <div class="hero-content">
       <h1 class="logo">Umbrixia</h1>
@@ -34,25 +38,25 @@
   </header>
 
   <!-- ✅ Rotating headline (can go in the hero section or under it) -->
-<section class="rotating-headline">
-  <h2 id="rotating-text">Trusted by students. Powered by AI.</h2>
-</section>
+  <section class="rotating-headline">
+    <h2 id="rotating-text">Trusted by students. Powered by AI.</h2>
+  </section>
 
-<section class="hero-pitch fade-in">
-  <div class="hero-content">
-    <h1 class="hero-title">A Smarter Way to Study</h1>
-    <p class="hero-subtitle">
-      Umbrixia isn’t just another tutor — it’s a high-performance AI built to empower students with personalized, accurate guidance for the ISEE, SHSAT, and SAT.
-    </p>
-    <div class="hero-cta">
-      <a href="#chatbox" class="cta-btn">Try Free Demo</a>
-      <a href="#auth-section" class="cta-outline">Subscribe Now</a>
+  <section class="hero-pitch fade-in">
+    <div class="hero-content">
+      <h1 class="hero-title">A Smarter Way to Study</h1>
+      <p class="hero-subtitle">
+        Umbrixia isn’t just another tutor — it’s a high-performance AI built to empower students with personalized, accurate guidance for the ISEE, SHSAT, and SAT.
+      </p>
+      <div class="hero-cta">
+        <a href="#chatbox" class="cta-btn">Try Free Demo</a>
+        <a href="#auth-section" class="cta-outline">Subscribe Now</a>
+      </div>
     </div>
-  </div>
-</section>
+  </section>
 
-
-  <section class="features-section fade-in">
+  <!-- ✅ Features Section -->
+  <section class="features-section fade-in" id="features">
     <h2 class="section-title">What Makes Umbrixia Stand Out?</h2>
     <div class="features-grid">
       <div class="feature-card">
@@ -74,6 +78,7 @@
     </div>
   </section>
 
+  <!-- ✅ Pitch & Success Graph -->
   <main class="layout">
     <section class="pitch">
       <h2>Why Umbrixia?</h2>
@@ -85,16 +90,15 @@
         <li>Loved by parents, trusted by students</li>
       </ul>
       <section class="success-graph">
-  <h2 class="graph-title">When Smart Work Meets Hard Work</h2>
-  <p class="graph-subtitle">They intersect and erupt into exponential success. See the difference Umbrixia makes.</p>
-  <div class="graph-container">
-    <img src="umbrixia_growth_curve.png" alt="Success Graph - Umbrixia" />
-  </div>
-</section>
-
-
+        <h2 class="graph-title">When Smart Work Meets Hard Work</h2>
+        <p class="graph-subtitle">They intersect and erupt into exponential success. See the difference Umbrixia makes.</p>
+        <div class="graph-container">
+          <img src="umbrixia_growth_curve.png" alt="Success Graph - Umbrixia" />
+        </div>
+      </section>
     </section>
 
+    <!-- ✅ Chat Interface -->
     <section id="chatbox">
       <div id="chat">
         <div class="message bot">
@@ -117,6 +121,7 @@
 
   <section id="trial-warning"></section>
 
+  <!-- ✅ Auth Section -->
   <section id="auth-section">
     <h2>Unlock Full Access</h2>
     <form id="signup-form">
@@ -126,15 +131,11 @@
     <div id="signup-status"></div>
   </section>
 
-  <!-- ✅ Rotating headline (can go in the hero section or under it) -->
-<section class="rotating-headline">
-  <h2 id="rotating-text">Trusted by students. Powered by AI.</h2>
-</section>
-
   <footer>
     <p>&copy; 2025 Umbrixia.ai • Built for Students. Powered by OpenAI.</p>
   </footer>
 
+  <!-- Scripts -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/auth0-spa-js/1.28.0/auth0-spa-js.production.js" onload="loadAuth()"></script>
   <script>
     function loadAuth() {
