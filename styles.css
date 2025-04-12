@@ -600,3 +600,112 @@ button:hover, .examples button:hover {
   color: white;
 }
 
+/* Sticky Navigation Bar */
+.sticky-nav {
+  position: sticky;
+  top: 0;
+  width: 100%;
+  background-color: #0d0d0d;
+  padding: 20px 40px;
+  z-index: 999;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #2a2a2a;
+  backdrop-filter: blur(10px);
+}
+
+.sticky-nav .logo {
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: #ffffff;
+}
+
+.sticky-nav nav a {
+  color: #ffffff;
+  text-decoration: none;
+  margin-left: 24px;
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+
+.sticky-nav nav a:hover {
+  color: #4f46e5;
+}
+
+/* Hero Section */
+.hero-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 100px 20px 80px;
+  background: linear-gradient(180deg, #101010 0%, #0d0d0d 100%);
+}
+
+.hero-section h1 {
+  font-size: 3.2rem;
+  font-weight: 800;
+  color: white;
+  margin-bottom: 20px;
+}
+
+.hero-section p {
+  font-size: 1.25rem;
+  color: #ccc;
+  max-width: 600px;
+  margin-bottom: 30px;
+}
+
+.hero-section .cta-btn {
+  background-color: #4f46e5;
+  color: white;
+  padding: 14px 28px;
+  font-size: 1rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.hero-section .cta-btn:hover {
+  background-color: #6a5bff;
+}
+
+/* Rotating Headline (Notion/Apple-style text motion) */
+.rotating-headline {
+  text-align: center;
+  margin-top: 60px;
+  font-size: 2rem;
+  font-weight: 600;
+  color: #ffffff;
+  height: 50px;
+  overflow: hidden;
+  position: relative;
+}
+
+.rotating-headline span {
+  display: inline-block;
+  animation: rotateWords 6s infinite ease-in-out;
+  white-space: nowrap;
+}
+
+@keyframes rotateWords {
+  0%   { transform: translateY(0%); }
+  20%  { transform: translateY(0%); }
+  25%  { transform: translateY(-100%); }
+  45%  { transform: translateY(-100%); }
+  50%  { transform: translateY(-200%); }
+  70%  { transform: translateY(-200%); }
+  75%  { transform: translateY(-300%); }
+  95%  { transform: translateY(-300%); }
+  100% { transform: translateY(0%); }
+}
+
+.rotating-headline span div {
+  height: 50px;
+  line-height: 50px;
+}
+
+
