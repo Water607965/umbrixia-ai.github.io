@@ -10,22 +10,18 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet" />
 </head>
 <body>
-  <header>
-    <h1 class="logo">Umbrixia</h1>
-    <p class="subtitle">Your AI-Powered ISEE, SHSAT, and SAT Tutor</p>
-    <div class="pricing">
-      <strong>Trial:</strong> 10 questions •
-      <strong>Full Access:</strong> $20/month or $100 lifetime
+  <header class="hero-section">
+    <div class="hero-content">
+      <h1 class="logo">Umbrixia</h1>
+      <p class="subtitle">Smarter Prep for the ISEE, SHSAT & SAT</p>
+      <p class="cta">Experience Umbrixia with a <strong>free demo</strong>. No sign-up needed.</p>
+      <div class="button-group">
+        <button id="login-btn" disabled class="login-button">Loading...</button>
+        <a href="#chatbox" class="try-demo-button">Try Demo Now</a>
+      </div>
+      <div id="server-status">Checking server status...</div>
     </div>
-    <div id="server-status">Checking server status...</div>
   </header>
-
- <div id="login-area">
-  <button id="login-btn" disabled>Loading...</button>
-</div>
-
-
-
 
   <section class="features-section fade-in">
     <h2 class="section-title">What Makes Umbrixia Stand Out?</h2>
@@ -53,11 +49,11 @@
     <section class="pitch">
       <h2>Why Umbrixia?</h2>
       <ul>
-        <li>Built specifically for ISEE, SHSAT, and SAT preparation</li>
-        <li>AI provides real-time explanations</li>
-        <li>Adaptive help tailored to strengths and weaknesses</li>
-        <li>Affordable and powerful learning companion</li>
-        <li>Used by students and trusted by parents</li>
+        <li>Purpose-built for ISEE, SHSAT, and SAT mastery</li>
+        <li>Step-by-step intelligent explanations</li>
+        <li>AI adapts as you improve</li>
+        <li>Elegant and distraction-free interface</li>
+        <li>Loved by parents, trusted by students</li>
       </ul>
     </section>
 
@@ -100,28 +96,14 @@
     <p>&copy; 2025 Umbrixia.ai • Built for Students. Powered by OpenAI.</p>
   </footer>
 
-<!-- ✅ Load Auth0 SDK first -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/auth0-spa-js/1.28.0/auth0-spa-js.production.js"
-  onload="loadAuth()"></script>
-
-
-<!-- ✅ Only run auth.js after SDK is ready -->
-<script>
-  function loadAuth() {
-    const script = document.createElement("script");
-    script.src = "auth.js";
-    document.body.appendChild(script);
-  }
-</script>
-
-<!-- ✅ Load your chatbot code LAST -->
-<script src="script.js"></script>
-
-
-
-
-
-
-
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/auth0-spa-js/1.28.0/auth0-spa-js.production.js" onload="loadAuth()"></script>
+  <script>
+    function loadAuth() {
+      const script = document.createElement("script");
+      script.src = "auth.js";
+      document.body.appendChild(script);
+    }
+  </script>
+  <script src="script.js"></script>
 </body>
 </html>
