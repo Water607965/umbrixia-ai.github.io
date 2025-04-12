@@ -347,3 +347,192 @@ footer {
   margin-top: 12px;
   color: #d4d4d4;
 }
+
+/* Reset & Base */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background: #0d0d0d;
+  color: #f2f2f2;
+  line-height: 1.6;
+  padding: 20px;
+  transition: all 0.3s ease;
+}
+
+/* Typography */
+h1, h2 {
+  font-weight: 800;
+  margin-bottom: 0.5em;
+  text-align: center;
+  letter-spacing: -0.02em;
+}
+
+p, .pricing, .footer-note {
+  font-weight: 400;
+  color: #cccccc;
+  text-align: center;
+  font-size: 1.1rem;
+}
+
+/* Header */
+header {
+  text-align: center;
+  margin-bottom: 50px;
+  padding-top: 20px;
+}
+
+.logo {
+  font-size: 3rem;
+  font-weight: 800;
+  background: linear-gradient(90deg, #ffffff, #cfcfcf);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.subtitle {
+  font-size: 1.3rem;
+  color: #c4c4c4;
+  margin-top: 8px;
+}
+
+.pricing {
+  margin: 12px 0;
+  font-size: 1.1rem;
+  color: #ffffff;
+}
+
+/* Pitch Upgrade */
+.pitch {
+  flex: 1 1 40%;
+  background: linear-gradient(145deg, #1b1b1b, #101010);
+  padding: 30px;
+  border-radius: 16px;
+  border: 1px solid #2a2a2a;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+  transition: transform 0.3s ease;
+}
+
+.pitch:hover {
+  transform: translateY(-4px);
+}
+
+.pitch h2 {
+  font-size: 2rem;
+  margin-bottom: 20px;
+  color: #ffffff;
+  text-align: left;
+}
+
+.pitch ul {
+  list-style-type: disc;
+  padding-left: 20px;
+  color: #dddddd;
+  font-size: 1.05rem;
+  line-height: 1.8;
+}
+
+.pitch ul li::marker {
+  color: #4f46e5;
+}
+
+/* Feature Card Polish */
+.feature-card {
+  background: #1a1a1a;
+  padding: 30px;
+  border: 1px solid #2a2a2a;
+  border-radius: 14px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+  transition: transform 0.35s ease, background 0.35s ease;
+}
+
+.feature-card:hover {
+  transform: translateY(-10px);
+  background: #242424;
+}
+
+.feature-card h3 {
+  font-size: 1.4rem;
+  margin-bottom: 12px;
+  color: #ffffff;
+}
+
+.feature-card p {
+  font-size: 1.05rem;
+  color: #c4c4c4;
+  line-height: 1.7;
+}
+
+/* Button Polish */
+button, .examples button {
+  font-size: 1rem;
+  font-weight: 500;
+  background: linear-gradient(135deg, #5e5eff, #8282ff);
+  padding: 12px 18px;
+  border: none;
+  border-radius: 10px;
+  color: white;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3);
+}
+
+button:hover, .examples button:hover {
+  background: linear-gradient(135deg, #6d6dff, #9d9dff);
+  transform: scale(1.03);
+}
+
+/* Smooth Fade In Animation */
+.fade-in {
+  animation: fadeIn 0.8s ease-out forwards;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Section Title Emphasis */
+.section-title {
+  font-size: 2.2rem;
+  color: #ffffff;
+  margin-bottom: 30px;
+  font-weight: 800;
+}
+
+/* Feature Grid Expansion */
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 25px;
+  padding: 0 10px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Enhanced Mobile UX */
+@media (max-width: 768px) {
+  .layout {
+    flex-direction: column;
+    gap: 30px;
+  }
+
+  .section-title {
+    font-size: 1.8rem;
+  }
+
+  button {
+    font-size: 1rem;
+  }
+}
