@@ -741,5 +741,51 @@ button:hover, .examples button:hover {
   margin-bottom: 30px;
 }
 
+/* 🌋 Success Graph Section */
+.success-graph {
+  text-align: center;
+  padding: 80px 20px 60px;
+  background: linear-gradient(to bottom, #0d0d0d, #121212);
+  color: white;
+  border-radius: 16px;
+  box-shadow: 0 0 50px rgba(255, 0, 0, 0.1);
+  margin: 60px auto;
+  max-width: 1100px;
+}
+
+.graph-title {
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: #ff3131;
+  margin-bottom: 8px;
+  animation: popIn 0.8s ease-out;
+}
+
+.graph-subtitle {
+  font-size: 1.1rem;
+  color: #ccc;
+  margin-bottom: 30px;
+  animation: fadeIn 1s ease-out 0.3s both;
+}
+
+.graph-container img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 14px;
+  box-shadow: 0 0 30px rgba(255, 0, 0, 0.4);
+  animation: riseFade 1.5s ease-in-out forwards;
+}
+
+/* Optional animations */
+@keyframes popIn {
+  from { transform: scale(0.9); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+@keyframes riseFade {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
 
 
