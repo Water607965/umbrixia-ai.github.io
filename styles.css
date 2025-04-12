@@ -1301,6 +1301,118 @@ section {
   }
 }
 
+/* Enhanced Section Separators */
+section::before {
+  content: "";
+  display: block;
+  height: 80px;
+  margin-top: -80px;
+  visibility: hidden;
+}
+
+/* Depth Shadow and Glow Effects */
+.feature-card, .pitch, .hero-section, .cta-btn, .cta-outline {
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.35);
+}
+
+.feature-card:hover {
+  background: radial-gradient(circle at top left, #232323, #1b1b1b);
+  border-color: #4f46e5;
+}
+
+/* Callout Bubble Highlight */
+.callout {
+  background: #121212;
+  border-left: 5px solid #4f46e5;
+  padding: 16px 24px;
+  border-radius: 8px;
+  margin: 20px auto;
+  max-width: 900px;
+  font-size: 1rem;
+  color: #eee;
+  box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+}
+
+/* Soft Glow Effect */
+.glow-effect {
+  box-shadow: 0 0 8px #4f46e5, 0 0 12px #4f46e5 inset;
+}
+
+/* Scroll-Fade Reveal */
+.fade-in-scroll {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.6s ease-out;
+}
+.fade-in-scroll.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Curved Divider */
+.curve-divider {
+  position: relative;
+  height: 120px;
+  background: linear-gradient(to top, #0d0d0d 0%, #1a1a1a 100%);
+}
+.curve-divider::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+  background: url('https://raw.githubusercontent.com/adamgiebl/beautiful-html-css-waves/main/wave-haikei.svg') no-repeat bottom;
+  background-size: cover;
+}
+
+/* Animated Pulse CTA */
+.pulse-ring {
+  position: relative;
+  display: inline-block;
+}
+.pulse-ring::after {
+  content: '';
+  position: absolute;
+  top: 50%; left: 50%;
+  width: 100%; height: 100%;
+  border: 2px solid #4f46e5;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  animation: pulse 2s infinite ease-out;
+}
+@keyframes pulse {
+  0% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+  100% { transform: translate(-50%, -50%) scale(1.8); opacity: 0; }
+}
+
+/* Animated Stat Boxes */
+.stat-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+  margin-top: 50px;
+}
+.stat-box {
+  background: #1e1e1e;
+  padding: 30px;
+  border-radius: 12px;
+  text-align: center;
+  border: 1px solid #333;
+  transition: all 0.3s ease-in-out;
+}
+.stat-box:hover {
+  border-color: #4f46e5;
+  transform: translateY(-4px);
+}
+.stat-box h3 {
+  font-size: 2rem;
+  color: #4f46e5;
+}
+.stat-box p {
+  font-size: 0.95rem;
+  color: #ccc;
+}
+
 
 
 
