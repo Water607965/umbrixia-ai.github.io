@@ -2523,6 +2523,416 @@ footer {
   color: #777;
 }
 
+/* ✅ Why Umbrixia Section */
+.pitch {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 40px;
+  margin: 80px auto;
+  max-width: 1200px;
+}
+
+.pitch h2 {
+  font-size: 2rem;
+  color: #ff4c4c;
+  text-align: left;
+  margin-bottom: 20px;
+}
+
+.pitch ul {
+  list-style: none;
+  padding-left: 0;
+}
+
+.pitch ul li {
+  margin-bottom: 12px;
+  font-size: 1rem;
+  color: #e0e0e0;
+  position: relative;
+  padding-left: 25px;
+}
+
+.pitch ul li::before {
+  content: '✅';
+  position: absolute;
+  left: 0;
+  color: #00ff99;
+}
+
+/* ✅ Subscribe Now Button */
+.pitch .cta-btn {
+  display: inline-block;
+  margin-top: 20px;
+  padding: 12px 24px;
+  background: #ff4c4c;
+  color: #fff;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  transition: background 0.3s ease;
+}
+
+.pitch .cta-btn:hover {
+  background: #ff1c1c;
+}
+
+/* ✅ Graph Container */
+.success-graph {
+  background: linear-gradient(to bottom, #111 0%, #0d0d0d 100%);
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 0 40px rgba(255, 0, 0, 0.3);
+  max-width: 360px;
+  text-align: center;
+}
+
+.success-graph h2 {
+  color: white;
+  font-size: 1.2rem;
+  margin-bottom: 10px;
+}
+
+.success-graph p {
+  color: #ccc;
+  font-size: 0.95rem;
+  margin-bottom: 15px;
+}
+
+.success-graph img {
+  width: 100%;
+  height: auto;
+  border-radius: 10px;
+  box-shadow: 0 0 30px rgba(255, 50, 50, 0.3);
+}
+
+/* ✅ Chatbox Section */
+#chatbox {
+  background: #1a1a1a;
+  padding: 30px;
+  margin: 60px auto;
+  border-radius: 12px;
+  box-shadow: 0 0 30px rgba(255, 0, 0, 0.1);
+  max-width: 700px;
+}
+
+#chat {
+  margin-bottom: 20px;
+  padding: 15px;
+  border-radius: 8px;
+  background-color: #151515;
+  border: 1px solid #333;
+  color: #ddd;
+}
+
+#userInput {
+  width: 100%;
+  padding: 12px;
+  border-radius: 6px;
+  border: none;
+  background: #2b2b2b;
+  color: #fff;
+  margin-bottom: 10px;
+}
+
+#chatbox button {
+  background: #ff3333;
+  color: white;
+  border: none;
+  width: 100%;
+  padding: 12px;
+  font-size: 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.3s ease-in-out;
+}
+
+#chatbox button:hover {
+  background: #ff1a1a;
+}
+
+/* ✅ Auth Section */
+#auth-section {
+  background: #151515;
+  border-radius: 12px;
+  padding: 40px 20px;
+  text-align: center;
+  max-width: 500px;
+  margin: 60px auto;
+  border: 1px solid #333;
+  box-shadow: 0 0 30px rgba(255, 0, 0, 0.2);
+}
+
+#auth-section h2 {
+  color: #ff4c4c;
+  font-size: 1.5rem;
+  margin-bottom: 20px;
+}
+
+#auth-section input[type="email"] {
+  width: 100%;
+  padding: 12px;
+  font-size: 1rem;
+  border-radius: 6px;
+  border: 1px solid #444;
+  background: #222;
+  color: #fff;
+  margin-bottom: 20px;
+}
+
+#auth-section button {
+  background: #ff3333;
+  color: #fff;
+  font-weight: 600;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+#auth-section button:hover {
+  background: #ff0000;
+}
+
+/* ============================== */
+/* ✅ Global Theme Enhancements  */
+/* ============================== */
+:root {
+  --red-main: #ff2c2c;
+  --red-dark: #b30000;
+  --red-glow: rgba(255, 0, 0, 0.3);
+  --text-light: #f5f5f5;
+  --text-muted: #ccc;
+  --bg-dark: #0d0d0d;
+  --bg-panel: #1a1a1a;
+}
+
+body {
+  background: var(--bg-dark);
+  color: var(--text-light);
+  font-family: 'Inter', sans-serif;
+  overflow-x: hidden;
+}
+
+/* ============================== */
+/* ✅ Navigation Fix             */
+/* ============================== */
+.navbar {
+  background: var(--bg-dark);
+  padding: 20px 40px;
+  position: sticky;
+  top: 0;
+  z-index: 999;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #222;
+}
+
+.navbar-logo {
+  font-size: 1.6rem;
+  font-weight: bold;
+  color: var(--text-light);
+}
+
+.navbar-menu {
+  list-style: none;
+  display: flex;
+  gap: 32px;
+}
+
+.navbar-menu li a {
+  color: var(--text-light);
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+
+.navbar-menu li a:hover {
+  color: var(--red-main);
+}
+
+/* ============================== */
+/* ✅ Call-to-Action Buttons     */
+/* ============================== */
+.cta-btn,
+.try-demo-button,
+.cta-outline,
+button {
+  font-weight: 600;
+  font-size: 1rem;
+  border-radius: 8px;
+  padding: 12px 24px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.cta-btn {
+  background: var(--red-main);
+  color: white;
+  border: none;
+}
+
+.cta-btn:hover {
+  background: var(--red-dark);
+}
+
+.cta-outline {
+  background: transparent;
+  color: var(--text-light);
+  border: 1px solid var(--text-muted);
+}
+
+.cta-outline:hover {
+  background: #222;
+  border-color: var(--red-main);
+  color: var(--red-main);
+}
+
+/* ============================== */
+/* ✅ Pulse Ring Animation       */
+/* ============================== */
+.pulse-ring {
+  position: relative;
+  display: inline-block;
+}
+
+.pulse-ring a {
+  display: inline-block;
+}
+
+.pulse-ring::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 140%;
+  height: 140%;
+  transform: translate(-50%, -50%);
+  background: var(--red-glow);
+  border-radius: 50%;
+  animation: pulse 2s infinite;
+  z-index: 0;
+}
+
+.pulse-ring a {
+  position: relative;
+  z-index: 1;
+}
+
+@keyframes pulse {
+  0% { transform: translate(-50%, -50%) scale(1); opacity: 0.6; }
+  50% { transform: translate(-50%, -50%) scale(1.2); opacity: 0.3; }
+  100% { transform: translate(-50%, -50%) scale(1); opacity: 0.6; }
+}
+
+/* ============================== */
+/* ✅ Chat Interface             */
+/* ============================== */
+#chatbox {
+  background: var(--bg-panel);
+  padding: 30px;
+  margin: 60px auto;
+  border-radius: 12px;
+  box-shadow: 0 0 40px var(--red-glow);
+  max-width: 700px;
+}
+
+#chat {
+  margin-bottom: 20px;
+  padding: 15px;
+  border-radius: 8px;
+  background-color: #151515;
+  border: 1px solid #333;
+  color: #ddd;
+}
+
+#userInput {
+  width: 100%;
+  padding: 12px;
+  border-radius: 6px;
+  border: none;
+  background: #2b2b2b;
+  color: #fff;
+  margin-bottom: 10px;
+}
+
+#chatbox button {
+  background: var(--red-main);
+  color: white;
+  border: none;
+  width: 100%;
+  padding: 12px;
+  font-size: 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.3s ease-in-out;
+}
+
+#chatbox button:hover {
+  background: var(--red-dark);
+}
+
+/* ============================== */
+/* ✅ Auth / Subscribe Panel     */
+/* ============================== */
+#auth-section {
+  background: #151515;
+  border-radius: 12px;
+  padding: 40px 20px;
+  text-align: center;
+  max-width: 500px;
+  margin: 60px auto;
+  border: 1px solid #333;
+  box-shadow: 0 0 30px var(--red-glow);
+}
+
+#auth-section h2 {
+  color: var(--red-main);
+  font-size: 1.5rem;
+  margin-bottom: 20px;
+}
+
+#auth-section input[type="email"] {
+  width: 100%;
+  padding: 12px;
+  font-size: 1rem;
+  border-radius: 6px;
+  border: 1px solid #444;
+  background: #222;
+  color: #fff;
+  margin-bottom: 20px;
+}
+
+#auth-section button {
+  background: var(--red-main);
+  color: #fff;
+  font-weight: 600;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+#auth-section button:hover {
+  background: var(--red-dark);
+}
+
+/* ============================== */
+/* ✅ Footer Cleanup             */
+/* ============================== */
+footer {
+  text-align: center;
+  font-size: 0.9rem;
+  padding: 30px 0;
+  color: #777;
+  border-top: 1px solid #222;
+  margin-top: 80px;
+}
 
 
 
