@@ -2934,6 +2934,121 @@ footer {
   margin-top: 80px;
 }
 
+/* === Why Umbrixia + Graph Section === */
+.why-graph-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 60px;
+  max-width: 1200px;
+  margin: 100px auto;
+  padding: 20px;
+  flex-wrap: wrap;
+}
+
+/* Left Side: Why Umbrixia */
+.why-text-card {
+  flex: 1 1 400px;
+  background: transparent;
+  padding: 20px;
+  border-radius: 12px;
+  color: white;
+}
+
+.why-text-card h2 {
+  font-size: 2rem;
+  font-weight: 800;
+  margin-bottom: 20px;
+  color: #ff2c2c;
+  text-align: center;
+}
+
+.why-text-card ul {
+  list-style: none;
+  padding: 0;
+  margin-bottom: 30px;
+}
+
+.why-text-card ul li {
+  margin-bottom: 10px;
+  font-size: 1.05rem;
+  color: #f2f2f2;
+  display: flex;
+  align-items: center;
+}
+
+.why-text-card ul li::before {
+  content: '✅';
+  color: #10ff8b;
+  margin-right: 12px;
+  font-size: 1.1rem;
+}
+
+.why-text-card .cta-btn {
+  display: inline-block;
+  background: #ff2c2c;
+  color: white;
+  font-weight: bold;
+  padding: 14px 30px;
+  border-radius: 10px;
+  text-align: center;
+  margin-top: 20px;
+  transition: background 0.3s ease;
+  box-shadow: 0 0 20px rgba(255, 0, 0, 0.4);
+  border: none;
+}
+
+.why-text-card .cta-btn:hover {
+  background: #cc0000;
+}
+
+/* Right Side: Graph */
+.graph-card {
+  flex: 1 1 400px;
+  background: #151515;
+  border-radius: 20px;
+  padding: 30px;
+  text-align: center;
+  box-shadow: 0 0 50px rgba(255, 0, 0, 0.3);
+}
+
+.graph-card h3 {
+  font-size: 1.6rem;
+  font-weight: 800;
+  margin-bottom: 10px;
+  color: white;
+}
+
+.graph-card p {
+  color: #bbb;
+  font-size: 1rem;
+  margin-bottom: 20px;
+}
+
+.graph-card img {
+  width: 100%;
+  border-radius: 12px;
+  margin-top: 10px;
+}
+
+/* Responsive stacking on mobile */
+@media (max-width: 768px) {
+  .why-graph-wrapper {
+    flex-direction: column;
+    align-items: center;
+    gap: 40px;
+  }
+
+  .why-text-card, .graph-card {
+    flex: 1 1 100%;
+    text-align: center;
+  }
+
+  .why-text-card h2 {
+    font-size: 1.7rem;
+  }
+}
+
 
 
 
