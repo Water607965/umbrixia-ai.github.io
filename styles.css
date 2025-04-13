@@ -3049,6 +3049,78 @@ footer {
   }
 }
 
+/* ✅ Designed for Mastery Section */
+.designed-for-mastery {
+  padding: 80px 20px;
+  background: #111;
+  text-align: center;
+}
+.mastery-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 30px;
+  justify-content: center;
+  margin-top: 40px;
+}
+.mastery-card {
+  background: #1c1c1c;
+  border: 1px solid #2e2e2e;
+  border-radius: 12px;
+  padding: 30px 25px;
+  max-width: 300px;
+  text-align: left;
+  transition: all 0.3s ease;
+}
+.mastery-card h3 {
+  font-size: 1.3rem;
+  color: #ff4c4c;
+  margin-bottom: 10px;
+}
+.mastery-card p {
+  font-size: 0.95rem;
+  color: #ccc;
+}
+.mastery-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 0 16px #ff4c4c44;
+}
+
+/* ✅ Vision Section */
+.vision-section {
+  background: #0e0e0e;
+  padding: 80px 30px;
+  text-align: center;
+}
+.vision-section .section-title {
+  font-size: 2rem;
+  color: #fff;
+}
+.vision-subtitle {
+  max-width: 700px;
+  margin: 20px auto 40px;
+  font-size: 1.1rem;
+  color: #ccc;
+  line-height: 1.7;
+}
+.vision-call {
+  display: flex;
+  justify-content: center;
+}
+.vision-call .cta-btn.red {
+  background: #ff4c4c;
+  color: white;
+  border: none;
+  padding: 14px 32px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 1rem;
+  transition: background 0.3s ease;
+}
+.vision-call .cta-btn.red:hover {
+  background: #ff1e1e;
+}
+
+
 
 
 
