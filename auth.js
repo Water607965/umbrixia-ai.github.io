@@ -1,46 +1,33 @@
-let auth0 = null;
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "firebase/auth";
+import { initializeApp } from "firebase/app";
 
-const config = {
-  domain: "dev-u1qim7tdcejrp6qi.us.auth0.com",
-  client_id: "xBkyc88waMGEiBtKC4L1qvn7QqFCGmzD",
-  redirect_uri: window.location.origin
+const firebaseConfig = {
+  apiKey: "AIzaSyDDcAp59mkTutfXgnRIBWpVww3jFyzOtIc",
+  authDomain: "umbrixia-d804f.firebaseapp.com",
+  projectId: "umbrixia-d804f",
+  storageBucket: "umbrixia-d804f.firebasestorage.app",
+  messagingSenderId: "532093768601",
+  appId: "1:532093768601:web:4e94149269d88213edb908"
 };
 
-async function initAuth() {
-  try {
-    auth0 = await createAuth0Client(config);
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
 
-    // Handle redirect callback if returning from Auth0
-    if (window.location.search.includes("code=") && window.location.search.includes("state=")) {
-      await auth0.handleRedirectCallback();
-      window.history.replaceState({}, document.title, "/");
-    }
-
-    const isAuthenticated = await auth0.isAuthenticated();
-    const loginBtn = document.getElementById("login-btn");
-
-    if (isAuthenticated) {
-      const user = await auth0.getUser();
-      document.getElementById("login-area").innerHTML = `
-        <p>👋 Welcome, ${user.name}</p>
-        <button onclick="logout()">Log Out</button>
-      `;
-    } else {
-      loginBtn.disabled = false;
-      loginBtn.textContent = "Log In / Sign Up";
-      loginBtn.addEventListener("click", login);
-    }
-  } catch (e) {
-    console.error("Auth0 failed to initialize:", e);
-  }
+// Signup
+function signup(email, password) {
+  return createUserWithEmailAndPassword(auth, email, password);
 }
 
-function login() {
-  auth0.loginWithRedirect();
+// Login
+function login(email, password) {
+  return signInWithEmailAndPassword(auth, email, password);
 }
 
+// Logout
 function logout() {
-  auth0.logout({ returnTo: window.location.origin });
+  return signOut(auth);
 }
 
-initAuth();
+window.signup = signup;
+window.login = login;
+window.logout = logout;
