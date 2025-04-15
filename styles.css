@@ -3174,6 +3174,38 @@ footer {
   }
 }
 
+body {
+  background: linear-gradient(to bottom right, #0a0a0a, #0d0d0d);
+  color: #fff;
+  font-family: 'Inter', sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+input[type="email"], input[type="password"] {
+  background-color: #1a1a1a;
+  border: 1px solid #333;
+  color: #fff;
+  padding: 10px 12px;
+  border-radius: 8px;
+  width: 240px;
+  margin: 8px;
+  font-size: 15px;
+}
+
+button {
+  cursor: pointer;
+  margin: 8px;
+  border: none;
+}
+
+.auth-buttons button {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin: 10px;
+}
+
 
 
 
