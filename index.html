@@ -23,7 +23,11 @@
   <button onclick="loginHandler()">Log In</button>
   <button onclick="signupHandler()">Sign Up</button>
   <button onclick="logoutHandler()">Log Out</button>
-    <button onclick="googleLogin()" class="google-btn">Continue with Google</button>
+    <button onclick="googleLogin()" class="google-btn">
+  <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" style="width:20px; margin-right: 8px;" />
+  Continue with Google
+</button>
+
 
   <p id="auth-status"></p>
 </div>
@@ -165,11 +169,12 @@
 <section class="section" id="auth-section">
   <h2>Unlock Full Access</h2>
   <form id="signup-form">
-    <input type="email" id="email" placeholder="Enter your email to subscribe" required />
+    <input type="email" id="email-subscribe" placeholder="Enter your email to subscribe" required />
     <button type="submit">Subscribe via Stripe</button>
   </form>
   <div id="signup-status"></div>
 </section>
+
 
 <!-- Footer -->
 <footer>
@@ -253,6 +258,32 @@
     }
   };
 </script>
+
+<script>
+  function loginHandler() {
+    const email = document.getElementById("email").value;
+    const password = document.getElementById("password").value;
+    login(email, password);
+  }
+
+  function signupHandler() {
+    const email = document.getElementById("email").value;
+    const password = document.getElementById("password").value;
+    signup(email, password);
+  }
+
+  function logoutHandler() {
+    logout();
+  }
+
+  // Optional: Automatically check trial on load
+  document.addEventListener("DOMContentLoaded", () => {
+    if (typeof checkTrial === "function") {
+      checkTrial();
+    }
+  });
+</script>
+
 
 <!-- ✅ Your main site logic AFTER all auth -->
 <script src="script.js" defer></script>
