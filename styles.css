@@ -3120,6 +3120,21 @@ footer {
   background: #ff1e1e;
 }
 
+.google-btn {
+  background: #fff;
+  color: #000;
+  border: 1px solid #ccc;
+  padding: 10px 20px;
+  font-weight: bold;
+  margin-top: 10px;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.google-btn:hover {
+  background: #f2f2f2;
+}
+
 
 
 
