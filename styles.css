@@ -3135,6 +3135,46 @@ footer {
   background: #f2f2f2;
 }
 
+/* Aura Glow Base */
+.glow {
+  position: relative;
+  z-index: 1;
+  overflow: hidden;
+  background: #111;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px;
+  padding: 14px 22px;
+  color: white;
+  font-weight: 600;
+  transition: 0.3s ease;
+  backdrop-filter: blur(12px);
+}
+
+.glow::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, #00fffc, #004dff, #a200ff, #ff008c);
+  background-size: 400% 400%;
+  animation: glowPulse 8s ease infinite;
+  z-index: -1;
+  filter: blur(40px);
+  opacity: 0.25;
+}
+
+@keyframes glowPulse {
+  0%, 100% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+  50% {
+    transform: translate(10%, 10%) rotate(180deg);
+  }
+}
+
+
 
 
 
