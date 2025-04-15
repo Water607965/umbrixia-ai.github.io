@@ -71,3 +71,37 @@ signupForm.addEventListener("submit", async (e) => {
         status.innerText = "Subscription failed. Please try again.";
     }
 });
+
+function loginHandler() {
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
+  login(email, password)
+    .then((userCredential) => {
+      document.getElementById("auth-status").innerText = `✅ Logged in as ${userCredential.user.email}`;
+    })
+    .catch((error) => {
+      document.getElementById("auth-status").innerText = `❌ Login error: ${error.message}`;
+    });
+}
+
+function signupHandler() {
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
+  signup(email, password)
+    .then((userCredential) => {
+      document.getElementById("auth-status").innerText = `✅ Signed up as ${userCredential.user.email}`;
+    })
+    .catch((error) => {
+      document.getElementById("auth-status").innerText = `❌ Signup error: ${error.message}`;
+    });
+}
+
+function logoutHandler() {
+  logout()
+    .then(() => {
+      document.getElementById("auth-status").innerText = `🚪 Logged out.`;
+    })
+    .catch((error) => {
+      document.getElementById("auth-status").innerText = `❌ Logout error: ${error.message}`;
+    });
+}
