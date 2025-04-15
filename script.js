@@ -1,3 +1,6 @@
+if (typeof checkTrial === "function") {
+  checkTrial();
+}
 
 
 
