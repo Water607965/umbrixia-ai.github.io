@@ -223,6 +223,25 @@
   };
 </script>
 
+  <script>
+  function loginHandler() {
+    const email = document.getElementById("email").value;
+    const password = document.getElementById("password").value;
+    login(email, password);
+  }
+
+  function signupHandler() {
+    const email = document.getElementById("email").value;
+    const password = document.getElementById("password").value;
+    signup(email, password);
+  }
+
+  function logoutHandler() {
+    logout();
+  }
+</script>
+
+
 <!-- Your main site logic -->
 <script src="script.js"></script>
 
