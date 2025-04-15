@@ -165,16 +165,11 @@
   <p>&copy; 2025 Umbrixia.ai • Built for Students. Powered by OpenAI.</p>
 </footer>
 
-<!-- Scripts -->
-<!-- Already in your index.html: KEEP THIS -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/auth0-spa-js/1.28.0/auth0-spa-js.production.js" onload="loadAuth()"></script>
-<script>
-  function loadAuth() {
-    const script = document.createElement("script");
-    script.src = "auth.js";
-    document.body.appendChild(script);
-  }
-</script>
+<!-- Add in <head> or before </body> -->
+<script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-auth-compat.js"></script>
+<script src="auth.js" defer></script>
+
 
 <script src="script.js"></script>
 
