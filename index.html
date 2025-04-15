@@ -236,7 +236,39 @@
         alert("❌ Google login failed: " + error.message);
       });
   };
+
+  function checkTrial() {
+  const trialStart = parseInt(localStorage.getItem("trialStart") || "0");
+  const sevenDays = 7 * 24 * 60 * 60 * 1000;
+
+  if (!trialStart) {
+    document.getElementById("signup-status").innerText = "No trial found. Please sign up or log in.";
+    return;
+  }
+
+  const now = Date.now();
+  if (now - trialStart < sevenDays) {
+    document.getElementById("signup-status").innerText = "🎉 You're in a 7-day free trial!";
+  } else {
+    document.getElementById("signup-status").innerHTML = `
+      ⛔ Your free trial expired.<br><button onclick="window.location='#auth-section'">Subscribe Now</button>
+    `;
+  }
+}
+
+  auth.onAuthStateChanged(user => {
+  if (user) {
+    checkTrial();
+    document.getElementById("login-area").innerHTML = `
+      <p>👋 Welcome, ${user.displayName || user.email}</p>
+      <button onclick="logout()">Log Out</button>
+    `;
+  }
+});
+
 </script>
+
+  
 
 <!-- Your main site logic -->
 <script src="script.js"></script>
