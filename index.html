@@ -13,7 +13,10 @@
 </head>
 <body>
 
-  
+  <div id="login-area" style="text-align:center; padding: 20px;">
+  <button id="login-btn" disabled>Loading...</button>
+</div>
+
 
 
 <!-- Navbar -->
@@ -165,7 +168,6 @@
 <!-- Scripts -->
 <!-- Already in your index.html: KEEP THIS -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/auth0-spa-js/1.28.0/auth0-spa-js.production.js" onload="loadAuth()"></script>
-
 <script>
   function loadAuth() {
     const script = document.createElement("script");
@@ -173,6 +175,7 @@
     document.body.appendChild(script);
   }
 </script>
+
 <script src="script.js"></script>
 
 </body>
