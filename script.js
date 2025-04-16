@@ -253,4 +253,128 @@ document.addEventListener("keydown", e => {
   }
 });
 
+// 🌟 Dashboard Reveal Animation
+function revealDashboard() {
+  const dash = document.querySelector(".dashboard");
+  if (!dash) return;
+  dash.classList.add("revealed");
+  dash.style.opacity = 0;
+  let opacity = 0;
+  const interval = setInterval(() => {
+    opacity += 0.02;
+    dash.style.opacity = opacity;
+    if (opacity >= 1) clearInterval(interval);
+  }, 10);
+}
+
+// 🧪 Subscription Plan Reminder if trial is ending
+function displayTrialCountdown() {
+  const trialStart = parseInt(localStorage.getItem("trialStart"), 10);
+  const now = Date.now();
+  const diff = 7 * 24 * 60 * 60 * 1000 - (now - trialStart);
+  const daysLeft = Math.ceil(diff / (1000 * 60 * 60 * 24));
+  const warn = document.createElement("div");
+
+  if (diff < 0) return;
+
+  warn.className = "trial-countdown glow-card";
+  warn.innerHTML = `<p>🕒 You have <strong>${daysLeft} day(s)</strong> left in your trial. 
+    <a href="#auth-section" style="color:#ff4d4d;">Subscribe now</a> to keep access!</p>`;
+  document.body.insertBefore(warn, document.body.firstChild);
+}
+
+// 📌 Sticky Navbar Shadow on Scroll
+const navbar = document.querySelector(".navbar");
+if (navbar) {
+  window.addEventListener("scroll", () => {
+    if (window.scrollY > 10) {
+      navbar.classList.add("scrolled");
+    } else {
+      navbar.classList.remove("scrolled");
+    }
+  });
+}
+
+// 🪄 Add Hint Hover Effects on Buttons
+document.querySelectorAll("button, .cta-btn").forEach(btn => {
+  btn.addEventListener("mouseenter", () => {
+    btn.style.transform = "scale(1.03)";
+    btn.style.boxShadow = "0 0 20px rgba(255,0,60,0.5)";
+  });
+  btn.addEventListener("mouseleave", () => {
+    btn.style.transform = "scale(1)";
+    btn.style.boxShadow = "none";
+  });
+});
+
+// 🎨 Color Cycle on CTA Buttons (Apple-style)
+function animateCTAColorShift() {
+  const ctas = document.querySelectorAll(".cta-btn");
+  const colors = ["#ff4d4d", "#ff6b81", "#e74c3c", "#ff3e55"];
+  let i = 0;
+  setInterval(() => {
+    ctas.forEach(btn => {
+      btn.style.backgroundColor = colors[i];
+    });
+    i = (i + 1) % colors.length;
+  }, 1500);
+}
+animateCTAColorShift();
+
+// ✍️ Delayed Paragraph Reveal for Each Section
+document.querySelectorAll("section").forEach(section => {
+  const text = section.querySelector("p");
+  if (text) {
+    text.style.opacity = 0;
+    setTimeout(() => {
+      text.style.transition = "opacity 1s ease-in";
+      text.style.opacity = 1;
+    }, 1000 + Math.random() * 2000);
+  }
+});
+
+// 📖 Random Welcome Tips (AI Tutoring Helper)
+const welcomeTips = [
+  "👋 Tip: Start with a 3-question quiz to get personalized results.",
+  "🧠 Tip: Ask me any SHSAT, ISEE, or SAT question.",
+  "📈 Tip: Track your accuracy on your dashboard after 3 attempts.",
+  "🔥 Tip: Enable Focus Mode with 'F' for a distraction-free experience.",
+];
+function showRandomWelcomeTip() {
+  const el = document.createElement("div");
+  el.className = "welcome-tip glow-card";
+  el.textContent = welcomeTips[Math.floor(Math.random() * welcomeTips.length)];
+  document.body.appendChild(el);
+  setTimeout(() => el.remove(), 10000);
+}
+window.addEventListener("load", () => setTimeout(showRandomWelcomeTip, 2500));
+
+// 💡 Auto-focus input on login form when clicked
+const emailInput = document.getElementById("email");
+if (emailInput) {
+  emailInput.addEventListener("focus", () => {
+    emailInput.style.outline = "2px solid #ff4d4d";
+    emailInput.style.boxShadow = "0 0 15px rgba(255, 77, 77, 0.5)";
+  });
+  emailInput.addEventListener("blur", () => {
+    emailInput.style.outline = "none";
+    emailInput.style.boxShadow = "none";
+  });
+}
+
+// ⏳ Save Scroll Position (like Notion)
+window.addEventListener("beforeunload", () => {
+  localStorage.setItem("scrollPos", window.scrollY);
+});
+window.addEventListener("DOMContentLoaded", () => {
+  const pos = localStorage.getItem("scrollPos");
+  if (pos) window.scrollTo(0, parseInt(pos));
+});
+
+// ✅ Activate enhancements on load
+document.addEventListener("DOMContentLoaded", () => {
+  displayTrialCountdown();
+  revealDashboard();
+});
+
 
