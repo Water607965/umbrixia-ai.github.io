@@ -15,25 +15,34 @@
  </head>
  <body>
  
-   <div class="glow-card auth-form">
+<div class="glow-card auth-form">
+  <h3 style="text-align:center; color:#ff4d4d; margin-bottom: 20px;">
+    Sign up or log in using one of the methods below
+  </h3>
+
   <input type="email" id="email" class="auth-input" placeholder="Email" />
   <input type="password" id="password" class="auth-input" placeholder="Password" />
-    <input type="text" id="name" class="auth-input" placeholder="Full Name" required />
-  <button onclick="loginHandler()" class="glow">Log In</button>
-  <button onclick="signupHandler()" class="glow">Sign Up</button>
-  <button onclick="logoutHandler()" class="glow">Log Out</button>
+  <input type="text" id="name" class="auth-input" placeholder="Full Name" required />
+
+  <!-- Unified action: will choose between signup or login in JS -->
+  <button onclick="unifiedAuthHandler()" class="glow">Continue with Email</button>
+
   <button onclick="googleLogin()" class="google-btn glow">
     <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" class="google-icon" />
     Continue with Google
   </button>
+
+  <button onclick="logoutHandler()" class="glow">Log Out</button>
+
   <p id="auth-status" class="auth-status"></p>
-    <!-- 🔓 This is shown ONLY if trial is active -->
-<div id="dashboard-prompt" style="display:none; text-align:center; margin-top:20px;">
-  <p class="trial-msg">You're currently in your free trial. Ready to dive in?</p>
-  <a href="dashboard.html" class="cta-btn glow">Go to Your Dashboard</a>
+
+  <!-- 🔓 This is shown ONLY if trial is active -->
+  <div id="dashboard-prompt" style="display:none; text-align:center; margin-top:20px;">
+    <p class="trial-msg">You're currently in your free trial. Ready to dive in?</p>
+    <a href="dashboard.html" class="cta-btn glow">Go to Your Dashboard</a>
+  </div>
 </div>
 
-</div>
 
  
  
