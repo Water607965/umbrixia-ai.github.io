@@ -13,23 +13,20 @@
  </head>
  <body>
  
-   <div class="auth-form centered-section">
-    <input type="email" id="email" class="auth-input" placeholder="Email" />
-    <input type="password" id="password" class="auth-input" placeholder="Password" />
+   <div class="glow-card auth-form">
+  <input type="email" id="email" class="auth-input" placeholder="Email" />
+  <input type="password" id="password" class="auth-input" placeholder="Password" />
+  <button onclick="loginHandler()" class="glow">Log In</button>
+  <button onclick="signupHandler()" class="glow">Sign Up</button>
+  <button onclick="logoutHandler()" class="glow">Log Out</button>
+  <button onclick="googleLogin()" class="google-btn glow">Continue with Google</button>
+  <button onclick="googleLogin()" class="google-btn glow">
+    <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" class="google-icon" />
+    Continue with Google
+  </button>
+  <p id="auth-status" class="auth-status"></p>
+</div>
 
-    <button onclick="loginHandler()" class="glow">Log In</button>
-    <button onclick="signupHandler()" class="glow">Sign Up</button>
-    <button onclick="logoutHandler()" class="glow">Log Out</button>
-
-    <button onclick="googleLogin()" class="google-btn glow">Continue with Google</button>
-
-    <button onclick="googleLogin()" class="google-btn glow">
-      <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" class="google-icon" />
-      Continue with Google
-    </button>
-
-    <p id="auth-status" class="auth-status"></p>
-  </div>
  
  
  
