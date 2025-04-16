@@ -959,3 +959,77 @@ function unifiedAuthHandler() {
     });
 }
 
+async function unifiedAuthHandler() {
+  const email = document.getElementById("email").value.trim();
+  const password = document.getElementById("password").value.trim();
+  const name = document.getElementById("name").value.trim();
+
+  if (!email || !password || !name) {
+    alert("Please enter your full name, email, and password.");
+    return;
+  }
+
+  try {
+    // 1️⃣ Try to sign in (existing user)
+    const loginResult = await auth.signInWithEmailAndPassword(email, password);
+    const user = loginResult.user;
+
+    if (!user.emailVerified) {
+      await user.sendEmailVerification();
+      alert("📩 We've sent you a verification link. Please check your inbox.");
+    }
+
+    showWelcome(user);
+    document.getElementById("auth-status").innerText = `✅ Logged in as ${user.email}`;
+    localStorage.setItem("trialStart", Date.now());
+    localStorage.setItem("displayName", user.displayName || name);
+    localStorage.setItem("userEmail", user.email);
+
+  } catch (loginError) {
+    if (loginError.code === "auth/user-not-found") {
+      try {
+        // 2️⃣ Create account if not found
+        const signupResult = await auth.createUserWithEmailAndPassword(email, password);
+        const newUser = signupResult.user;
+
+        await newUser.updateProfile({ displayName: name });
+        await newUser.sendEmailVerification();
+
+        showWelcome(newUser);
+        document.getElementById("auth-status").innerText = `✅ Signed up as ${name}. Verification link sent.`;
+
+        localStorage.setItem("trialStart", Date.now());
+        localStorage.setItem("displayName", name);
+        localStorage.setItem("userEmail", newUser.email);
+
+        // Trigger native browser password save
+        setTimeout(() => {
+          const fakeForm = document.createElement("form");
+          fakeForm.method = "post";
+          fakeForm.style.display = "none";
+
+          const emailInput = document.createElement("input");
+          emailInput.name = "email";
+          emailInput.value = email;
+
+          const passInput = document.createElement("input");
+          passInput.name = "password";
+          passInput.value = password;
+          passInput.type = "password";
+
+          fakeForm.appendChild(emailInput);
+          fakeForm.appendChild(passInput);
+          document.body.appendChild(fakeForm);
+          fakeForm.submit(); // triggers browser password manager
+
+        }, 500);
+
+      } catch (signupError) {
+        alert(`❌ Signup error: ${signupError.message}`);
+      }
+    } else {
+      alert(`❌ Login error: ${loginError.message}`);
+    }
+  }
+}
+
