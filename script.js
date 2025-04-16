@@ -109,11 +109,4 @@ function logoutHandler() {
     });
 }
 
-function redirectToDashboardIfTrialActive() {
-  const start = parseInt(localStorage.getItem("trialStart"), 10);
-  const now = Date.now();
-  const trialActive = start && now - start <= 7 * 24 * 60 * 60 * 1000;
-  if (trialActive) {
-    window.location.href = "dashboard.html";
-  }
-}
+
