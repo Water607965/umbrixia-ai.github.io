@@ -18,6 +18,7 @@
    <div class="glow-card auth-form">
   <input type="email" id="email" class="auth-input" placeholder="Email" />
   <input type="password" id="password" class="auth-input" placeholder="Password" />
+    <input type="text" id="name" class="auth-input" placeholder="Full Name" required />
   <button onclick="loginHandler()" class="glow">Log In</button>
   <button onclick="signupHandler()" class="glow">Sign Up</button>
   <button onclick="logoutHandler()" class="glow">Log Out</button>
@@ -173,6 +174,7 @@
  <section class="section" id="auth-section">
    <h2>Unlock Full Access</h2>
    <form id="signup-form">
+    <input type="text" id="name" placeholder="Full Name" required />
      <input type="email" id="email" placeholder="Enter your email to subscribe" required />
      <input type="email" id="email-subscribe" placeholder="Enter your email to subscribe" required />
      <button type="submit">Subscribe via Stripe</button>
