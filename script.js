@@ -154,4 +154,103 @@ function signupHandler() {
   });
 }
 
+// 🌙 Toggle Dark/Light Theme (Press T)
+let isDark = true;
+function toggleTheme() {
+  document.body.classList.toggle("dark-mode");
+  isDark = !isDark;
+  localStorage.setItem("theme", isDark ? "dark" : "light");
+}
+document.addEventListener("keydown", e => {
+  if (e.key.toLowerCase() === "t") toggleTheme();
+});
+window.addEventListener("DOMContentLoaded", () => {
+  if (localStorage.getItem("theme") === "light") toggleTheme();
+});
+
+// 🧠 Rotating Quotes in Header
+const rotatingText = document.getElementById("rotating-text");
+const quotes = [
+  "Learning made intelligent.",
+  "Build momentum, not just answers.",
+  "Where AI meets clarity.",
+  "You grow. We adapt.",
+  "Daily habits. Lifelong success.",
+  "Confidence through mastery.",
+];
+if (rotatingText) {
+  let i = 0;
+  setInterval(() => {
+    rotatingText.textContent = quotes[i];
+    i = (i + 1) % quotes.length;
+  }, 3500);
+}
+
+// ✨ Fade-in on Scroll
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) entry.target.classList.add("visible");
+  });
+});
+document.querySelectorAll(".fade-in, .feature-card, .stat-box").forEach(el => observer.observe(el));
+
+// ⬆️ Scroll To Top Button
+const topBtn = document.createElement("button");
+topBtn.textContent = "⬆️ Top";
+topBtn.className = "scroll-top glow";
+topBtn.style.position = "fixed";
+topBtn.style.bottom = "20px";
+topBtn.style.right = "20px";
+topBtn.style.display = "none";
+topBtn.style.zIndex = "9999";
+topBtn.onclick = () => window.scrollTo({ top: 0, behavior: "smooth" });
+document.body.appendChild(topBtn);
+window.addEventListener("scroll", () => {
+  topBtn.style.display = window.scrollY > 300 ? "block" : "none";
+});
+
+// 📅 Real-Time Clock in Footer
+const footer = document.querySelector("footer");
+if (footer) {
+  const clock = document.createElement("div");
+  clock.id = "footer-clock";
+  clock.style.textAlign = "center";
+  clock.style.marginTop = "10px";
+  clock.style.fontSize = "14px";
+  clock.style.color = "#888";
+  footer.appendChild(clock);
+  setInterval(() => {
+    clock.textContent = new Date().toLocaleString();
+  }, 1000);
+}
+
+// 💬 Typing Animation for Bot Responses
+function typeBotMessage(element, message, speed = 30) {
+  element.innerHTML = "";
+  let i = 0;
+  function type() {
+    if (i < message.length) {
+      element.innerHTML += message.charAt(i);
+      i++;
+      setTimeout(type, speed);
+    }
+  }
+  type();
+}
+
+// 🪄 Auto-fill from Local Storage
+["email", "name", "password"].forEach(id => {
+  const el = document.getElementById(id);
+  if (el && localStorage.getItem(id)) el.value = localStorage.getItem(id);
+  if (el) el.addEventListener("input", () => localStorage.setItem(id, el.value));
+});
+
+// 🎯 Focus Mode (Press F)
+document.addEventListener("keydown", e => {
+  if (e.key.toLowerCase() === "f") {
+    document.body.classList.toggle("focus-mode");
+    alert("🎯 Focus Mode " + (document.body.classList.contains("focus-mode") ? "enabled" : "disabled"));
+  }
+});
+
 
