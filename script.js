@@ -103,24 +103,17 @@ function signupHandler() {
 function logoutHandler() {
   logout()
     .then(() => {
-      localStorage.removeItem("displayName");
-      localStorage.removeItem("userEmail");
-      document.getElementById("auth-status").innerText = `🚪 You are logged out.`;
-      const dashboardPrompt = document.getElementById("dashboard-prompt");
-      if (dashboardPrompt) dashboardPrompt.style.display = "none";
-
-      // Optional: also hide dropdown if open
-      const dropdown = document.getElementById("userDropdown");
-      if (dropdown) dropdown.style.display = "none";
-
-      // Optional: reset dropdown name to "User"
-      const dropdownName = document.getElementById("dropdownName");
-      if (dropdownName) dropdownName.innerText = "User";
+      document.getElementById("auth-status").innerText = ""; // ✅ Clear the welcome text
+      localStorage.removeItem("displayName"); // ✅ Clear saved name
+      localStorage.removeItem("userEmail");   // Optional: clear userEmail too
+      alert("🚪 Logged out.");
+      document.getElementById("dashboard-prompt").style.display = "none";
     })
     .catch((error) => {
       document.getElementById("auth-status").innerText = `❌ Logout error: ${error.message}`;
     });
 }
+
 
 
 function submitAnswers() {
