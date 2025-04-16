@@ -80,6 +80,7 @@ function loginHandler() {
   const password = document.getElementById("password").value;
   login(email, password)
     .then((userCredential) => {
+      showWelcome(userCredential.user);
       document.getElementById("auth-status").innerText = `✅ Logged in as ${userCredential.user.email}`;
     })
     .catch((error) => {
