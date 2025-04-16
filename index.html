@@ -298,7 +298,7 @@
 <!-- 🔽 Insert block RIGHT BELOW -->
 <script>
   function showWelcome(user) {
-    const name = user.email || "user";
+    const name = user.displayName || user.email || "user";
     document.getElementById("auth-status").innerText = `👋 Welcome, ${name}`;
   }
 
@@ -336,6 +336,7 @@ function checkAndRedirectToDashboard() {
 
     // Save user email
     localStorage.setItem("userEmail", user.email);
+localStorage.setItem("displayName", user.displayName || user.email);
 
     // Show welcome message
     showWelcome(user);
