@@ -103,12 +103,25 @@ function signupHandler() {
 function logoutHandler() {
   logout()
     .then(() => {
-      document.getElementById("auth-status").innerText = `🚪 Logged out.`;
+      localStorage.removeItem("displayName");
+      localStorage.removeItem("userEmail");
+      document.getElementById("auth-status").innerText = `🚪 You are logged out.`;
+      const dashboardPrompt = document.getElementById("dashboard-prompt");
+      if (dashboardPrompt) dashboardPrompt.style.display = "none";
+
+      // Optional: also hide dropdown if open
+      const dropdown = document.getElementById("userDropdown");
+      if (dropdown) dropdown.style.display = "none";
+
+      // Optional: reset dropdown name to "User"
+      const dropdownName = document.getElementById("dropdownName");
+      if (dropdownName) dropdownName.innerText = "User";
     })
     .catch((error) => {
       document.getElementById("auth-status").innerText = `❌ Logout error: ${error.message}`;
     });
 }
+
 
 function submitAnswers() {
   const q1 = document.getElementById('q1').value.toLowerCase();
