@@ -377,4 +377,148 @@ document.addEventListener("DOMContentLoaded", () => {
   revealDashboard();
 });
 
+// 🧭 Smart Section Navigation Memory
+const sectionIDs = Array.from(document.querySelectorAll("section")).map(s => s.id);
+let lastSection = "";
+
+function highlightActiveSection() {
+  let current = "";
+  sectionIDs.forEach(id => {
+    const section = document.getElementById(id);
+    if (section && window.scrollY >= section.offsetTop - 100) {
+      current = id;
+    }
+  });
+
+  if (current !== lastSection) {
+    document.querySelectorAll(".navbar-menu li a").forEach(link => {
+      link.classList.remove("active");
+      if (link.getAttribute("href") === `#${current}`) {
+        link.classList.add("active");
+      }
+    });
+    lastSection = current;
+  }
+}
+window.addEventListener("scroll", highlightActiveSection);
+
+// 🎯 Click Ripple Animation
+document.querySelectorAll("button, .cta-btn").forEach(el => {
+  el.addEventListener("click", function (e) {
+    const ripple = document.createElement("span");
+    ripple.classList.add("ripple");
+    this.appendChild(ripple);
+
+    const maxDim = Math.max(this.clientWidth, this.clientHeight);
+    ripple.style.width = ripple.style.height = maxDim + "px";
+    ripple.style.left = e.offsetX - maxDim / 2 + "px";
+    ripple.style.top = e.offsetY - maxDim / 2 + "px";
+
+    ripple.addEventListener("animationend", () => ripple.remove());
+  });
+});
+
+// 💬 Bot Typing Simulation
+async function simulateTyping(message, containerId = "chat") {
+  const container = document.getElementById(containerId);
+  if (!container) return;
+
+  const msg = document.createElement("p");
+  msg.className = "message bot typing";
+  msg.innerHTML = "<strong>Bot:</strong> ";
+  container.appendChild(msg);
+
+  for (let i = 0; i < message.length; i++) {
+    msg.innerHTML += message.charAt(i);
+    await new Promise(r => setTimeout(r, 15 + Math.random() * 25));
+  }
+
+  msg.classList.remove("typing");
+}
+
+// 🧠 AI Hint Injector (based on input)
+const hints = {
+  "theme": "Think about what the author is trying to communicate.",
+  "inference": "Use context clues from the surrounding sentences.",
+  "vocabulary": "Try replacing the word with similar ones.",
+  "author": "Why did the author include this detail?",
+  "tone": "What's the speaker's attitude?"
+};
+
+document.getElementById("userInput")?.addEventListener("input", e => {
+  const val = e.target.value.toLowerCase();
+  const match = Object.keys(hints).find(k => val.includes(k));
+  const hintBox = document.querySelector(".input-hint");
+
+  if (match && hintBox) {
+    hintBox.textContent = `🧠 Hint: ${hints[match]}`;
+    hintBox.style.opacity = 1;
+  } else if (hintBox) {
+    hintBox.style.opacity = 0;
+  }
+});
+
+// 🎬 Smooth Page Transitions (Apple-style)
+document.querySelectorAll("a[href^='#']").forEach(anchor => {
+  anchor.addEventListener("click", function (e) {
+    e.preventDefault();
+    const target = document.querySelector(this.getAttribute("href"));
+    if (target) {
+      window.scrollTo({
+        top: target.offsetTop - 50,
+        behavior: 'smooth'
+      });
+    }
+  });
+});
+
+// 💾 Persistent Name Memory Across Sessions
+window.addEventListener("DOMContentLoaded", () => {
+  const savedName = localStorage.getItem("displayName");
+  if (savedName) {
+    document.getElementById("auth-status").innerText = `👋 Welcome, ${savedName}`;
+  }
+});
+
+function showWelcome(user) {
+  const name = user.displayName || user.email || "user";
+  document.getElementById("auth-status").innerText = `👋 Welcome, ${name}`;
+  localStorage.setItem("displayName", name);
+}
+
+// 🔍 Search Filter Demo for Future Questions
+function filterQuestions(keyword) {
+  const examples = document.getElementById("example-buttons");
+  if (!examples) return;
+
+  Array.from(examples.children).forEach(btn => {
+    if (!btn.textContent.toLowerCase().includes(keyword.toLowerCase())) {
+      btn.style.display = "none";
+    } else {
+      btn.style.display = "inline-block";
+    }
+  });
+}
+
+// 🧪 Easter Egg AI Command
+const secretCodes = {
+  "notion": "You discovered Notion Mode!",
+  "apple": "🍎 Apple polish enabled.",
+  "ai": "🤖 You summoned Umbrixia's inner genius."
+};
+document.getElementById("userInput")?.addEventListener("keydown", e => {
+  if (e.key === "Enter") {
+    const val = e.target.value.trim().toLowerCase();
+    if (secretCodes[val]) {
+      simulateTyping(secretCodes[val]);
+    }
+  }
+});
+
+// 📱 Mobile UX Fix: Auto-scroll input into view on focus
+document.querySelectorAll("input").forEach(input => {
+  input.addEventListener("focus", () => {
+    setTimeout(() => input.scrollIntoView({ behavior: "smooth", block: "center" }), 300);
+  });
+});
 
