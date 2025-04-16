@@ -328,6 +328,65 @@
   });
 </script>
 
+  <div style="text-align:center; padding: 20px;">
+  <input type="text" id="phoneNumber" placeholder="+1234567890" />
+  <div id="recaptcha-container"></div>
+  <button onclick="sendVerificationCode()" class="glow">Send Code</button>
+  <br><br>
+  <input type="text" id="verificationCode" placeholder="Enter the code" />
+  <button onclick="verifyCode()" class="glow">Verify & Log In</button>
+</div>
+
+  <script>
+  let confirmationResult = null;
+
+  // Initialize reCAPTCHA
+  window.recaptchaVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {
+    size: 'normal',
+    callback: (response) => {
+      console.log("reCAPTCHA verified ✅");
+    },
+    'expired-callback': () => {
+      alert("reCAPTCHA expired. Please refresh and try again.");
+    }
+  });
+
+  // Send SMS Code
+  function sendVerificationCode() {
+    const phoneNumber = document.getElementById('phoneNumber').value;
+    const appVerifier = window.recaptchaVerifier;
+
+    firebase.auth().signInWithPhoneNumber(phoneNumber, appVerifier)
+      .then((result) => {
+        confirmationResult = result;
+        alert("✅ Code sent! Check your phone.");
+      })
+      .catch((error) => {
+        alert("❌ Failed to send code: " + error.message);
+        window.recaptchaVerifier.render().then(widgetId => {
+          grecaptcha.reset(widgetId); // Reset on error
+        });
+      });
+  }
+
+  // Verify Code
+  function verifyCode() {
+    const code = document.getElementById('verificationCode').value;
+    if (!confirmationResult) return alert("Send the code first!");
+
+    confirmationResult.confirm(code)
+      .then((result) => {
+        const user = result.user;
+        localStorage.setItem("trialStart", Date.now());
+        alert("✅ Phone login successful!");
+      })
+      .catch((error) => {
+        alert("❌ Invalid code: " + error.message);
+      });
+  }
+</script>
+
+
 
 <!-- ✅ Your main site logic AFTER all auth -->
 <script src="script.js" defer></script>
