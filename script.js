@@ -907,5 +907,24 @@ function shineButtons() {
   });
 }
 
+function shineButtons() {
+  const buttonsToShine = [
+    document.querySelector('button.glow:nth-of-type(1)'), // Log In
+    document.querySelector('button.glow:nth-of-type(2)'), // Sign Up
+    document.querySelector('.google-btn')                 // Google
+  ];
+
+  buttonsToShine.forEach(btn => {
+    if (!btn) return;
+    btn.classList.remove('shine-on-click');
+    void btn.offsetWidth; // Force reflow to retrigger animation
+    btn.classList.add('shine-on-click');
+
+    setTimeout(() => {
+      btn.classList.remove('shine-on-click');
+    }, 800); // clean up class after animation
+  });
+}
+
 
 
