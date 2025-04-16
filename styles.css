@@ -3445,3 +3445,46 @@ input:focus {
   font-weight: 600;
 }
 
+/* Glow Pulse for Buttons */
+.glow {
+  color: white;
+  background: linear-gradient(90deg, #ff1b6b, #45caff);
+  border: none;
+  border-radius: 8px;
+  padding: 10px 20px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 0 12px rgba(255, 75, 165, 0.6), 0 0 30px rgba(69, 202, 255, 0.3);
+  transition: all 0.3s ease;
+  animation: glowPulse 2.5s infinite alternate;
+}
+
+@keyframes glowPulse {
+  0% {
+    box-shadow: 0 0 12px rgba(255, 75, 165, 0.6), 0 0 30px rgba(69, 202, 255, 0.3);
+  }
+  100% {
+    box-shadow: 0 0 24px rgba(255, 75, 165, 1), 0 0 50px rgba(69, 202, 255, 0.5);
+  }
+}
+
+/* Card Glow for Sections */
+.glow-card {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  box-shadow: 0 0 40px rgba(255, 255, 255, 0.05);
+  padding: 40px;
+  backdrop-filter: blur(20px);
+  animation: subtlePulse 4s ease-in-out infinite alternate;
+}
+
+@keyframes subtlePulse {
+  0% {
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.05);
+  }
+  100% {
+    box-shadow: 0 0 40px rgba(255, 255, 255, 0.12);
+  }
+}
+
