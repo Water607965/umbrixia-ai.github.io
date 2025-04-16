@@ -933,4 +933,29 @@ function toggleUserMenu() {
   menu.classList.toggle("hidden");
 }
 
+function unifiedAuthHandler() {
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
+  const name = document.getElementById("name").value;
+
+  // Try login first, if fails, try signup
+  login(email, password)
+    .then(userCredential => {
+      showWelcome(userCredential.user);
+      document.getElementById("auth-status").innerText = `✅ Logged in as ${userCredential.user.email}`;
+    })
+    .catch(() => {
+      signup(email, password)
+        .then(userCredential => {
+          const user = userCredential.user;
+          return user.updateProfile({ displayName: name }).then(() => {
+            showWelcome(user);
+            document.getElementById("auth-status").innerText = `✅ Signed up as ${name}`;
+          });
+        })
+        .catch(err => {
+          document.getElementById("auth-status").innerText = `❌ Auth error: ${err.message}`;
+        });
+    });
+}
 
