@@ -4007,4 +4007,157 @@ input[type="text"] {
   display: none;
 }
 
+/* 🌟 DASHBOARD MAIN CONTAINER */
+.dashboard-container {
+  padding: 40px;
+  max-width: 1200px;
+  margin: 0 auto;
+  font-family: 'Inter', sans-serif;
+  color: #f9f9f9;
+}
+
+/* 🧠 DASHBOARD HEADER */
+.dashboard-header {
+  text-align: center;
+  font-size: 2.6rem;
+  font-weight: 800;
+  margin-bottom: 40px;
+  background: linear-gradient(90deg, #ff4d4d, #ff0000, #ff4d4d);
+  background-size: 200% auto;
+  color: white;
+  text-shadow: 0 0 10px rgba(255, 60, 60, 0.4);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: pulseHeader 6s infinite linear;
+}
+
+/* 🧮 STATS CARDS */
+.stat-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 30px;
+  margin-bottom: 50px;
+}
+
+.stat-card {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 0 12px rgba(255, 50, 50, 0.2);
+  transition: transform 0.4s ease, box-shadow 0.4s ease;
+  text-align: center;
+}
+
+.stat-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 0 20px rgba(255, 50, 50, 0.35);
+}
+
+.stat-card h3 {
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+}
+
+.stat-card p {
+  font-size: 1rem;
+  opacity: 0.85;
+}
+
+/* 🔘 CTA BUTTONS */
+.btn, .cta-btn {
+  background: linear-gradient(90deg, #ff4d4d, #cc0000);
+  color: white;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 40px;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  box-shadow: 0 0 10px rgba(255, 0, 0, 0.5);
+  transition: all 0.3s ease;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.btn:hover, .cta-btn:hover {
+  background: #ff1a1a;
+  box-shadow: 0 0 20px rgba(255, 0, 0, 0.6);
+  transform: translateY(-2px);
+}
+
+/* ✍️ QUESTION BOX */
+.question-box {
+  background: #1a1a1a;
+  padding: 20px;
+  border-radius: 16px;
+  border: 1px solid #ff3333;
+  box-shadow: 0 0 12px rgba(255, 0, 0, 0.2);
+  margin-bottom: 20px;
+}
+
+.question-box h4 {
+  font-size: 1.2rem;
+  margin-bottom: 10px;
+}
+
+.question-box input[type="text"],
+.question-box textarea {
+  width: 100%;
+  padding: 10px;
+  border-radius: 8px;
+  background: #262626;
+  color: white;
+  border: 1px solid #444;
+  margin-top: 10px;
+  font-family: inherit;
+}
+
+/* 🤖 AI HELP BOX */
+.ai-help-box {
+  background: rgba(255, 255, 255, 0.03);
+  border-left: 5px solid #ff1a1a;
+  padding: 16px 24px;
+  border-radius: 8px;
+  margin-top: 20px;
+  font-style: italic;
+  animation: pulseAI 4s infinite ease-in-out;
+}
+
+/* 🔄 SUBTLE GLOWING ANIMATIONS */
+@keyframes pulseHeader {
+  0% {
+    background-position: 0% center;
+  }
+  100% {
+    background-position: 200% center;
+  }
+}
+
+@keyframes pulseAI {
+  0%, 100% {
+    box-shadow: 0 0 8px rgba(255, 0, 0, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 14px rgba(255, 0, 0, 0.6);
+  }
+}
+
+/* 🧱 LAYOUT WRAPPERS */
+.grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+}
+
+@media (max-width: 768px) {
+  .grid-2 {
+    grid-template-columns: 1fr;
+  }
+
+  .dashboard-header {
+    font-size: 2rem;
+  }
+}
 
