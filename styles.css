@@ -3206,6 +3206,62 @@ button {
   margin: 10px;
 }
 
+body {
+  font-family: 'Inter', sans-serif;
+  background: #0d0d0d;
+  color: #fff;
+  margin: 0;
+  padding: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+.glow-card {
+  background: #111;
+  padding: 30px;
+  border-radius: 20px;
+  box-shadow: 0 0 40px rgba(255, 0, 0, 0.6);
+  width: 350px;
+  max-width: 90%;
+  text-align: center;
+}
+
+.glow-card input, .glow-card button {
+  width: 100%;
+  margin-top: 12px;
+  padding: 12px;
+  border: none;
+  border-radius: 10px;
+  font-size: 16px;
+}
+
+.glow-card input {
+  background: #1a1a1a;
+  color: #fff;
+}
+
+.glow-card button {
+  background: #ff1a1a;
+  color: white;
+  font-weight: bold;
+  box-shadow: 0 0 10px #ff1a1a, 0 0 20px #ff4d4d;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+.glow-card button:hover {
+  box-shadow: 0 0 20px #ff4d4d, 0 0 40px #ff6666;
+  transform: scale(1.03);
+}
+
+#welcome-box {
+  margin-top: 20px;
+  text-align: left;
+  color: #ff4d4d;
+  font-size: 15px;
+}
 
 
 
