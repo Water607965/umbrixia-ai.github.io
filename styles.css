@@ -4266,7 +4266,7 @@ input[type="text"] {
 }
 
 .shine-effect {
-  animation: shine 0.7s ease-in-out;
+  animation: shine 3s ease-in-out;
 }
 
 
