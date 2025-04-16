@@ -4172,4 +4172,11 @@ input[type="text"] {
   z-index: 11;
 }
 
+.google-btn img.google-icon {
+  width: 20px;
+  height: 20px;
+  margin-right: 8px;
+  vertical-align: middle;
+}
+
 
