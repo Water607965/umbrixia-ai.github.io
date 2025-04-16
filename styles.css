@@ -4163,20 +4163,71 @@ input[type="text"] {
 
 .auth-form {
   position: relative;
-  z-index: 10;
-  margin-top: 80px; /* optional if it's too close to the top */
+  z-index: 1;
 }
-.auth-form input,
-.auth-form button {
+
+.auth-form input {
+  z-index: 2;
   position: relative;
-  z-index: 11;
 }
+
 
 .google-btn img.google-icon {
   width: 20px;
   height: 20px;
   margin-right: 8px;
   vertical-align: middle;
+}
+
+.user-avatar {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 9999;
+}
+
+.avatar-circle {
+  width: 40px;
+  height: 40px;
+  background-color: #111;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  font-size: 20px;
+  box-shadow: 0 0 8px rgba(255, 77, 77, 0.6);
+}
+
+.avatar-dropdown {
+  display: none;
+  position: absolute;
+  top: 50px;
+  right: 0;
+  background: #1c1c1c;
+  border: 1px solid #333;
+  border-radius: 8px;
+  padding: 12px;
+  width: 150px;
+  font-size: 14px;
+  box-shadow: 0 0 20px rgba(255, 0, 60, 0.2);
+}
+
+.avatar-dropdown a {
+  display: block;
+  color: #fff;
+  padding: 6px 0;
+  text-decoration: none;
+}
+
+.avatar-dropdown a:hover {
+  color: #ff4d4d;
+}
+
+.avatar-dropdown p {
+  margin: 0 0 8px;
+  font-weight: bold;
+  color: #ccc;
 }
 
 
