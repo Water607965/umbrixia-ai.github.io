@@ -1,0 +1,50 @@
+<!-- 🚀 Umbrixia Trial Dashboard -->
+<section id="dashboard" class="dashboard-section hidden">
+  <div class="dashboard-header glow-card">
+    <h2>Welcome back, <span id="dashboard-username"></span> 👋</h2>
+    <p>Your trial ends in <strong id="trial-days-left">7</strong> day(s).</p>
+    <button class="glow" onclick="logout()">Logout</button>
+  </div>
+
+  <div class="dashboard-main">
+    <h3>🔍 SHSAT ELA Practice — AI Feedback</h3>
+    <div id="timer" class="timer-box">Time: <span id="timer-count">00:00</span></div>
+    <button class="glow" onclick="toggleTimer()">⏸ Pause Timer</button>
+
+    <!-- Questions -->
+    <form id="quiz-form">
+      <div class="question-card glow-card">
+        <p><strong>Q1.</strong> Based on paragraph 2 of the passage, the word “elated” most nearly means:</p>
+        <label><input type="radio" name="q1" value="a" /> a. Angry</label><br />
+        <label><input type="radio" name="q1" value="b" /> b. Excited</label><br />
+        <label><input type="radio" name="q1" value="c" /> c. Confused</label><br />
+        <label><input type="radio" name="q1" value="d" /> d. Lonely</label>
+      </div>
+
+      <div class="question-card glow-card">
+        <p><strong>Q2.</strong> What is the main idea of the passage?</p>
+        <label><input type="radio" name="q2" value="a" /> a. A story about friendship</label><br />
+        <label><input type="radio" name="q2" value="b" /> b. How nature affects people</label><br />
+        <label><input type="radio" name="q2" value="c" /> c. The joy of exploring the outdoors</label><br />
+        <label><input type="radio" name="q2" value="d" /> d. Tips for camping in the wild</label>
+      </div>
+
+      <div class="question-card glow-card">
+        <p><strong>Q3.</strong> Why does the author use dialogue in paragraph 5?</p>
+        <label><input type="radio" name="q3" value="a" /> a. To express confusion</label><br />
+        <label><input type="radio" name="q3" value="b" /> b. To develop character emotion</label><br />
+        <label><input type="radio" name="q3" value="c" /> c. To show a plot twist</label><br />
+        <label><input type="radio" name="q3" value="d" /> d. To introduce a new theme</label>
+      </div>
+
+      <button class="glow" type="submit">Submit Answers</button>
+    </form>
+
+    <!-- AI Help Area -->
+    <div id="ai-help" class="glow-card hidden">
+      <h4>🤖 AI Walkthrough</h4>
+      <p id="ai-explanation">Answer submitted. Let's go step by step...</p>
+      <button onclick="nextStep()" class="glow">Next Step</button>
+    </div>
+  </div>
+</section>
