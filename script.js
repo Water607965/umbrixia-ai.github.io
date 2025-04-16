@@ -522,3 +522,334 @@ document.querySelectorAll("input").forEach(input => {
   });
 });
 
+// ⚡ Umbrixia Advanced JS Upgrade Part 1 of 2
+// Apple-like transitions, dynamic UI behavior, typing effects, etc.
+
+document.addEventListener("DOMContentLoaded", () => {
+  const navbar = document.querySelector(".navbar");
+  const rotatingText = document.getElementById("rotating-text");
+  const sectionTitles = document.querySelectorAll(".section-title");
+  const ctaButtons = document.querySelectorAll(".cta-btn");
+
+  // 🔽 001 - Shrink navbar on scroll
+  window.addEventListener("scroll", () => {
+    if (window.scrollY > 50) {
+      navbar.classList.add("shrink");
+    } else {
+      navbar.classList.remove("shrink");
+    }
+  });
+
+  // 🔽 002 - Typing effect on rotating text
+  const headlines = [
+    "Trusted by students.",
+    "Powered by AI.",
+    "Boost your scores.",
+    "Made for SHSAT mastery."
+  ];
+  let i = 0;
+  let j = 0;
+  let isDeleting = false;
+
+  function typeEffect() {
+    if (!rotatingText) return;
+    rotatingText.innerText = headlines[i].substring(0, j);
+    if (!isDeleting && j < headlines[i].length) {
+      j++;
+      setTimeout(typeEffect, 100);
+    } else if (isDeleting && j > 0) {
+      j--;
+      setTimeout(typeEffect, 50);
+    } else {
+      isDeleting = !isDeleting;
+      if (!isDeleting) i = (i + 1) % headlines.length;
+      setTimeout(typeEffect, 1000);
+    }
+  }
+  typeEffect();
+
+  // 🔽 003 - Fade-in on scroll
+  const fadeInElements = document.querySelectorAll(".fade-in");
+  const observer = new IntersectionObserver(
+    entries => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add("visible");
+        }
+      });
+    },
+    { threshold: 0.2 }
+  );
+  fadeInElements.forEach(el => observer.observe(el));
+
+  // 🔽 004 - Glow on CTA hover
+  ctaButtons.forEach(button => {
+    button.addEventListener("mouseenter", () => {
+      button.classList.add("hover-glow");
+    });
+    button.addEventListener("mouseleave", () => {
+      button.classList.remove("hover-glow");
+    });
+  });
+
+  // 🔽 005 - Auto scroll reveal delay
+  sectionTitles.forEach((title, index) => {
+    title.style.transitionDelay = `${index * 0.3}s`;
+  });
+
+  // 🔽 006 - Local storage onboarding welcome
+  if (!localStorage.getItem("seenWelcome")) {
+    setTimeout(() => {
+      alert("👋 Welcome to Umbrixia. Let’s get you started.");
+      localStorage.setItem("seenWelcome", "true");
+    }, 2000);
+  }
+
+  // 🔽 007 - Keyboard shortcuts
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "d" && e.altKey) {
+      window.location.href = "/dashboard.html";
+    }
+  });
+
+  // 🔽 008 - Time spent on page tracking
+  let secondsSpent = 0;
+  setInterval(() => {
+    secondsSpent++;
+    if (secondsSpent === 300) {
+      console.log("⏱️ You’ve been using Umbrixia for 5 minutes.");
+    }
+  }, 1000);
+
+  // 🔽 009 - Confetti after success
+  window.showConfetti = function () {
+    const confetti = document.createElement("div");
+    confetti.className = "confetti";
+    document.body.appendChild(confetti);
+    setTimeout(() => confetti.remove(), 3000);
+  };
+
+  // 🔽 010 - Easter egg: Tap logo 5x
+  let logoClicks = 0;
+  const logo = document.querySelector(".navbar-logo");
+  if (logo) {
+    logo.addEventListener("click", () => {
+      logoClicks++;
+      if (logoClicks >= 5) {
+        alert("🎉 You discovered the Umbrixia easter egg!");
+        showConfetti();
+        logoClicks = 0;
+      }
+    });
+  }
+
+  // 🔽 011 - Scroll to top button logic
+  const scrollBtn = document.createElement("button");
+  scrollBtn.className = "scroll-to-top";
+  scrollBtn.innerText = "⬆ Top";
+  scrollBtn.onclick = () => window.scrollTo({ top: 0, behavior: "smooth" });
+  document.body.appendChild(scrollBtn);
+
+  window.addEventListener("scroll", () => {
+    scrollBtn.style.display = window.scrollY > 400 ? "block" : "none";
+  });
+
+  // 🔽 012 - Live Date Footer
+  const footer = document.querySelector("footer");
+  if (footer) {
+    const year = new Date().getFullYear();
+    footer.innerHTML = `<p>&copy; ${year} Umbrixia.ai • Built for Students. Powered by OpenAI.</p>`;
+  }
+
+  // 🔽 013 - Dynamic Page Title
+  const originalTitle = document.title;
+  window.addEventListener("blur", () => {
+    document.title = "👋 Come back to Umbrixia!";
+  });
+  window.addEventListener("focus", () => {
+    document.title = originalTitle;
+  });
+
+  // 🔽 014 - Save last input session
+  const userInput = document.getElementById("userInput");
+  if (userInput) {
+    userInput.value = localStorage.getItem("lastQuery") || "";
+    userInput.addEventListener("input", () => {
+      localStorage.setItem("lastQuery", userInput.value);
+    });
+  }
+
+  // 🔽 015 - Dynamic page tracking for analytics
+  window.addEventListener("beforeunload", () => {
+    const timeOnSite = Math.round(performance.now() / 1000);
+    console.log(`🕐 Time on site: ${timeOnSite}s`);
+  });
+
+  // 🔽 016 - Auto-suggest for test names
+  const testDropdown = document.getElementById("exam-select");
+  if (testDropdown) {
+    testDropdown.addEventListener("change", () => {
+      localStorage.setItem("preferredTest", testDropdown.value);
+    });
+
+    const savedTest = localStorage.getItem("preferredTest");
+    if (savedTest) testDropdown.value = savedTest;
+  }
+
+  // 🔽 017 - Highlight selected feature cards on hover
+  document.querySelectorAll(".feature-card").forEach(card => {
+    card.addEventListener("mouseenter", () => card.classList.add("card-glow"));
+    card.addEventListener("mouseleave", () => card.classList.remove("card-glow"));
+  });
+});
+
+// ✨ Smoothly animate section reveals on scroll
+const sections = document.querySelectorAll(".section, .vision-section, .designed-for-mastery");
+
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add("reveal-visible");
+    }
+  });
+}, { threshold: 0.1 });
+
+sections.forEach(section => {
+  observer.observe(section);
+});
+
+// 🧠 Animated rotating testimonials
+const testimonials = [
+  "“Umbrixia made test prep fun. Who knew AI could be this helpful?” – Maya, Grade 8",
+  "“I scored 132 points higher thanks to Umbrixia’s smart explanations.” – Leo, Grade 7",
+  "“It’s like having a personal tutor 24/7.” – Jamal, Grade 9"
+];
+let currentTestimonial = 0;
+
+function rotateTestimonial() {
+  const text = testimonials[currentTestimonial];
+  const testimonialEl = document.getElementById("testimonial-text");
+  if (testimonialEl) {
+    testimonialEl.classList.remove("fade-in");
+    void testimonialEl.offsetWidth; // trigger reflow
+    testimonialEl.textContent = text;
+    testimonialEl.classList.add("fade-in");
+  }
+
+  currentTestimonial = (currentTestimonial + 1) % testimonials.length;
+  setTimeout(rotateTestimonial, 5000);
+}
+
+setTimeout(rotateTestimonial, 1000);
+
+// 💡 Dynamic focus effect for input fields
+document.querySelectorAll("input").forEach(input => {
+  input.addEventListener("focus", () => input.classList.add("focused"));
+  input.addEventListener("blur", () => input.classList.remove("focused"));
+});
+
+// 🚀 Add bounce animation on important CTA buttons
+document.querySelectorAll(".cta-btn").forEach(btn => {
+  btn.addEventListener("mouseenter", () => {
+    btn.classList.add("bounce");
+    setTimeout(() => btn.classList.remove("bounce"), 600);
+  });
+});
+
+// 🧩 Easter Egg Konami Code unlock for hidden AI Game
+const konamiSequence = ["ArrowUp", "ArrowUp", "ArrowDown", "ArrowDown", "ArrowLeft", "ArrowRight", "ArrowLeft", "ArrowRight", "b", "a"];
+let konamiIndex = 0;
+
+document.addEventListener("keydown", function(e) {
+  if (e.key === konamiSequence[konamiIndex]) {
+    konamiIndex++;
+    if (konamiIndex === konamiSequence.length) {
+      activateSecretAI();
+      konamiIndex = 0;
+    }
+  } else {
+    konamiIndex = 0;
+  }
+});
+
+function activateSecretAI() {
+  alert("🤖 You’ve unlocked Umbrixia’s Secret AI Mode!");
+  // You could redirect to a hidden page or show hidden UI
+  const hiddenGame = document.createElement("div");
+  hiddenGame.innerHTML = `<h2 class="glow">🧠 AI Challenge Mode Activated</h2><p>Coming soon.</p>`;
+  hiddenGame.classList.add("secret-mode");
+  document.body.appendChild(hiddenGame);
+}
+
+// 🕐 Time tracker for productivity stats
+function startTimeTracking() {
+  let startTime = Date.now();
+
+  setInterval(() => {
+    const elapsed = Date.now() - startTime;
+    const minutes = Math.floor(elapsed / 60000);
+    document.getElementById("time-tracker")?.textContent = `Time Spent: ${minutes} min`;
+  }, 60000);
+}
+
+document.addEventListener("DOMContentLoaded", startTimeTracking);
+
+// 📊 Animate stat numbers on scroll
+const statBoxes = document.querySelectorAll(".stat-box strong");
+const statValues = [120, 10000, 95]; // Adjust to match actual data
+
+function animateStats() {
+  statBoxes.forEach((box, i) => {
+    let count = 0;
+    const interval = setInterval(() => {
+      if (count < statValues[i]) {
+        count += Math.ceil(statValues[i] / 60);
+        box.textContent = (i === 2 ? `${count}%` : `+${count}${i === 1 ? "+" : ""}`);
+      } else {
+        clearInterval(interval);
+      }
+    }, 20);
+  });
+}
+
+const statsObserver = new IntersectionObserver((entries) => {
+  if (entries[0].isIntersecting) {
+    animateStats();
+    statsObserver.disconnect(); // Only animate once
+  }
+}, { threshold: 0.5 });
+
+statsObserver.observe(document.querySelector(".stats-row"));
+
+// 🌠 Add subtle glow on mouse move to feature cards
+document.querySelectorAll(".feature-card").forEach(card => {
+  card.addEventListener("mousemove", e => {
+    const rect = card.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    card.style.setProperty('--mouse-x', `${x}px`);
+    card.style.setProperty('--mouse-y', `${y}px`);
+  });
+});
+
+// 🛸 Add floating dots to background (Apple-like parallax animation)
+const dotCount = 30;
+const background = document.createElement("div");
+background.classList.add("floating-dots");
+
+for (let i = 0; i < dotCount; i++) {
+  const dot = document.createElement("span");
+  dot.classList.add("dot");
+  dot.style.left = `${Math.random() * 100}%`;
+  dot.style.animationDuration = `${5 + Math.random() * 10}s`;
+  background.appendChild(dot);
+}
+
+document.body.appendChild(background);
+
+// 🧬 Smooth page load animation
+window.addEventListener("load", () => {
+  document.body.classList.add("loaded");
+});
+
+
