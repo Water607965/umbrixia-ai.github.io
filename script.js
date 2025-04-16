@@ -133,4 +133,24 @@ function closeAI() {
   document.getElementById("ai-response").classList.add("hidden");
 }
 
+function signupHandler() {
+  const name = document.getElementById("name").value;
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
+
+  signup(email, password).then((userCredential) => {
+    const user = userCredential.user;
+
+    // Set the user's display name in Firebase
+    return user.updateProfile({
+      displayName: name
+    }).then(() => {
+      showWelcome(user);  // Show welcome message with name
+    });
+
+  }).catch((error) => {
+    document.getElementById("auth-status").innerText = `❌ Signup error: ${error.message}`;
+  });
+}
+
 
