@@ -877,5 +877,29 @@ firebase.auth().onAuthStateChanged(user => {
   }
 });
 
+function shineButtons() {
+  const glowButtons = document.querySelectorAll(".glow, .google-btn");
+  glowButtons.forEach(btn => {
+    btn.classList.add("shine-effect");
+    setTimeout(() => {
+      btn.classList.remove("shine-effect");
+    }, 1000); // duration should match the CSS animation
+  });
+}
+
+// Enhance loginHandler to include shine
+function loginHandler() {
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
+  shineButtons(); // <- added
+  login(email, password);
+}
+
+function signupHandler() {
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
+  shineButtons(); // <- added
+  signup(email, password);
+}
 
 
