@@ -928,5 +928,9 @@ function shineButtons() {
   });
 }
 
+function toggleUserMenu() {
+  const menu = document.getElementById("userDropdown");
+  menu.classList.toggle("hidden");
+}
 
 
