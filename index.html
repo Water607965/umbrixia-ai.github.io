@@ -1,272 +1,350 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="theme-color" content="#0d0d0d" />
-  <link rel="icon" href="/favicon.ico" type="image/x-icon" />
-  <title>Umbrixia AI Tutor</title>
-  <link rel="stylesheet" href="styles.css" />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet" />
-</head>
-<body>
+ <html lang="en">
+ <head>
+   <meta charset="UTF-8" />
+   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+   <meta name="theme-color" content="#0d0d0d" />
+   <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+   <title>Umbrixia AI Tutor</title>
+   <link rel="stylesheet" href="styles.css" />
+   <link rel="preconnect" href="https://fonts.googleapis.com" />
+   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet" />
+ </head>
+ <body>
+ 
+   <div id="login-area" style="text-align:center; padding: 20px;">
+   <button id="login-btn" disabled>Loading...</button>
+ </div>
+ 
+   <div style="text-align:center; padding: 20px;">
+   <input type="email" id="email" placeholder="Email" />
+   <input type="password" id="password" placeholder="Password" />
+   <button onclick="loginHandler()">Log In</button>
+   <button onclick="signupHandler()">Sign Up</button>
+   <button onclick="logoutHandler()">Log Out</button>
+ 
+     <!-- ✅ Begin Auth Service Buttons -->
+<div class="auth-buttons" style="text-align:center; padding: 20px;">
+  <button onclick="googleLogin()" class="glow">Continue with Google</button>
+  <button onclick="microsoftLogin()" class="glow">Continue with Microsoft</button>
+  <button onclick="appleLogin()" class="glow">Continue with Apple</button>
+  <button onclick="emailLogin()" class="glow">Continue with Email</button>
+  <button onclick="phoneLogin()" class="glow">Continue with Phone</button>
+</div>
+<!-- ✅ End Auth Service Buttons -->
 
-  <div style="text-align:center; padding: 20px;">
-    <button class="glow red" onclick="loginHandler()">Log In</button>
-    <button class="glow red" onclick="signupHandler()">Sign Up</button>
-    <button class="glow red" onclick="logoutHandler()">Log Out</button>
-
-    <div id="auth-card" class="glow-card">
-      <h2>Login to Umbrixia</h2>
-      <button onclick="loginHandler()">Log In</button>
-      <button onclick="signupHandler()">Sign Up</button>
-      <div id="auth-buttons">
-        <button onclick="googleLogin()">Google</button>
-      </div>
-
-      <h3>Or Sign In with Phone</h3>
-      <div id="recaptcha-container"></div>
-      <button onclick="sendPhoneCode()">Send Code</button>
-      <input type="text" id="verifyCode" placeholder="Verification Code" />
-      <button onclick="verifyPhoneCode()">Verify</button>
-      <div id="welcome-box"></div>
-    </div>
-
-    <p id="auth-status"></p>
-  </div>
-
-  <!-- Navbar -->
-  <nav class="navbar">
-    <div class="navbar-container">
-      <div class="navbar-logo">Umbrixia</div>
-      <ul class="navbar-menu">
-        <li><a href="#features">Features</a></li>
-        <li><a href="#chatbox">Demo</a></li>
-        <li><a href="#auth-section">Pricing</a></li>
-        <li><a href="#success">Success</a></li>
-      </ul>
-    </div>
-  </nav>
-
-  <section class="vision-section">
-    <h2 class="section-title">What If Studying Felt Powerful?</h2>
-    <p class="vision-subtitle">Umbrixia is built for the future of test prep — personalized, intelligent, and designed to make students feel confident and in control. This is not just another study tool. It's your edge.</p>
-    <div class="vision-call">
-      <a href="#chatbox" class="cta-btn red">Try It — Free Demo</a>
-    </div>
-  </section>
-
-  <section class="rotating-headline">
-    <h2 id="rotating-text">Trusted by students. Powered by AI.</h2>
-  </section>
-
-  <section class="section">
-    <h2>Why Students Trust Us</h2>
-    <div class="stats-row">
-      <div class="stat-box"><strong>+120 pts</strong><span>Average score gain</span></div>
-      <div class="stat-box"><strong>10k+</strong><span>Questions solved</span></div>
-      <div class="stat-box"><strong>95%</strong><span>Accuracy rate</span></div>
-    </div>
-  </section>
-
-  <section class="section features-section fade-in" id="features">
-    <h2 class="section-title">What Makes Umbrixia Stand Out?</h2>
-    <div class="grid-2">
-      <div class="feature-card"><h3>🔬 Precision AI</h3><p>Trained on ISEE, SHSAT, and SAT-style questions for exact-match guidance with full explanations.</p></div>
-      <div class="feature-card"><h3>📈 Student Dashboard</h3><p>Visualize strengths, weaknesses, and track improvement across subjects.</p></div>
-      <div class="feature-card"><h3>🧠 Smart Feedback</h3><p>Every answer includes step-by-step reasoning to deepen conceptual understanding.</p></div>
-      <div class="feature-card"><h3>💡 Diagnostic Insights</h3><p>Start with a 3-question quiz to instantly personalize your tutoring path.</p></div>
-    </div>
-  </section>
-
-  <section class="designed-for-mastery">
-    <h2 class="section-title">Designed for Mastery</h2>
-    <div class="mastery-grid">
-      <div class="mastery-card"><h3>Practice That Adapts</h3><p>Umbrixia intelligently evolves with you — delivering questions that challenge and strengthen.</p></div>
-      <div class="mastery-card"><h3>Feedback You Can Trust</h3><p>Step-by-step logic for every answer. Learn why you're right — or wrong — every single time.</p></div>
-      <div class="mastery-card"><h3>Built-In Focus</h3><p>Minimalist design with maximal results. No distractions. Just growth.</p></div>
-    </div>
-  </section>
-
-  <section class="why-graph-wrapper">
-    <div class="why-text-card">
-      <h2>Why Umbrixia?</h2>
-      <ul>
-        <li>Purpose-built for ISEE, SHSAT, and SAT mastery</li>
-        <li>Step-by-step intelligent explanations</li>
-        <li>AI adapts as you improve</li>
-        <li>Elegant and distraction-free interface</li>
-        <li>Loved by parents, trusted by students</li>
-      </ul>
-      <button class="cta-btn">Subscribe Now</button>
-    </div>
-    <div class="graph-card">
-      <h3>When Smart Work Meets Hard Work</h3>
-      <p>They intersect and erupt into exponential success. See the difference Umbrixia makes.</p>
-      <img src="umbrixia_growth_curve.png" alt="Graph of Umbrixia's success curve" />
-    </div>
-  </section>
-
-  <section class="section" id="chatbox">
-    <div id="chat">
-      <div class="message bot">
-        <strong>Bot:</strong> Welcome! Ask me an ISEE, SHSAT, or SAT question or pick an example:
-      </div>
-      <div class="examples">
-        <label for="exam-select">Choose Exam:</label>
-        <select id="exam-select" onchange="switchExam()">
-          <option value="shsat">SHSAT</option>
-          <option value="isee">ISEE</option>
-          <option value="sat">SAT</option>
-        </select>
-        <div id="example-buttons"></div>
-      </div>
-    </div>
-    <input type="text" id="userInput" placeholder="Type your ISEE, SHSAT, or SAT question..." />
-    <button onclick="sendMessage()">Send</button>
-  </section>
-
-  <section class="section" id="auth-section">
-    <h2>Unlock Full Access</h2>
-    <form id="signup-form">
-      <input type="email" id="email-subscribe" placeholder="Enter your email to subscribe" required />
-      <button type="submit">Subscribe via Stripe</button>
-    </form>
-    <div id="signup-status"></div>
-  </section>
-
-  <footer>
-    <p>&copy; 2025 Umbrixia.ai • Built for Students. Powered by OpenAI.</p>
-  </footer>
-
-  <!-- Firebase SDK -->
-  <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-auth-compat.js"></script>
-
-  <script>
-    const firebaseConfig = {
-      apiKey: "AIzaSyDDcAp59mkTutfXgnRIBWpVww3jFyzOtIc",
-      authDomain: "umbrixia-d804f.firebaseapp.com",
-      projectId: "umbrixia-d804f",
-      storageBucket: "umbrixia-d804f.appspot.com",
-      messagingSenderId: "532093768601",
-      appId: "1:532093768601:web:4e94149269d88213edb908"
-    };
-
-    firebase.initializeApp(firebaseConfig);
-    const auth = firebase.auth();
-    auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
-
-    let confirmationResult = null;
-    window.verifyPhoneCode = verifyCode;
-
-    function showWelcome(user) {
-      const name = user.email || user.phoneNumber || "user";
-      document.getElementById("welcome-msg").innerText = `👋 Welcome, ${name}`;
-    }
-
-    window.signup = function(email, password) {
-      auth.createUserWithEmailAndPassword(email, password)
-        .then(cred => {
-          localStorage.setItem("trialStart", Date.now());
-          showWelcome(cred.user);
-          alert("✅ Signup successful!");
-        }).catch(err => alert("❌ Signup error: " + err.message));
-    };
-
-    window.login = function(email, password) {
-      auth.signInWithEmailAndPassword(email, password)
-        .then(cred => {
-          showWelcome(cred.user);
-          alert("✅ Login successful!");
-        }).catch(err => alert("❌ Login error: " + err.message));
-    };
-
-    window.googleLogin = function() {
-      const provider = new firebase.auth.GoogleAuthProvider();
-      auth.signInWithPopup(provider)
-        .then(result => {
-          localStorage.setItem("trialStart", Date.now());
-          showWelcome(result.user);
-          alert("✅ Logged in with Google");
-        }).catch(err => alert("❌ Google login failed: " + err.message));
-    };
-
-    window.sendPhoneCode = function() {
-      const phoneNumber = document.getElementById("phoneNumber").value;
-      const appVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {
-        size: 'normal',
-        callback: () => console.log("reCAPTCHA ✅"),
-        'expired-callback': () => alert("reCAPTCHA expired. Refresh page.")
-      });
-
-      firebase.auth().signInWithPhoneNumber(phoneNumber, appVerifier)
-        .then(result => {
-          confirmationResult = result;
-          alert("✅ Code sent!");
-        }).catch(err => alert("❌ Failed to send code: " + err.message));
-    };
-
-    function verifyCode() {
-      const code = document.getElementById("verificationCode").value;
-      if (!confirmationResult) return alert("Send the code first!");
-      confirmationResult.confirm(code)
-        .then(result => {
-          localStorage.setItem("trialStart", Date.now());
-          showWelcome(result.user);
-          alert("✅ Phone login successful!");
-        }).catch(err => alert("❌ Code error: " + err.message));
-    }
-
-    window.logout = function() {
-      auth.signOut().then(() => {
-        alert("👋 Logged out.");
-        document.getElementById("welcome-msg").innerText = "";
-      });
-    };
-
-    window.checkTrial = function() {
-      const start = parseInt(localStorage.getItem("trialStart"), 10);
-      const now = Date.now();
-      const sevenDays = 7 * 24 * 60 * 60 * 1000;
-      if (start && now - start > sevenDays) {
-        alert("🚫 Trial expired. Please subscribe.");
-      }
-    };
-
-    document.addEventListener("DOMContentLoaded", () => {
-      if (typeof checkTrial === "function") checkTrial();
-    });
-
-    function loginHandler() {
-      const email = document.getElementById("email-subscribe").value || document.getElementById("email-auth")?.value;
-      const password = document.getElementById("password-auth")?.value;
-      if (email && password) login(email, password);
-    }
-
-    function signupHandler() {
-      const email = document.getElementById("email-subscribe").value || document.getElementById("email-auth")?.value;
-      const password = document.getElementById("password-auth")?.value;
-      if (email && password) signup(email, password);
-    }
-
-    function logoutHandler() {
-      logout();
-    }
-  </script>
-
-  <div style="text-align:center; padding: 20px;">
-    <input type="text" id="phoneNumber" placeholder="+1234567890" />
-    <br><br>
-    <input type="text" id="verificationCode" placeholder="Enter the code" />
-    <button onclick="verifyCode()" class="glow">Verify & Log In</button>
-  </div>
-
-  <div id="welcome-msg" style="position: fixed; top: 20px; left: 20px; color: #fff; z-index: 9999; font-weight: bold;"></div>
-
-  <script src="script.js" defer></script>
-
-</body>
-</html>
+ 
+ 
+ 
+   <p id="auth-status"></p>
+ </div>
+ 
+ 
+ 
+ <!-- Navbar -->
+ <nav class="navbar">
+   <div class="navbar-container">
+     <div class="navbar-logo">Umbrixia</div>
+     <ul class="navbar-menu">
+       <li><a href="#features">Features</a></li>
+       <li><a href="#chatbox">Demo</a></li>
+       <li><a href="#auth-section">Pricing</a></li>
+       <li><a href="#success">Success</a></li>
+     </ul>
+   </div>
+ </nav>
+ 
+   <section class="vision-section">
+   <h2 class="section-title">What If Studying Felt Powerful?</h2>
+   <p class="vision-subtitle">Umbrixia is built for the future of test prep — personalized, intelligent, and designed to make students feel confident and in control. This is not just another study tool. It's your edge.</p>
+   <div class="vision-call">
+     <a href="#chatbox" class="cta-btn red">Try It — Free Demo</a>
+   </div>
+ </section>
+ 
+ 
+ <!-- Rotating Headline -->
+ <section class="rotating-headline">
+   <h2 id="rotating-text">Trusted by students. Powered by AI.</h2>
+ </section>
+ 
+ <!-- Stats -->
+ <section class="section">
+   <h2>Why Students Trust Us</h2>
+   <div class="stats-row">
+     <div class="stat-box">
+       <strong>+120 pts</strong>
+       <span>Average score gain</span>
+     </div>
+     <div class="stat-box">
+       <strong>10k+</strong>
+       <span>Questions solved</span>
+     </div>
+     <div class="stat-box">
+       <strong>95%</strong>
+       <span>Accuracy rate</span>
+     </div>
+   </div>
+ </section>
+ 
+ <!-- Features -->
+ <section class="section features-section fade-in" id="features">
+   <h2 class="section-title">What Makes Umbrixia Stand Out?</h2>
+   <div class="grid-2">
+     <div class="feature-card">
+       <h3>🔬 Precision AI</h3>
+       <p>Trained on ISEE, SHSAT, and SAT-style questions for exact-match guidance with full explanations.</p>
+     </div>
+     <div class="feature-card">
+       <h3>📈 Student Dashboard</h3>
+       <p>Visualize strengths, weaknesses, and track improvement across subjects.</p>
+     </div>
+     <div class="feature-card">
+       <h3>🧠 Smart Feedback</h3>
+       <p>Every answer includes step-by-step reasoning to deepen conceptual understanding.</p>
+     </div>
+     <div class="feature-card">
+       <h3>💡 Diagnostic Insights</h3>
+       <p>Start with a 3-question quiz to instantly personalize your tutoring path.</p>
+     </div>
+   </div>
+ </section>
+ 
+   <section class="designed-for-mastery">
+   <h2 class="section-title">Designed for Mastery</h2>
+   <div class="mastery-grid">
+     <div class="mastery-card">
+       <h3>Practice That Adapts</h3>
+       <p>Umbrixia intelligently evolves with you — delivering questions that challenge and strengthen.</p>
+     </div>
+     <div class="mastery-card">
+       <h3>Feedback You Can Trust</h3>
+       <p>Step-by-step logic for every answer. Learn why you're right — or wrong — every single time.</p>
+     </div>
+     <div class="mastery-card">
+       <h3>Built-In Focus</h3>
+       <p>Minimalist design with maximal results. No distractions. Just growth.</p>
+     </div>
+   </div>
+ </section>
+ 
+ 
+ <section class="why-graph-wrapper">
+   <!-- Left Text Column -->
+   <div class="why-text-card">
+     <h2>Why Umbrixia?</h2>
+     <ul>
+       <li>Purpose-built for ISEE, SHSAT, and SAT mastery</li>
+       <li>Step-by-step intelligent explanations</li>
+       <li>AI adapts as you improve</li>
+       <li>Elegant and distraction-free interface</li>
+       <li>Loved by parents, trusted by students</li>
+     </ul>
+     <button class="cta-btn">Subscribe Now</button>
+   </div>
+ 
+   <!-- Right Graph Column -->
+   <div class="graph-card">
+     <h3>When Smart Work Meets Hard Work</h3>
+     <p>They intersect and erupt into exponential success. See the difference Umbrixia makes.</p>
+     <img src="umbrixia_growth_curve.png" alt="Graph of Umbrixia's success curve" />
+   </div>
+ </section>
+ 
+ 
+ <!-- Chat Section -->
+ <section class="section" id="chatbox">
+   <div id="chat">
+     <div class="message bot">
+       <strong>Bot:</strong> Welcome! Ask me an ISEE, SHSAT, or SAT question or pick an example:
+     </div>
+     <div class="examples">
+       <label for="exam-select">Choose Exam:</label>
+       <select id="exam-select" onchange="switchExam()">
+         <option value="shsat">SHSAT</option>
+         <option value="isee">ISEE</option>
+         <option value="sat">SAT</option>
+       </select>
+       <div id="example-buttons"></div>
+     </div>
+   </div>
+   <input type="text" id="userInput" placeholder="Type your ISEE, SHSAT, or SAT question..." />
+   <button onclick="sendMessage()">Send</button>
+ </section>
+ 
+ <!-- Pricing Section -->
+ <section class="section" id="auth-section">
+   <h2>Unlock Full Access</h2>
+   <form id="signup-form">
+     <input type="email" id="email-subscribe" placeholder="Enter your email to subscribe" required />
+     <button type="submit">Subscribe via Stripe</button>
+   </form>
+   <div id="signup-status"></div>
+ </section>
+ 
+ 
+ <!-- Footer -->
+ <footer>
+   <p>&copy; 2025 Umbrixia.ai • Built for Students. Powered by OpenAI.</p>
+ </footer>
+ 
+ <!-- ✅ Firebase SDKs -->
+ <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js"></script>
+ <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-auth-compat.js"></script>
+ 
+ <!-- ✅ Auth Logic -->
+ <script>
+   const firebaseConfig = {
+     apiKey: "AIzaSyDDcAp59mkTutfXgnRIBWpVww3jFyzOtIc",
+     authDomain: "umbrixia-d804f.firebaseapp.com",
+     projectId: "umbrixia-d804f",
+     storageBucket: "umbrixia-d804f.firebasestorage.app",
+     messagingSenderId: "532093768601",
+     appId: "1:532093768601:web:4e94149269d88213edb908"
+   };
+ 
+   // Initialize Firebase
+   firebase.initializeApp(firebaseConfig);
+   const auth = firebase.auth();
+   auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
+ 
+   // Signup
+   window.signup = function(email, password) {
+     return auth.createUserWithEmailAndPassword(email, password)
+       .then(userCredential => {
+         localStorage.setItem("trialStart", Date.now());
+         alert("✅ Signup successful!");
+         return userCredential;
+       })
+       .catch(error => {
+         alert("❌ Signup error: " + error.message);
+       });
+   };
+ 
+   // Login
+   window.login = function(email, password) {
+     return auth.signInWithEmailAndPassword(email, password)
+       .then(userCredential => {
+         alert("✅ Login successful!");
+         return userCredential;
+       })
+       .catch(error => {
+         alert("❌ Login error: " + error.message);
+       });
+   };
+ 
+   // Google Login
+   window.googleLogin = function() {
+   // Google
+   window.googleLogin = function () {
+     const provider = new firebase.auth.GoogleAuthProvider();
+     auth.signInWithPopup(provider)
+       .then(result => {
+         localStorage.setItem("trialStart", Date.now());
+         alert("✅ Logged in with Google");
+       })
+       .catch(error => {
+         alert("❌ Google login failed: " + error.message);
+       });
+     auth.signInWithPopup(provider).then(result => {
+       localStorage.setItem("trialStart", Date.now());
+       alert("✅ Logged in with Google");
+     }).catch(error => {
+       alert("❌ Google login failed: " + error.message);
+     });
+   };
+ 
+   // Microsoft
+   window.microsoftLogin = function () {
+     const provider = new firebase.auth.OAuthProvider('microsoft.com');
+     auth.signInWithPopup(provider).then(result => {
+       alert("✅ Logged in with Microsoft");
+     }).catch(error => {
+       alert("❌ Microsoft login failed: " + error.message);
+     });
+   };
+ 
+   // Apple
+   window.appleLogin = function () {
+     const provider = new firebase.auth.OAuthProvider('apple.com');
+     auth.signInWithPopup(provider).then(result => {
+       alert("✅ Logged in with Apple");
+     }).catch(error => {
+       alert("❌ Apple login failed: " + error.message);
+     });
+   };
+ 
+ // Email Link Auth (you must enable it in Firebase)
+   window.emailLogin = function () {
+     const email = prompt("Enter your email:");
+     if (!email) return;
+     auth.sendSignInLinkToEmail(email, {
+       url: window.location.href,
+       handleCodeInApp: true
+     }).then(() => {
+       window.localStorage.setItem('emailForSignIn', email);
+       alert("📩 Check your inbox for a magic link.");
+     }).catch(error => {
+       alert("❌ Email link failed: " + error.message);
+     });
+   };
+ 
+ // Phone (requires reCAPTCHA setup)
+   window.phoneLogin = function () {
+     alert("📞 Phone login requires Firebase reCAPTCHA setup. We’ll add this next.");
+   };
+ </script>
+ 
+   // Logout
+   window.logout = function() {
+     return auth.signOut().then(() => {
+       alert("👋 Logged out.");
+     });
+   };
+ 
+   // Check trial expiration
+   window.checkTrial = function() {
+     const trialStart = parseInt(localStorage.getItem("trialStart"), 10);
+     const now = Date.now();
+     const sevenDays = 7 * 24 * 60 * 60 * 1000;
+ 
+     if (trialStart && now - trialStart > sevenDays) {
+       alert("🚫 Your free trial has expired. Please subscribe to continue.");
+       // Redirect or lock features here
+     }
+   };
+ </script>
+ 
+ <script>
+   function loginHandler() {
+     const email = document.getElementById("email").value;
+     const password = document.getElementById("password").value;
+     login(email, password);
+   }
+ 
+   function signupHandler() {
+     const email = document.getElementById("email").value;
+     const password = document.getElementById("password").value;
+     signup(email, password);
+   }
+ 
+   function logoutHandler() {
+     logout();
+   }
+ 
+   // Optional: Automatically check trial on load
+   document.addEventListener("DOMContentLoaded", () => {
+     if (typeof checkTrial === "function") {
+       checkTrial();
+     }
+   });
+ </script>
+ 
+ 
+ <!-- ✅ Your main site logic AFTER all auth -->
+ <script src="script.js" defer></script>
+ 
+ 
+ </body>
+ </html>
