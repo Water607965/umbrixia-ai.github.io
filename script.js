@@ -109,4 +109,28 @@ function logoutHandler() {
     });
 }
 
+function submitAnswers() {
+  const q1 = document.getElementById('q1').value.toLowerCase();
+  const q2 = document.getElementById('q2').value.toLowerCase();
+  const q3 = document.getElementById('q3').value.toLowerCase();
+
+  let incorrect = [];
+
+  if (!q1.includes("danger")) incorrect.push("1");
+  if (!q2.includes("central idea") && !q2.includes("main idea")) incorrect.push("2");
+  if (!q3.includes("supports bravery")) incorrect.push("3");
+
+  if (incorrect.length > 0) {
+    document.getElementById("ai-message").innerText =
+      `You got question(s) ${incorrect.join(", ")} wrong.\nClick below to see AI step-by-step guidance.`;
+    document.getElementById("ai-response").classList.remove("hidden");
+  } else {
+    alert("✅ All correct! Great job.");
+  }
+}
+
+function closeAI() {
+  document.getElementById("ai-response").classList.add("hidden");
+}
+
 
