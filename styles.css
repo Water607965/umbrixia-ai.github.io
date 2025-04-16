@@ -4161,3 +4161,15 @@ input[type="text"] {
   }
 }
 
+.auth-form {
+  position: relative;
+  z-index: 10;
+  margin-top: 80px; /* optional if it's too close to the top */
+}
+.auth-form input,
+.auth-form button {
+  position: relative;
+  z-index: 11;
+}
+
+
