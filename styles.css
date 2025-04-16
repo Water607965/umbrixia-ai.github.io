@@ -3134,3 +3134,94 @@
  .google-btn:hover {
    background: #f2f2f2;
  }
+
+/* ====== BASE GLOWING STYLES ====== */
+.glow {
+  background-color: #111;
+  color: #fff;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 1rem;
+  transition: all 0.3s ease-in-out;
+  box-shadow: 0 0 10px rgba(255, 0, 90, 0.5), 0 0 20px rgba(255, 0, 90, 0.2);
+  position: relative;
+  z-index: 1;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.glow::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: conic-gradient(
+    from 0deg,
+    rgba(255, 0, 90, 0.3),
+    rgba(255, 255, 255, 0),
+    rgba(255, 0, 90, 0.3)
+  );
+  animation: rotateGlow 4s linear infinite;
+  z-index: -1;
+  filter: blur(40px);
+  opacity: 0.6;
+}
+
+@keyframes rotateGlow {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/* ====== RED VARIANT (Apple-style) ====== */
+.glow.red {
+  background: rgba(255, 0, 90, 0.1);
+  color: #ff005a;
+  box-shadow: 0 0 10px rgba(255, 0, 90, 0.5), 0 0 20px rgba(255, 0, 90, 0.3);
+  border: 1px solid rgba(255, 0, 90, 0.3);
+}
+
+/* ====== FOR HEADERS / BOXES ====== */
+.glow-card {
+  background-color: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 0, 90, 0.15);
+  padding: 30px;
+  border-radius: 20px;
+  box-shadow: 0 0 20px rgba(255, 0, 90, 0.2);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.glow-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 0 25px rgba(255, 0, 90, 0.35);
+}
+
+/* ====== STYLISH INPUTS ====== */
+input[type="email"],
+input[type="password"],
+input[type="text"],
+input[type="tel"] {
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.04);
+  color: #fff;
+  width: 250px;
+  font-size: 0.95rem;
+  margin-bottom: 10px;
+  transition: border 0.3s ease, box-shadow 0.3s ease;
+}
+
+input:focus {
+  border-color: #ff005a;
+  box-shadow: 0 0 8px rgba(255, 0, 90, 0.4);
+  outline: none;
+}
+
