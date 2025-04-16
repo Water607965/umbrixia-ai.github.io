@@ -238,6 +238,7 @@
      auth.signInWithPopup(provider)
        .then(result => {
          localStorage.setItem("trialStart", Date.now());
+         showWelcome(result.user);
          alert("✅ Logged in with Google");
        })
        .catch(error => {
