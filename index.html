@@ -302,9 +302,12 @@
 <!-- 🔽 Insert block RIGHT BELOW -->
 <script>
   function showWelcome(user) {
-    const name = user.displayName || user.email || "user";
-    document.getElementById("auth-status").innerText = `👋 Welcome, ${name}`;
-  }
+  let name = user.displayName || user.email || "user";
+  if (name.includes(" ")) name = name.split(" ")[0]; // only first name
+  document.getElementById("auth-status").innerHTML = `👋 <span style="color:#ff4d4d; font-weight:600;">Welcome, ${name}</span>`;
+  localStorage.setItem("displayName", name);
+}
+
 
  // 🔒 Trial-based redirect after welcome
 function checkAndRedirectToDashboard() {
@@ -358,7 +361,16 @@ localStorage.setItem("displayName", user.displayName || user.email);
     
 </script>
 
-  
+  <div class="user-avatar" id="avatarMenu">
+  <div class="avatar-circle" onclick="toggleUserMenu()">👤</div>
+  <div class="avatar-dropdown" id="userDropdown">
+    <p><strong id="dropdownName">User</strong></p>
+    <a href="dashboard.html">Dashboard</a>
+    <a href="#auth-section">Settings</a>
+    <a href="#" onclick="logoutHandler()">Log Out</a>
+  </div>
+</div>
+
  
  </body>
  </html>
