@@ -895,5 +895,17 @@ function signupHandler() {
   signup(email, password);
 }
 
+function shineButtons() {
+  const targets = [document.querySelector("button.glow"), document.querySelector(".google-btn")];
+
+  targets.forEach(btn => {
+    if (!btn) return;
+
+    btn.classList.remove("shine-on-click"); // Reset in case it was applied before
+    void btn.offsetWidth; // Force reflow (ensures animation replays)
+    btn.classList.add("shine-on-click");
+  });
+}
+
 
 
