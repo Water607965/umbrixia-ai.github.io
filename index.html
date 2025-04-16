@@ -14,16 +14,14 @@
 <body>
 
   <div style="text-align:center; padding: 20px;">
-  <input type="email" id="email" placeholder="Email" />
-  <input type="password" id="password" placeholder="Password" />
   <button onclick="loginHandler()">Log In</button>
   <button onclick="signupHandler()">Sign Up</button>
   <button onclick="logoutHandler()">Log Out</button>
 
     <div id="auth-card" class="glow-card">
   <h2>Login to Umbrixia</h2>
-  <input type="email" id="email" placeholder="Email" />
-  <input type="password" id="password" placeholder="Password" />
+  <input type="email" id="email-auth" placeholder="Email" />
+<input type="password" id="password-auth" placeholder="Password" />
   <button onclick="loginHandler()">Log In</button>
   <button onclick="signupHandler()">Sign Up</button>
   <div id="auth-buttons">
@@ -31,7 +29,6 @@
   </div>
 
   <h3>Or Sign In with Phone</h3>
-  <input type="tel" id="phone" placeholder="+1 555-555-5555" />
   <div id="recaptcha-container"></div>
   <button onclick="sendPhoneCode()">Send Code</button>
   <input type="text" id="verifyCode" placeholder="Verification Code" />
@@ -198,143 +195,134 @@
 <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-auth-compat.js"></script>
 
-<!-- ✅ Auth Logic -->
 <script>
   const firebaseConfig = {
     apiKey: "AIzaSyDDcAp59mkTutfXgnRIBWpVww3jFyzOtIc",
     authDomain: "umbrixia-d804f.firebaseapp.com",
     projectId: "umbrixia-d804f",
-    storageBucket: "umbrixia-d804f.firebasestorage.app",
+    storageBucket: "umbrixia-d804f.appspot.com",
     messagingSenderId: "532093768601",
     appId: "1:532093768601:web:4e94149269d88213edb908"
   };
 
-  // Initialize Firebase
   firebase.initializeApp(firebaseConfig);
   const auth = firebase.auth();
   auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
 
-  // Signup
+  // Welcome Msg Helper
+  function showWelcome(user) {
+    const name = user.email || user.phoneNumber || "user";
+    document.getElementById("welcome-msg").innerText = `👋 Welcome, ${name}`;
+  }
+
+  // Email/Password Signup
   window.signup = function(email, password) {
-    return auth.createUserWithEmailAndPassword(email, password)
-      .then(userCredential => {
+    auth.createUserWithEmailAndPassword(email, password)
+      .then(cred => {
         localStorage.setItem("trialStart", Date.now());
+        showWelcome(cred.user);
         alert("✅ Signup successful!");
-        return userCredential;
       })
-      .catch(error => {
-        alert("❌ Signup error: " + error.message);
-      });
+      .catch(err => alert("❌ Signup error: " + err.message));
   };
 
   // Login
   window.login = function(email, password) {
-    return auth.signInWithEmailAndPassword(email, password)
-      .then(userCredential => {
+    auth.signInWithEmailAndPassword(email, password)
+      .then(cred => {
+        showWelcome(cred.user);
         alert("✅ Login successful!");
-        return userCredential;
       })
-      .catch(error => {
-        alert("❌ Login error: " + error.message);
-      });
+      .catch(err => alert("❌ Login error: " + err.message));
   };
 
-  // Google
-  window.googleLogin = function () {
+  // Google Login
+  window.googleLogin = function() {
     const provider = new firebase.auth.GoogleAuthProvider();
-    auth.signInWithPopup(provider).then(result => {
-      localStorage.setItem("trialStart", Date.now());
-      alert("✅ Logged in with Google");
-    }).catch(error => {
-      alert("❌ Google login failed: " + error.message);
-    });
+    auth.signInWithPopup(provider)
+      .then(result => {
+        localStorage.setItem("trialStart", Date.now());
+        showWelcome(result.user);
+        alert("✅ Logged in with Google");
+      })
+      .catch(err => alert("❌ Google login failed: " + err.message));
   };
 
-  // Microsoft
-  window.microsoftLogin = function () {
+  // Microsoft Login
+  window.microsoftLogin = function() {
     const provider = new firebase.auth.OAuthProvider('microsoft.com');
-    auth.signInWithPopup(provider).then(result => {
-      alert("✅ Logged in with Microsoft");
-    }).catch(error => {
-      alert("❌ Microsoft login failed: " + error.message);
-    });
+    auth.signInWithPopup(provider)
+      .then(result => {
+        showWelcome(result.user);
+        alert("✅ Logged in with Microsoft");
+      })
+      .catch(err => alert("❌ Microsoft login failed: " + err.message));
   };
 
-  // Apple
-  window.appleLogin = function () {
+  // Apple Login
+  window.appleLogin = function() {
     const provider = new firebase.auth.OAuthProvider('apple.com');
-    auth.signInWithPopup(provider).then(result => {
-      alert("✅ Logged in with Apple");
-    }).catch(error => {
-      alert("❌ Apple login failed: " + error.message);
-    });
+    auth.signInWithPopup(provider)
+      .then(result => {
+        showWelcome(result.user);
+        alert("✅ Logged in with Apple");
+      })
+      .catch(err => alert("❌ Apple login failed: " + err.message));
   };
 
-// Email Link Auth (you must enable it in Firebase)
-  window.emailLogin = function () {
-    const email = prompt("Enter your email:");
-    if (!email) return;
-    auth.sendSignInLinkToEmail(email, {
-      url: window.location.href,
-      handleCodeInApp: true
-    }).then(() => {
-      window.localStorage.setItem('emailForSignIn', email);
-      alert("📩 Check your inbox for a magic link.");
-    }).catch(error => {
-      alert("❌ Email link failed: " + error.message);
+  // Phone Login Setup
+  let confirmationResult = null;
+  window.sendVerificationCode = function() {
+    const phoneNumber = document.getElementById("phoneNumber").value;
+    const appVerifier = new firebase.auth.RecaptchaVerifier('recaptcha-container', {
+      size: 'normal',
+      callback: () => console.log("reCAPTCHA ✅"),
+      'expired-callback': () => alert("reCAPTCHA expired. Refresh page.")
     });
+    firebase.auth().signInWithPhoneNumber(phoneNumber, appVerifier)
+      .then(result => {
+        confirmationResult = result;
+        alert("✅ Code sent!");
+      })
+      .catch(err => alert("❌ Failed to send code: " + err.message));
   };
 
-// Phone (requires reCAPTCHA setup)
-  window.phoneLogin = function () {
-    alert("📞 Phone login requires Firebase reCAPTCHA setup. We’ll add this next.");
+  window.verifyCode = function() {
+    const code = document.getElementById("verificationCode").value;
+    if (!confirmationResult) return alert("Send the code first!");
+    confirmationResult.confirm(code)
+      .then(result => {
+        localStorage.setItem("trialStart", Date.now());
+        showWelcome(result.user);
+        alert("✅ Phone login successful!");
+      })
+      .catch(err => alert("❌ Code error: " + err.message));
   };
-</script>
 
   // Logout
   window.logout = function() {
-    return auth.signOut().then(() => {
+    auth.signOut().then(() => {
       alert("👋 Logged out.");
+      document.getElementById("welcome-msg").innerText = "";
     });
   };
 
-  // Check trial expiration
+  // Trial Check
   window.checkTrial = function() {
-    const trialStart = parseInt(localStorage.getItem("trialStart"), 10);
+    const start = parseInt(localStorage.getItem("trialStart"), 10);
     const now = Date.now();
     const sevenDays = 7 * 24 * 60 * 60 * 1000;
-
-    if (trialStart && now - trialStart > sevenDays) {
-      alert("🚫 Your free trial has expired. Please subscribe to continue.");
-      // Redirect or lock features here
+    if (start && now - start > sevenDays) {
+      alert("🚫 Trial expired. Please subscribe.");
     }
   };
-</script>
 
-<script>
-  function loginHandler() {
-    const email = document.getElementById("email").value;
-    const password = document.getElementById("password").value;
-    login(email, password);
-  }
-
-  function signupHandler() {
-    const email = document.getElementById("email").value;
-    const password = document.getElementById("password").value;
-    signup(email, password);
-  }
-
-  function logoutHandler() {
-    logout();
-  }
-
-  // Optional: Automatically check trial on load
+  // Run trial check on page load
   document.addEventListener("DOMContentLoaded", () => {
-    if (typeof checkTrial === "function") {
-      checkTrial();
-    }
+    if (typeof checkTrial === "function") checkTrial();
   });
 </script>
+
 
   <div style="text-align:center; padding: 20px;">
   <input type="text" id="phoneNumber" placeholder="+1234567890" />
@@ -394,6 +382,7 @@
   }
 </script>
 
+<div id="welcome-msg" style="position: fixed; top: 20px; left: 20px; color: #fff; z-index: 9999; font-weight: bold;"></div>
 
 
 <!-- ✅ Your main site logic AFTER all auth -->
