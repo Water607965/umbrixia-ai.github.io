@@ -20,12 +20,24 @@
   <button onclick="signupHandler()">Sign Up</button>
   <button onclick="logoutHandler()">Log Out</button>
 
-    <div class="auth-buttons" style="text-align:center;">
-  <button onclick="googleLogin()" class="glow">Continue with Google</button>
-  <button onclick="microsoftLogin()" class="glow">Continue with Microsoft</button>
-  <button onclick="appleLogin()" class="glow">Continue with Apple</button>
-  <button onclick="emailLogin()" class="glow">Continue with Email</button>
-  <button onclick="phoneLogin()" class="glow">Continue with Phone</button>
+    <div id="auth-card" class="glow-card">
+  <h2>Login to Umbrixia</h2>
+  <input type="email" id="email" placeholder="Email" />
+  <input type="password" id="password" placeholder="Password" />
+  <button onclick="loginHandler()">Log In</button>
+  <button onclick="signupHandler()">Sign Up</button>
+  <div id="auth-buttons">
+    <button onclick="googleLogin()">Google</button>
+  </div>
+
+  <h3>Or Sign In with Phone</h3>
+  <input type="tel" id="phone" placeholder="+1 555-555-5555" />
+  <div id="recaptcha-container"></div>
+  <button onclick="sendPhoneCode()">Send Code</button>
+  <input type="text" id="verifyCode" placeholder="Verification Code" />
+  <button onclick="verifyPhoneCode()">Verify</button>
+
+  <div id="welcome-box"></div>
 </div>
 
 
