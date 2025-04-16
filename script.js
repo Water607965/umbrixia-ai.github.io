@@ -852,4 +852,17 @@ window.addEventListener("load", () => {
   document.body.classList.add("loaded");
 });
 
+function toggleUserMenu() {
+  const menu = document.getElementById("userDropdown");
+  menu.style.display = menu.style.display === "block" ? "none" : "block";
+}
+
+firebase.auth().onAuthStateChanged(user => {
+  if (user) {
+    const firstName = (user.displayName || user.email).split(" ")[0];
+    document.getElementById("dropdownName").innerText = firstName;
+  }
+});
+
+
 
