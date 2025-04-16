@@ -288,6 +288,10 @@
      if (typeof checkTrial === "function") {
        checkTrial();
      }
+    const savedName = localStorage.getItem("displayName");
+  if (savedName) {
+    document.getElementById("auth-status").innerText = `👋 Welcome, ${savedName}`;
+  }
    });
  </script>
  
