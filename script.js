@@ -89,6 +89,7 @@ function loginHandler() {
 }
 
 function signupHandler() {
+  shineButtons();
   const email = document.getElementById("email").value;
   const password = document.getElementById("password").value;
   signup(email, password)
@@ -101,6 +102,7 @@ function signupHandler() {
 }
 
 function logoutHandler() {
+  shineButtons();
   logout()
     .then(() => {
       document.getElementById("auth-status").innerText = ""; // ✅ Clear the welcome text
