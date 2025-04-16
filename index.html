@@ -285,6 +285,32 @@
  <!-- ✅ Your main site logic AFTER all auth -->
  <script src="script.js" defer></script>
  
+<!-- 🔽 Insert block RIGHT BELOW -->
+<script>
+  function showWelcome(user) {
+    const name = user.email || "user";
+    document.getElementById("auth-status").innerText = `👋 Welcome, ${name}`;
+  }
+
+  function redirectToDashboardIfValid() {
+    const trialStart = parseInt(localStorage.getItem("trialStart"), 10);
+    const email = localStorage.getItem("userEmail");
+    const now = Date.now();
+    const sevenDays = 7 * 24 * 60 * 60 * 1000;
+
+    if (trialStart && email && now - trialStart <= sevenDays) {
+      window.location.href = "/dashboard.html";
+    }
+  }
+
+  firebase.auth().onAuthStateChanged(user => {
+    if (user) {
+      localStorage.setItem("userEmail", user.email);
+      showWelcome(user);
+      redirectToDashboardIfValid();
+    }
+  });
+</script>
  
  </body>
  </html>
