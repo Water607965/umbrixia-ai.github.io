@@ -22,7 +22,7 @@
 
   <input type="email" id="email" class="auth-input" placeholder="Email" />
   <input type="password" id="password" class="auth-input" placeholder="Password" />
-  <input type="text" id="name" class="auth-input" placeholder="Full Name" required />
+  <input type="text" id="name-auth" class="auth-input" placeholder="Full Name" required />
 
   <!-- Unified action: will choose between signup or login in JS -->
   <button onclick="unifiedAuthHandler()" class="glow">Continue with Email</button>
@@ -203,7 +203,7 @@
    <h2>Unlock Full Access</h2>
    <form id="signup-form">
     <input type="text" id="name" placeholder="Full Name" required />
-     <input type="email" id="email" placeholder="Enter your email to subscribe" required />
+     <input type="email" id="email-auth" placeholder="Enter your email to subscribe" required />
      <input type="email" id="email-subscribe" placeholder="Enter your email to subscribe" required />
      <button type="submit">Subscribe via Stripe</button>
    </form>
@@ -409,7 +409,7 @@ function checkAndRedirectToDashboard() {
     } else if (!isTrialActive) {
       alert("🚫 Trial expired. Please subscribe to continue.");
     }
-  }
+  
 });
 
  function unifiedAuthHandler() {
@@ -440,9 +440,12 @@ function checkAndRedirectToDashboard() {
 
  
   function toggleUserMenu() {
-  const dropdown = document.getElementById("userDropdownPanel");
-  dropdown.classList.toggle("hidden");
+  const menu = document.getElementById("userDropdownPanel");
+  if (menu) {
+    menu.classList.toggle("hidden");
+  }
 }
+
 
     
 </script>
