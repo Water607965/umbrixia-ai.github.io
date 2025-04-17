@@ -27,12 +27,17 @@
   <!-- Unified action: will choose between signup or login in JS -->
   <button onclick="unifiedAuthHandler()" class="glow">Continue with Email</button>
 
+ 
+
   <button onclick="googleLogin()" class="google-btn glow">
     <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" class="google-icon" />
     Continue with Google
   </button>
 
-  <button onclick="logoutHandler()" class="auth-status" Log Out</button>
+  <button id="logout-btn" onclick="logoutHandler()" style="display:none;" class="logout-clean">Logout</button>
+
+ 
+
 
   <p id="auth-status" class="auth-status"></p>
 
@@ -65,7 +70,6 @@
   <div class="user-icon" onclick="toggleUserMenu()">
     👤
   </div>
-  <div id="userDropdown" class="user-dropdown hidden">
     <p id="dropdownName">User</p>
     <a href="dashboard.html">📊 Dashboard</a>
     <a href="#auth-section">💳 Subscribe</a>
@@ -303,8 +307,16 @@
    }
  
    function logoutHandler() {
-     logout();
-   }
+  logout().then(() => {
+    document.getElementById("auth-status").innerText = "";
+    localStorage.removeItem("displayName");
+    localStorage.removeItem("userEmail");
+    alert("👋 Logged out.");
+  });
+}
+
+  
+
  
    // Optional: Automatically check trial on load
    document.addEventListener("DOMContentLoaded", () => {
@@ -316,6 +328,7 @@
     document.getElementById("auth-status").innerText = `👋 Welcome, ${savedName}`;
   }
    });
+
  </script>
  
  
@@ -358,16 +371,33 @@ function checkAndRedirectToDashboard() {
   }
 
   firebase.auth().onAuthStateChanged(user => {
+  const logoutBtn = document.getElementById("logout-btn");
+  const profileBtn = document.getElementById("profile-btn");
+  const prompt = document.getElementById("dashboard-prompt");
+
   if (user) {
     const trialStart = parseInt(localStorage.getItem("trialStart"), 10);
     const now = Date.now();
-    const sevenDays = 7 * 24 * 60 * 60 * 1000;
-    const isTrialActive = trialStart && now - trialStart <= sevenDays;
+    const isTrialActive = trialStart && now - trialStart <= 7 * 24 * 60 * 60 * 1000;
 
-    // Save user email
-    localStorage.setItem("userEmail", user.email);
-localStorage.setItem("displayName", user.displayName || user.email);
+    logoutBtn.style.display = "block";
+    profileBtn.style.display = "block";
+    showWelcome(user);
 
+    if (isTrialActive && prompt) prompt.style.display = "block";
+    else alert("🚫 Trial expired. Please subscribe to continue.");
+  } else {
+    logoutBtn.style.display = "none";
+    profileBtn.style.display = "none";
+  }
+});
+
+
+
+   
+
+
+    
     // Show welcome message
     showWelcome(user);
 
@@ -381,18 +411,64 @@ localStorage.setItem("displayName", user.displayName || user.email);
   }
 });
 
+ function unifiedAuthHandler() {
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
+  const name = document.getElementById("name").value;
+
+  auth.fetchSignInMethodsForEmail(email)
+    .then(methods => {
+      if (methods.length > 0) {
+        return login(email, password);
+      } else {
+        return auth.createUserWithEmailAndPassword(email, password).then(userCred => {
+          return userCred.user.updateProfile({ displayName: name }).then(() => {
+            auth.currentUser.sendEmailVerification();
+            return userCred;
+          });
+        });
+      }
+    })
+    .then(userCred => {
+      showWelcome(userCred.user);
+    })
+    .catch(err => {
+      alert("❌ Auth error: " + err.message);
+    });
+}
+
+ function toggleUserMenu() {
+  const dropdown = document.getElementById("userDropdownMenu");
+  dropdown.style.display = (dropdown.style.display === "block") ? "none" : "block";
+}
+
+
     
 </script>
 
   <div class="user-avatar" id="avatarMenu">
   <div class="avatar-circle" onclick="toggleUserMenu()">👤</div>
-  <div class="avatar-dropdown" id="userDropdown">
+  <div class="avatar-dropdown" id="userAvatarDropdown"> <!-- ✅ Fixed -->
     <p><strong id="dropdownName">User</strong></p>
     <a href="dashboard.html">Dashboard</a>
     <a href="#auth-section">Settings</a>
     <a href="#" onclick="logoutHandler()">Log Out</a>
+ 
   </div>
 </div>
+
+  <img src="https://cdn-icons-png.flaticon.com/512/1077/1077063.png" width="28" />
+</button>
+
+<div id="userDropdownMenu" style="display:none; position:absolute; top:60px; right:60px; background:#111; padding:12px; border-radius:10px;">
+
+
+  <p>Account Settings</p>
+  <a href="dashboard.html">Dashboard</a>
+</div>
+
+  
+
 
  
  </body>
