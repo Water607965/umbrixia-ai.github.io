@@ -4433,3 +4433,477 @@ input[type="text"] {
   right: 60px;
 }
 
+<!DOCTYPE html>
+ <html lang="en">
+ <head>
+   <meta charset="UTF-8" />
+   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+   <meta name="theme-color" content="#0d0d0d" />
+   <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+   <title>Umbrixia AI Tutor</title>
+   <link rel="stylesheet" href="styles.css" />
+   <link rel="preconnect" href="https://fonts.googleapis.com" />
+   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet" />
+  
+
+ </head>
+ <body>
+ 
+<div class="apple-strip">
+  <h3 style="text-align:center; color:#ff4d4d; margin-bottom: 20px;">
+    Sign up or log in using one of the methods below
+  </h3>
+
+  <input type="email" id="email" class="auth-input" placeholder="Email" />
+  <input type="password" id="password" class="auth-input" placeholder="Password" />
+  <input type="text" id="name" class="auth-input" placeholder="Full Name" required />
+
+  <!-- Unified action: will choose between signup or login in JS -->
+  <button onclick="unifiedAuthHandler()" class="glow">Continue with Email</button>
+
+ 
+
+  <button onclick="googleLogin()" class="google-btn glow">
+    <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" class="google-icon" />
+    Continue with Google
+  </button>
+
+  <button id="logout-btn" onclick="logoutHandler()" style="display:none;" class="logout-clean">Logout</button>
+
+ 
+
+
+  <p id="auth-status" class="auth-status"></p>
+
+  <!-- 🔓 This is shown ONLY if trial is active -->
+  <div id="dashboard-prompt" style="display:none; text-align:center; margin-top:20px;">
+    <p class="trial-msg">You're currently in your free trial. Ready to dive in?</p>
+    <a href="dashboard.html" class="cta-btn glow">Go to Your Dashboard</a>
+  </div>
+</div>
+
+
+ 
+ 
+ 
+ <!-- Navbar -->
+ <nav class="navbar">
+   <div class="navbar-container">
+     <div class="navbar-logo">Umbrixia</div>
+     <ul class="navbar-menu">
+       <li><a href="#features">Features</a></li>
+       <li><a href="#chatbox">Demo</a></li>
+       <li><a href="#auth-section">Pricing</a></li>
+       <li><a href="#success">Success</a></li>
+     </ul>
+   </div>
+ </nav>
+
+  <div id="userDropdownPanel" class="user-dropdown hidden"> <!-- ✅ ADD THIS -->
+  <p id="dropdownName">User</p>
+  <a href="dashboard.html">📊 Dashboard</a>
+  <a href="#auth-section">💳 Subscribe</a>
+  <a href="#" onclick="logoutHandler()">🚪 Log Out</a>
+</div> <!-- ✅ END DIV -->
+
+
+ 
+   <section class="vision-section">
+   <h2 class="section-title">What If Studying Felt Powerful?</h2>
+   <p class="vision-subtitle">Umbrixia is built for the future of test prep — personalized, intelligent, and designed to make students feel confident and in control. This is not just another study tool. It's your edge.</p>
+   <div class="vision-call">
+     <a href="#chatbox" class="cta-btn red">Try It — Free Demo</a>
+   </div>
+ </section>
+ 
+ 
+ <!-- Rotating Headline -->
+ <section class="rotating-headline">
+   <h2 id="rotating-text">Trusted by students. Powered by AI.</h2>
+ </section>
+ 
+ <!-- Stats -->
+ <section class="section">
+   <h2>Why Students Trust Us</h2>
+   <div class="stats-row">
+     <div class="stat-box">
+       <strong>+120 pts</strong>
+       <span>Average score gain</span>
+     </div>
+     <div class="stat-box">
+       <strong>10k+</strong>
+       <span>Questions solved</span>
+     </div>
+     <div class="stat-box">
+       <strong>95%</strong>
+       <span>Accuracy rate</span>
+     </div>
+   </div>
+ </section>
+ 
+ <!-- Features -->
+ <section class="section features-section fade-in" id="features">
+   <h2 class="section-title">What Makes Umbrixia Stand Out?</h2>
+   <div class="grid-2">
+     <div class="feature-card">
+       <h3>🔬 Precision AI</h3>
+       <p>Trained on ISEE, SHSAT, and SAT-style questions for exact-match guidance with full explanations.</p>
+     </div>
+     <div class="feature-card">
+       <h3>📈 Student Dashboard</h3>
+       <p>Visualize strengths, weaknesses, and track improvement across subjects.</p>
+     </div>
+     <div class="feature-card">
+       <h3>🧠 Smart Feedback</h3>
+       <p>Every answer includes step-by-step reasoning to deepen conceptual understanding.</p>
+     </div>
+     <div class="feature-card">
+       <h3>💡 Diagnostic Insights</h3>
+       <p>Start with a 3-question quiz to instantly personalize your tutoring path.</p>
+     </div>
+   </div>
+ </section>
+ 
+   <section class="designed-for-mastery">
+   <h2 class="section-title">Designed for Mastery</h2>
+   <div class="mastery-grid">
+     <div class="mastery-card">
+       <h3>Practice That Adapts</h3>
+       <p>Umbrixia intelligently evolves with you — delivering questions that challenge and strengthen.</p>
+     </div>
+     <div class="mastery-card">
+       <h3>Feedback You Can Trust</h3>
+       <p>Step-by-step logic for every answer. Learn why you're right — or wrong — every single time.</p>
+     </div>
+     <div class="mastery-card">
+       <h3>Built-In Focus</h3>
+       <p>Minimalist design with maximal results. No distractions. Just growth.</p>
+     </div>
+   </div>
+ </section>
+ 
+ 
+ <section class="why-graph-wrapper">
+   <!-- Left Text Column -->
+   <div class="why-text-card">
+     <h2>Why Umbrixia?</h2>
+     <ul>
+       <li>Purpose-built for ISEE, SHSAT, and SAT mastery</li>
+       <li>Step-by-step intelligent explanations</li>
+       <li>AI adapts as you improve</li>
+       <li>Elegant and distraction-free interface</li>
+       <li>Loved by parents, trusted by students</li>
+     </ul>
+     <button class="cta-btn">Subscribe Now</button>
+   </div>
+ 
+   <!-- Right Graph Column -->
+   <div class="graph-card">
+     <h3>When Smart Work Meets Hard Work</h3>
+     <p>They intersect and erupt into exponential success. See the difference Umbrixia makes.</p>
+     <img src="umbrixia_growth_curve.png" alt="Graph of Umbrixia's success curve" />
+   </div>
+ </section>
+ 
+ 
+ <!-- Chat Section -->
+ <section class="section" id="chatbox">
+   <div id="chat">
+     <div class="message bot">
+       <strong>Bot:</strong> Welcome! Ask me an ISEE, SHSAT, or SAT question or pick an example:
+     </div>
+     <div class="examples">
+       <label for="exam-select">Choose Exam:</label>
+       <select id="exam-select" onchange="switchExam()">
+         <option value="shsat">SHSAT</option>
+         <option value="isee">ISEE</option>
+         <option value="sat">SAT</option>
+       </select>
+       <div id="example-buttons"></div>
+     </div>
+   </div>
+   <input type="text" id="userInput" placeholder="Type your ISEE, SHSAT, or SAT question..." />
+   <button onclick="sendMessage()">Send</button>
+ </section>
+ 
+ <!-- Pricing Section -->
+ <section class="section" id="auth-section">
+   <h2>Unlock Full Access</h2>
+   <form id="signup-form">
+    <input type="text" id="name" placeholder="Full Name" required />
+     <input type="email" id="email" placeholder="Enter your email to subscribe" required />
+     <input type="email" id="email-subscribe" placeholder="Enter your email to subscribe" required />
+     <button type="submit">Subscribe via Stripe</button>
+   </form>
+   <div id="signup-status"></div>
+ </section>
+ 
+ 
+ <!-- Footer -->
+ <footer>
+   <p>&copy; 2025 Umbrixia.ai • Built for Students. Powered by OpenAI.</p>
+ </footer>
+ 
+ <!-- ✅ Firebase SDKs -->
+ <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js"></script>
+ <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-auth-compat.js"></script>
+ 
+ <!-- ✅ Auth Logic -->
+ <script>
+   const firebaseConfig = {
+     apiKey: "AIzaSyDDcAp59mkTutfXgnRIBWpVww3jFyzOtIc",
+     authDomain: "umbrixia-d804f.firebaseapp.com",
+     projectId: "umbrixia-d804f",
+     storageBucket: "umbrixia-d804f.firebasestorage.app",
+     messagingSenderId: "532093768601",
+     appId: "1:532093768601:web:4e94149269d88213edb908"
+   };
+ 
+   // Initialize Firebase
+   firebase.initializeApp(firebaseConfig);
+   const auth = firebase.auth();
+   auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
+ 
+   // Signup
+   window.signup = function(email, password) {
+     return auth.createUserWithEmailAndPassword(email, password)
+       .then(userCredential => {
+         localStorage.setItem("trialStart", Date.now());
+         alert("✅ Signup successful!");
+         return userCredential;
+       })
+       .catch(error => {
+         alert("❌ Signup error: " + error.message);
+       });
+   };
+ 
+   // Login
+   window.login = function(email, password) {
+     return auth.signInWithEmailAndPassword(email, password)
+       .then(userCredential => {
+         alert("✅ Login successful!");
+         return userCredential;
+       })
+       .catch(error => {
+         alert("❌ Login error: " + error.message);
+       });
+   };
+ 
+   // Google Login
+   window.googleLogin = function() {
+     const provider = new firebase.auth.GoogleAuthProvider();
+     auth.signInWithPopup(provider)
+       .then(result => {
+         localStorage.setItem("trialStart", Date.now());
+         showWelcome(result.user);
+         alert("✅ Logged in with Google");
+       })
+       .catch(error => {
+         alert("❌ Google login failed: " + error.message);
+       });
+   };
+ 
+   // Logout
+   window.logout = function() {
+     return auth.signOut().then(() => {
+       alert("👋 Logged out.");
+     });
+   };
+ 
+   // Check trial expiration
+   window.checkTrial = function() {
+     const trialStart = parseInt(localStorage.getItem("trialStart"), 10);
+     const now = Date.now();
+     const sevenDays = 7 * 24 * 60 * 60 * 1000;
+ 
+     if (trialStart && now - trialStart > sevenDays) {
+       alert("🚫 Your free trial has expired. Please subscribe to continue.");
+       // Redirect or lock features here
+     }
+   };
+ </script>
+ 
+ <script>
+   function loginHandler() {
+     const email = document.getElementById("email").value;
+     const password = document.getElementById("password").value;
+     login(email, password);
+   }
+ 
+   function signupHandler() {
+     const email = document.getElementById("email").value;
+     const password = document.getElementById("password").value;
+     signup(email, password);
+   }
+ 
+   function logoutHandler() {
+  logout().then(() => {
+    document.getElementById("dropdownName").innerText = "User";
+    localStorage.removeItem("displayName");
+    localStorage.removeItem("userEmail");
+    alert("👋 Logged out.");
+  });
+}
+
+  
+
+ 
+   // Optional: Automatically check trial on load
+   document.addEventListener("DOMContentLoaded", () => {
+     if (typeof checkTrial === "function") {
+       checkTrial();
+     }
+    const savedName = localStorage.getItem("displayName");
+  if (savedName) {
+    document.getElementById("auth-status").innerText = `👋 Welcome, ${savedName}`;
+  }
+   });
+
+ </script>
+ 
+ 
+ <!-- ✅ Your main site logic AFTER all auth -->
+ <script src="script.js" defer></script>
+ 
+<!-- 🔽 Insert block RIGHT BELOW -->
+<script>
+  function showWelcome(user) {
+  let name = user.displayName || user.email || "user";
+  if (name.includes(" ")) name = name.split(" ")[0]; // only first name
+  document.getElementById("auth-status").innerHTML = `👋 <span style="color:#ff4d4d; font-weight:600;">Welcome, ${name}</span>`;
+  localStorage.setItem("displayName", name);
+}
+
+
+ // 🔒 Trial-based redirect after welcome
+function checkAndRedirectToDashboard() {
+  const trialStart = parseInt(localStorage.getItem("trialStart"), 10);
+  const now = Date.now();
+  const sevenDays = 7 * 24 * 60 * 60 * 1000;
+
+  if (trialStart && now - trialStart <= sevenDays) {
+    window.location.href = "dashboard.html"; // Redirect to dashboard
+  } else if (trialStart && now - trialStart > sevenDays) {
+    alert("🚫 Trial expired. Please subscribe to continue.");
+  }
+}
+
+
+  function redirectToDashboardIfValid() {
+    const trialStart = parseInt(localStorage.getItem("trialStart"), 10);
+    const email = localStorage.getItem("userEmail");
+    const now = Date.now();
+    const sevenDays = 7 * 24 * 60 * 60 * 1000;
+
+    if (trialStart && email && now - trialStart <= sevenDays) {
+      window.location.href = "/dashboard.html";
+    }
+  }
+
+  firebase.auth().onAuthStateChanged(user => {
+  const logoutBtn = document.getElementById("logout-btn");
+  const profileBtn = document.getElementById("profile-btn");
+  const prompt = document.getElementById("dashboard-prompt");
+
+  if (user) {
+    const trialStart = parseInt(localStorage.getItem("trialStart"), 10);
+    const now = Date.now();
+    const isTrialActive = trialStart && now - trialStart <= 7 * 24 * 60 * 60 * 1000;
+
+    logoutBtn.style.display = "block";
+    profileBtn.style.display = "block";
+    showWelcome(user);
+
+    if (isTrialActive && prompt) prompt.style.display = "block";
+    else alert("🚫 Trial expired. Please subscribe to continue.");
+  } else {
+    logoutBtn.style.display = "none";
+    profileBtn.style.display = "none";
+  }
+});
+
+
+
+   
+
+
+    
+    
+
+    // Only show dashboard button if trial is active
+    const prompt = document.getElementById("dashboard-prompt");
+    if (isTrialActive && prompt) {
+      prompt.style.display = "block";
+    } else if (!isTrialActive) {
+      alert("🚫 Trial expired. Please subscribe to continue.");
+    }
+  }
+});
+
+ function unifiedAuthHandler() {
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
+  const name = document.getElementById("name").value;
+
+  auth.fetchSignInMethodsForEmail(email)
+    .then(methods => {
+      if (methods.length > 0) {
+        return login(email, password);
+      } else {
+        return auth.createUserWithEmailAndPassword(email, password).then(userCred => {
+          return userCred.user.updateProfile({ displayName: name }).then(() => {
+            auth.currentUser.sendEmailVerification();
+            return userCred;
+          });
+        });
+      }
+    })
+    .then(userCred => {
+      showWelcome(userCred.user);
+    })
+    .catch(err => {
+      alert("❌ Auth error: " + err.message);
+    });
+}
+
+ 
+  function toggleUserMenu() {
+  const dropdown = document.getElementById("userDropdownPanel");
+  dropdown.classList.toggle("hidden");
+}
+
+
+
+    
+</script>
+
+  <div class="user-avatar" id="avatarMenu">
+  <div class="avatar-circle" onclick="toggleUserMenu()">👤</div>
+   <p id="dropdownName">User</p>
+   
+  <a href="dashboard.html">📊 Dashboard</a>
+  <a href="#auth-section">💳 Subscribe</a>
+  <a href="#" onclick="logoutHandler()">🚪 Log Out</a>
+</div>
+    <a href="dashboard.html">Dashboard</a>
+    <a href="#auth-section">Settings</a>
+    <a href="#" onclick="logoutHandler()">Log Out</a>
+ 
+  </div>
+</div>
+
+  
+
+
+  <p>Account Settings</p>
+  <a href="dashboard.html">Dashboard</a>
+</div>
+
+  
+
+
+ 
+ </body>
+ </html>
+
