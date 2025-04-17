@@ -195,12 +195,13 @@ if (rotatingText) {
 }
 
 // ✨ Fade-in on Scroll
-const observer = new IntersectionObserver(entries => {
+const revealObserver = new IntersectionObserver((entries) => {
   entries.forEach(entry => {
     if (entry.isIntersecting) entry.target.classList.add("visible");
   });
 });
-document.querySelectorAll(".fade-in, .feature-card, .stat-box").forEach(el => observer.observe(el));
+document.querySelectorAll(".fade-in, .feature-card, .stat-box").forEach(el => revealObserver.observe(el));
+
 
 // ⬆️ Scroll To Top Button
 const topBtn = document.createElement("button");
@@ -711,10 +712,7 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 });
 
-// ✨ Smoothly animate section reveals on scroll
-const sections = document.querySelectorAll(".section, .vision-section, .designed-for-mastery");
-
-const observer = new IntersectionObserver((entries) => {
+const revealObserver = new IntersectionObserver((entries) => {
   entries.forEach(entry => {
     if (entry.isIntersecting) {
       entry.target.classList.add("reveal-visible");
@@ -723,7 +721,7 @@ const observer = new IntersectionObserver((entries) => {
 }, { threshold: 0.1 });
 
 sections.forEach(section => {
-  observer.observe(section);
+  revealObserver.observe(section);
 });
 
 // 🧠 Animated rotating testimonials
@@ -933,41 +931,13 @@ function toggleUserMenu() {
   menu.classList.toggle("hidden");
 }
 
-function unifiedAuthHandler() {
-  const email = document.getElementById("email").value;
-  const password = document.getElementById("password").value;
-  const name = document.getElementById("name").value;
-
-  // Try login first, if fails, try signup
-  login(email, password)
-    .then(userCredential => {
-      showWelcome(userCredential.user);
-      document.getElementById("auth-status").innerText = `✅ Logged in as ${userCredential.user.email}`;
-    })
-    .catch(() => {
-      signup(email, password)
-        .then(userCredential => {
-          const user = userCredential.user;
-          return user.updateProfile({ displayName: name }).then(() => {
-            showWelcome(user);
-            document.getElementById("auth-status").innerText = `✅ Signed up as ${name}`;
-          });
-        })
-        .catch(err => {
-          document.getElementById("auth-status").innerText = `❌ Auth error: ${err.message}`;
-        });
-    });
-}
-
 async function unifiedAuthHandler() {
   const email = document.getElementById("email").value.trim();
   const password = document.getElementById("password").value.trim();
   const name = document.getElementById("name").value.trim();
+  ...
+}
 
-  if (!email || !password || !name) {
-    alert("Please enter your full name, email, and password.");
-    return;
-  }
 
   try {
     // 1️⃣ Try to sign in (existing user)
