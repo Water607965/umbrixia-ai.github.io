@@ -65,17 +65,13 @@
    </div>
  </nav>
 
-  <!-- 👤 Person Icon -->
-<div class="user-menu-container">
-  <div class="user-icon" onclick="toggleUserMenu()">
-    👤
-  </div>
-    <p id="dropdownName">User</p>
-    <a href="dashboard.html">📊 Dashboard</a>
-    <a href="#auth-section">💳 Subscribe</a>
-    <a href="#" onclick="logoutHandler()">🚪 Log Out</a>
-  </div>
-</div>
+  <div id="userDropdownPanel" class="user-dropdown hidden"> <!-- ✅ ADD THIS -->
+  <p id="dropdownName">User</p>
+  <a href="dashboard.html">📊 Dashboard</a>
+  <a href="#auth-section">💳 Subscribe</a>
+  <a href="#" onclick="logoutHandler()">🚪 Log Out</a>
+</div> <!-- ✅ END DIV -->
+
 
  
    <section class="vision-section">
@@ -308,7 +304,7 @@
  
    function logoutHandler() {
   logout().then(() => {
-    document.getElementById("auth-status").innerText = "";
+    document.getElementById("dropdownName").innerText = "User";
     localStorage.removeItem("displayName");
     localStorage.removeItem("userEmail");
     alert("👋 Logged out.");
@@ -398,8 +394,7 @@ function checkAndRedirectToDashboard() {
 
 
     
-    // Show welcome message
-    showWelcome(user);
+    
 
     // Only show dashboard button if trial is active
     const prompt = document.getElementById("dashboard-prompt");
@@ -437,10 +432,12 @@ function checkAndRedirectToDashboard() {
     });
 }
 
- function toggleUserMenu() {
-  const dropdown = document.getElementById("userDropdownMenu");
-  dropdown.style.display = (dropdown.style.display === "block") ? "none" : "block";
+ 
+  function toggleUserMenu() {
+  const dropdown = document.getElementById("userDropdownPanel");
+  dropdown.classList.toggle("hidden");
 }
+
 
 
     
@@ -448,8 +445,12 @@ function checkAndRedirectToDashboard() {
 
   <div class="user-avatar" id="avatarMenu">
   <div class="avatar-circle" onclick="toggleUserMenu()">👤</div>
-  <div class="avatar-dropdown" id="userAvatarDropdown"> <!-- ✅ Fixed -->
-    <p><strong id="dropdownName">User</strong></p>
+   <p id="dropdownName">User</p>
+   
+  <a href="dashboard.html">📊 Dashboard</a>
+  <a href="#auth-section">💳 Subscribe</a>
+  <a href="#" onclick="logoutHandler()">🚪 Log Out</a>
+</div>
     <a href="dashboard.html">Dashboard</a>
     <a href="#auth-section">Settings</a>
     <a href="#" onclick="logoutHandler()">Log Out</a>
@@ -457,10 +458,7 @@ function checkAndRedirectToDashboard() {
   </div>
 </div>
 
-  <img src="https://cdn-icons-png.flaticon.com/512/1077/1077063.png" width="28" />
-</button>
-
-<div id="userDropdownMenu" style="display:none; position:absolute; top:60px; right:60px; background:#111; padding:12px; border-radius:10px;">
+  
 
 
   <p>Account Settings</p>
