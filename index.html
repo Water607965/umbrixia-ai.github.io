@@ -65,12 +65,18 @@
    </div>
  </nav>
 
-  <div id="userDropdownPanel" class="user-dropdown hidden"> <!-- ✅ ADD THIS -->
-  <p id="dropdownName">User</p>
+  <!-- Avatar & Dropdown -->
+<div class="user-avatar" id="avatarMenu" style="position:absolute; top:20px; right:20px;">
+  <div class="avatar-circle" onclick="toggleUserMenu()">👤</div>
+</div>
+
+<div id="userDropdownPanel" class="user-dropdown hidden" style="position:absolute; top:60px; right:20px; background:#111; padding:12px; border-radius:10px;">
+  <p id="dropdownName">👤 User</p>
   <a href="dashboard.html">📊 Dashboard</a>
   <a href="#auth-section">💳 Subscribe</a>
   <a href="#" onclick="logoutHandler()">🚪 Log Out</a>
-</div> <!-- ✅ END DIV -->
+</div>
+
 
 
  
@@ -438,36 +444,10 @@ function checkAndRedirectToDashboard() {
   dropdown.classList.toggle("hidden");
 }
 
-
-
     
 </script>
 
-  <div class="user-avatar" id="avatarMenu">
-  <div class="avatar-circle" onclick="toggleUserMenu()">👤</div>
-   <p id="dropdownName">User</p>
-   
-  <a href="dashboard.html">📊 Dashboard</a>
-  <a href="#auth-section">💳 Subscribe</a>
-  <a href="#" onclick="logoutHandler()">🚪 Log Out</a>
-</div>
-    <a href="dashboard.html">Dashboard</a>
-    <a href="#auth-section">Settings</a>
-    <a href="#" onclick="logoutHandler()">Log Out</a>
- 
-  </div>
-</div>
 
   
-
-
-  <p>Account Settings</p>
-  <a href="dashboard.html">Dashboard</a>
-</div>
-
-  
-
-
- 
  </body>
  </html>
