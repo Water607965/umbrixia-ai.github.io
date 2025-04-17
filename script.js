@@ -712,18 +712,6 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 });
 
-const revealObserver = new IntersectionObserver((entries) => {
-  entries.forEach(entry => {
-    if (entry.isIntersecting) {
-      entry.target.classList.add("reveal-visible");
-    }
-  });
-}, { threshold: 0.1 });
-
-sections.forEach(section => {
-  revealObserver.observe(section);
-});
-
 // 🧠 Animated rotating testimonials
 const testimonials = [
   "“Umbrixia made test prep fun. Who knew AI could be this helpful?” – Maya, Grade 8",
