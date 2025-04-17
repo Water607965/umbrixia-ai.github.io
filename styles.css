@@ -4425,3 +4425,11 @@ input[type="text"] {
     transform: rotate(360deg);
   }
 }
+
+#profile-btn {
+  display: none;
+  position: absolute;
+  top: 20px;
+  right: 60px;
+}
+
