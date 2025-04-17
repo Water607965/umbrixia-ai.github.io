@@ -77,6 +77,10 @@
   <a href="#" onclick="logoutHandler()">🚪 Log Out</a>
 </div>
 
+  <!-- 👇 Add this button right below your dropdown panel -->
+<button id="profile-btn" style="display:none; position:absolute; top:120px; right:20px;">Profile</button>
+
+
 
 
  
@@ -202,7 +206,6 @@
  <section class="section" id="auth-section">
    <h2>Unlock Full Access</h2>
    <form id="signup-form">
-    <input type="text" id="name" placeholder="Full Name" required />
      <input type="email" id="email-auth" placeholder="Enter your email to subscribe" required />
      <input type="email" id="email-subscribe" placeholder="Enter your email to subscribe" required />
      <button type="submit">Subscribe via Stripe</button>
@@ -374,8 +377,9 @@ function checkAndRedirectToDashboard() {
 
   firebase.auth().onAuthStateChanged(user => {
   const logoutBtn = document.getElementById("logout-btn");
-  const profileBtn = document.getElementById("profile-btn");
+  const profileBtn = document.getElementById("profile-btn"); // ✅ add this line
   const prompt = document.getElementById("dashboard-prompt");
+
 
   if (user) {
     const trialStart = parseInt(localStorage.getItem("trialStart"), 10);
@@ -402,20 +406,43 @@ function checkAndRedirectToDashboard() {
     
     
 
-    // Only show dashboard button if trial is active
-    const prompt = document.getElementById("dashboard-prompt");
-    if (isTrialActive && prompt) {
+    let isTrialActive = false;
+firebase.auth().onAuthStateChanged(user => {
+  const logoutBtn = document.getElementById("logout-btn");
+  const profileBtn = document.getElementById("profile-btn");
+  const prompt = document.getElementById("dashboard-prompt");
+
+  if (user) {
+    const trialStart = parseInt(localStorage.getItem("trialStart"), 10);
+    const now = Date.now();
+    isTrialActive = trialStart && now - trialStart <= 7 * 24 * 60 * 60 * 1000;
+
+    logoutBtn.style.display = "block";
+    if (profileBtn) profileBtn.style.display = "block";
+    showWelcome(user);
+
+    if (isTrialActive && prompt) prompt.style.display = "block";
+    else alert("🚫 Trial expired. Please subscribe to continue.");
+  } else {
+    logoutBtn.style.display = "none";
+    if (profileBtn) profileBtn.style.display = "none";
+  }
+
+  // 👇 Move this block **inside** here, or it'll crash
+  if (prompt) {
+    if (isTrialActive) {
       prompt.style.display = "block";
-    } else if (!isTrialActive) {
+    } else {
       alert("🚫 Trial expired. Please subscribe to continue.");
     }
-  
+  }
 });
+
 
  function unifiedAuthHandler() {
   const email = document.getElementById("email").value;
   const password = document.getElementById("password").value;
-  const name = document.getElementById("name").value;
+  const name = document.getElementById("name-auth").value;
 
   auth.fetchSignInMethodsForEmail(email)
     .then(methods => {
@@ -450,6 +477,7 @@ function checkAndRedirectToDashboard() {
     
 </script>
 
+  
 
   
  </body>
