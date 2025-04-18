@@ -4998,3 +4998,15 @@ html {
   color: #eee;
   box-shadow: 0 4px 16px rgba(255, 77, 77, 0.1);
 }
+
+.fade-in {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+}
+
+.fade-in.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
