@@ -436,6 +436,28 @@ firebase.auth().onAuthStateChanged(user => {
   }
 }
 
+<script>
+  document.getElementById("signupBtn").addEventListener("click", () => {
+    const email = prompt("Enter your email to sign up:");
+    const password = prompt("Enter your password:");
+    signup(email, password);
+  });
+
+  document.getElementById("loginBtn").addEventListener("click", () => {
+    const email = prompt("Enter your email to login:");
+    const password = prompt("Enter your password:");
+    login(email, password);
+  });
+
+  document.getElementById("googleBtn").addEventListener("click", () => {
+    googleLogin();
+  });
+
+  document.getElementById("logoutBtn").addEventListener("click", () => {
+    logout();
+  });
+</script>
+
 
     
 </script>
