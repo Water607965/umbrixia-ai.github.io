@@ -15,50 +15,35 @@
  </head>
  <body>
 
-  <!-- Navbar -->
- <nav class="navbar">
-   <div class="navbar-container">
-     <div class="navbar-logo">Umbrixia</div>
-     <ul class="navbar-menu">
-       <li><a href="#features">Features</a></li>
-       <li><a href="#chatbox">Demo</a></li>
-       <li><a href="#auth-section">Pricing</a></li>
-       <li><a href="#success">Success</a></li>
-     </ul>
-   </div>
- </nav>
+  <nav class="navbar-modern">
+  <div class="navbar-logo">Umbrixia</div>
+  <ul class="navbar-links">
+    <li><a href="#features">Features</a></li>
+    <li><a href="#chatbox">Demo</a></li>
+    <li><a href="#auth-section">Pricing</a></li>
+    <li><a href="#success">Success</a></li>
+  </ul>
+  <div class="user-avatar" onclick="toggleUserMenu()">👤</div>
+</nav>
+
  
-<!-- 🌟 NEW FULL‑BLEED HERO SECTION -->
 <header class="hero">
   <div class="hero-content">
     <h1 class="hero-title">Welcome to Umbrixia</h1>
-    <p class="hero-subtitle">
-      AI‑powered test prep for ISEE, SHSAT, and SAT.
-      Personalized paths, instant feedback, zero distractions.
-    </p>
-
+    <p class="hero-subtitle">AI-powered prep for SHSAT, ISEE & SAT—refined, efficient, yours.</p>
     <div class="hero-buttons">
-      <a href="signup.html" class="hero-btn hero-btn--primary">Get Started (Free)</a>
-      <a href="login.html" class="hero-btn hero-btn--secondary">Log In</a>
+      <a href="signup.html" class="btn btn-primary">Start Free</a>
+      <a href="login.html" class="btn btn-secondary">Log In</a>
     </div>
-
     <div class="hero-alt">
-      <button id="googleBtn" class="hero-btn hero-btn--google">
-        <img src="google-icon.svg" alt="" class="hero-icon" />
-        Sign in with Google
+      <button id="googleBtn" class="btn btn-google">
+        <img src="google-icon.svg" alt="Google Icon" class="icon" />
+        Continue with Google
       </button>
     </div>
   </div>
 </header>
-
-
-
-
- 
- 
- 
- 
-
+  
   <!-- Avatar & Dropdown -->
 <div class="user-avatar" id="avatarMenu" style="position:absolute; top:20px; right:20px;">
   <div class="avatar-circle" onclick="toggleUserMenu()">👤</div>
