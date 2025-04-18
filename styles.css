@@ -5074,4 +5074,10 @@ html {
   box-shadow: 0 5px 20px rgba(255, 77, 77, 0.4);
 }
 
+.fade-in.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+
 
