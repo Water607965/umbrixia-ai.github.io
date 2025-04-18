@@ -2,163 +2,159 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Umbrixia | Dashboard</title>
   <link rel="stylesheet" href="styles.css" />
+  <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-auth-compat.js"></script>
   <style>
     body {
       margin: 0;
       font-family: 'Inter', sans-serif;
       background-color: #0d0d0d;
       color: white;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 40px 20px;
     }
-
-    .dashboard-title {
-      font-size: 2.5rem;
+    .dashboard {
+      padding: 60px 20px;
+      max-width: 1200px;
+      margin: auto;
+    }
+    h1 {
+      font-size: 2.8rem;
+      text-align: center;
+      color: #ff4d4d;
       margin-bottom: 10px;
     }
-
-    .subtitle {
-      color: #ccc;
-      margin-bottom: 30px;
+    .sub {
       text-align: center;
-      max-width: 600px;
-    }
-
-    .test-selection {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 15px;
+      font-size: 1.1rem;
+      color: #999;
       margin-bottom: 40px;
     }
-
-    .test-button {
-      background-color: #1a1a1a;
-      border: 1px solid #444;
-      color: white;
-      padding: 15px 25px;
-      border-radius: 10px;
-      cursor: pointer;
+    .test-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      flex-wrap: wrap;
+      margin-bottom: 40px;
+    }
+    .test-buttons button {
+      background-color: #111;
+      border: 1px solid #ff4d4d;
+      padding: 15px 30px;
       font-size: 1rem;
-      transition: all 0.2s ease;
+      color: white;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: 0.2s ease;
     }
-
-    .test-button.active {
+    .test-buttons button:hover {
       background-color: #ff4d4d;
-      border-color: #ff4d4d;
-      font-weight: 600;
+      color: #0d0d0d;
     }
-
     .test-section {
-      margin-bottom: 60px;
-      width: 100%;
-      max-width: 1000px;
+      display: none;
+      animation: fadeIn 0.4s ease;
     }
-
-    .test-section h2 {
-      font-size: 1.8rem;
-      margin-bottom: 10px;
-    }
-
     .practice-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-      gap: 20px;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 25px;
+      margin-bottom: 50px;
     }
-
     .practice-card {
-      background-color: #1a1a1a;
-      border: 1px solid #333;
-      padding: 20px;
-      border-radius: 12px;
-      transition: transform 0.2s ease;
+      background: #111;
+      border: 1px solid #222;
+      padding: 25px;
+      border-radius: 14px;
+      box-shadow: 0 0 10px #191919;
+      text-align: center;
+      transition: 0.2s ease;
     }
-
     .practice-card:hover {
-      transform: scale(1.03);
+      box-shadow: 0 0 15px #ff4d4d;
     }
-
     .practice-card h3 {
       color: #ff4d4d;
-      margin-bottom: 8px;
     }
-
-    .practice-card p {
-      color: #aaa;
-      font-size: 0.95rem;
+    .puzzle-section {
+      margin-top: 30px;
+      background-color: #141414;
+      padding: 20px;
+      border-radius: 14px;
+      box-shadow: 0 0 8px #181818;
+    }
+    .puzzle-section h4 {
+      color: #ff4d4d;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
     }
   </style>
 </head>
 <body>
+  <div class="dashboard">
+    <h1>🧠 Umbrixia AI Dashboard</h1>
+    <p class="sub">Choose your test, try in-development practice tests, or challenge your mind with puzzles.</p>
 
-  <h1 class="dashboard-title">👋 Welcome to Your Umbrixia Dashboard</h1>
-  <p class="subtitle">Choose the exams you want to study. Your 7-day free trial is active. Select any test to see what’s available so far!</p>
+    <div class="test-buttons">
+      <button onclick="showSection('shsat')">SHSAT</button>
+      <button onclick="showSection('isee')">ISEE</button>
+      <button onclick="showSection('sat')">SAT</button>
+    </div>
 
-  <!-- Test Type Buttons -->
-  <div class="test-selection">
-    <button class="test-button" onclick="toggleTest('shsat')">SHSAT</button>
-    <button class="test-button" onclick="toggleTest('isee')">ISEE</button>
-    <button class="test-button" onclick="toggleTest('sat')">SAT</button>
+    <!-- SHSAT Section -->
+    <div id="shsat" class="test-section">
+      <h2>SHSAT Practice Tests</h2>
+      <div class="practice-grid">
+        <div class="practice-card"><h3>Test 1</h3><p>Coming Soon...</p></div>
+        <div class="practice-card"><h3>Test 2</h3><p>Coming Soon...</p></div>
+        <div class="practice-card"><h3>Test 3</h3><p>Coming Soon...</p></div>
+      </div>
+      <div class="puzzle-section">
+        <h4>🧩 SHSAT Puzzle of the Day</h4>
+        <p>“You measure my life in hours and I serve you by expiring. I’m quick when I’m thin and slow when I’m fat. The wind is my enemy.”</p>
+        <small>Answer tomorrow.</small>
+      </div>
+    </div>
+
+    <!-- ISEE Section -->
+    <div id="isee" class="test-section">
+      <h2>ISEE Practice Tests</h2>
+      <div class="practice-grid">
+        <div class="practice-card"><h3>Test 1</h3><p>Coming Soon...</p></div>
+        <div class="practice-card"><h3>Test 2</h3><p>Coming Soon...</p></div>
+        <div class="practice-card"><h3>Test 3</h3><p>Coming Soon...</p></div>
+      </div>
+      <div class="puzzle-section">
+        <h4>🧠 ISEE Logic Puzzle</h4>
+        <p>“I speak without a mouth and hear without ears. I have no body, but I come alive with wind.”</p>
+        <small>Answer tomorrow.</small>
+      </div>
+    </div>
+
+    <!-- SAT Section -->
+    <div id="sat" class="test-section">
+      <h2>SAT Practice Tests</h2>
+      <div class="practice-grid">
+        <div class="practice-card"><h3>Test 1</h3><p>Coming Soon...</p></div>
+        <div class="practice-card"><h3>Test 2</h3><p>Coming Soon...</p></div>
+        <div class="practice-card"><h3>Test 3</h3><p>Coming Soon...</p></div>
+      </div>
+      <div class="puzzle-section">
+        <h4>💡 SAT Puzzle</h4>
+        <p>“I have keys but no locks. I have space but no room. You can enter but you can’t go outside. What am I?”</p>
+        <small>Answer tomorrow.</small>
+      </div>
+    </div>
   </div>
 
-  <!-- Practice Tests Placeholder -->
-  <div id="testSections"></div>
-
   <script>
-    const selectedTests = new Set();
-
-    const tests = {
-      shsat: "SHSAT",
-      isee: "ISEE",
-      sat: "SAT"
-    };
-
-    function toggleTest(testKey) {
-      const button = document.querySelector(`.test-button[onclick*="${testKey}"]`);
-      if (selectedTests.has(testKey)) {
-        selectedTests.delete(testKey);
-        button.classList.remove("active");
-      } else {
-        selectedTests.add(testKey);
-        button.classList.add("active");
-      }
-      renderTests();
-    }
-
-    function renderTests() {
-      const container = document.getElementById("testSections");
-      container.innerHTML = "";
-
-      selectedTests.forEach(testKey => {
-        const testName = tests[testKey];
-        const section = document.createElement("section");
-        section.className = "test-section";
-        section.innerHTML = `
-          <h2>${testName} Practice Tests</h2>
-          <div class="practice-grid">
-            <div class="practice-card">
-              <h3>Test 1</h3>
-              <p>Status: In Development</p>
-            </div>
-            <div class="practice-card">
-              <h3>Test 2</h3>
-              <p>Status: In Development</p>
-            </div>
-            <div class="practice-card">
-              <h3>Test 3</h3>
-              <p>Status: In Development</p>
-            </div>
-          </div>
-        `;
-        container.appendChild(section);
-      });
+    function showSection(test) {
+      document.querySelectorAll('.test-section').forEach(sec => sec.style.display = 'none');
+      document.getElementById(test).style.display = 'block';
     }
   </script>
-
 </body>
 </html>
