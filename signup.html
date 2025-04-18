@@ -2,77 +2,102 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Sign Up | Umbrixia</title>
   <link rel="stylesheet" href="styles.css" />
   <style>
     body {
       margin: 0;
       font-family: 'Inter', sans-serif;
-      background: radial-gradient(circle at top left, #1a1a1a, #0d0d0d);
-      color: white;
+      background: linear-gradient(145deg, #0d0d0d, #1a1a1a);
+      color: #fff;
       display: flex;
-      flex-direction: column;
-      align-items: center;
       justify-content: center;
+      align-items: center;
       height: 100vh;
     }
 
-    .signup-wrapper {
+    .signup-container {
+      background: rgba(15, 15, 15, 0.9);
+      padding: 40px;
+      border-radius: 16px;
       width: 100%;
       max-width: 450px;
-      padding: 2rem;
-      background: rgba(20, 20, 20, 0.9);
-      border-radius: 16px;
-      box-shadow: 0 0 60px #ff4d4d44;
+      box-shadow: 0 0 30px rgba(255, 77, 77, 0.2);
+      backdrop-filter: blur(20px);
       text-align: center;
     }
 
-    input, button {
-      width: 100%;
-      padding: 12px;
-      margin: 10px 0;
-      border: none;
-      border-radius: 8px;
-      font-size: 1rem;
+    h1 {
+      margin-bottom: 30px;
+      color: #ff4d4d;
+      font-weight: 800;
+      font-size: 28px;
     }
 
     input {
-      background-color: #1f1f1f;
+      width: 100%;
+      padding: 14px;
+      margin: 10px 0;
+      border: none;
+      border-radius: 10px;
+      background-color: #1c1c1c;
       color: white;
+      font-size: 15px;
     }
 
     button {
-      background: #ff4d4d;
+      width: 100%;
+      padding: 14px;
+      margin-top: 15px;
+      background-color: #ff4d4d;
       color: white;
-      cursor: pointer;
+      font-size: 16px;
       font-weight: bold;
-      transition: 0.3s ease;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.3s ease;
     }
 
     button:hover {
-      background: #ff1a1a;
+      background-color: #ff1a1a;
     }
 
-    .link-btn {
-      margin-top: 12px;
-      background: transparent;
+    .link-buttons {
+      margin-top: 25px;
+    }
+
+    .link-buttons a {
+      display: block;
       color: #aaa;
-      font-size: 0.9rem;
-      text-decoration: underline;
+      margin-top: 10px;
+      text-decoration: none;
+      font-size: 14px;
+    }
+
+    .link-buttons a:hover {
+      color: #fff;
     }
   </style>
 </head>
 <body>
-  <div class="signup-wrapper">
-    <h2>Create Your Umbrixia Account</h2>
+  <div class="signup-container">
+    <h1>Create an Umbrixia Account</h1>
     <input id="email" type="email" placeholder="Email" />
     <input id="password" type="password" placeholder="Password" />
     <button onclick="signupHandler()">Sign Up</button>
-    <button class="link-btn" onclick="window.location.href='index.html'">⬅ Back to Home</button>
-    <button class="link-btn" onclick="window.location.href='login.html'">Already have an account? Log in</button>
+    <button onclick="googleLogin()" style="background-color:#1a1a1a; color:white; border:1px solid #ff4d4d; margin-top:10px;">
+      Sign Up with Google
+    </button>
+
+    <div class="link-buttons">
+      <a href="login.html">Already have an account? Log In</a>
+      <a href="index.html">← Back to Home</a>
+    </div>
   </div>
 
+  <!-- Firebase SDK -->
   <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-auth-compat.js"></script>
   <script>
@@ -80,10 +105,11 @@
       apiKey: "AIzaSyDDcAp59mkTutfXgnRIBWpVww3jFyzOtIc",
       authDomain: "umbrixia-d804f.firebaseapp.com",
       projectId: "umbrixia-d804f",
-      storageBucket: "umbrixia-d804f.firebasestorage.app",
+      storageBucket: "umbrixia-d804f.appspot.com",
       messagingSenderId: "532093768601",
       appId: "1:532093768601:web:4e94149269d88213edb908"
     };
+
     firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
 
@@ -91,9 +117,20 @@
       const email = document.getElementById("email").value;
       const password = document.getElementById("password").value;
       auth.createUserWithEmailAndPassword(email, password)
-        .then(userCred => {
+        .then(userCredential => {
           localStorage.setItem("trialStart", Date.now());
-          alert("✅ Account created! Redirecting...");
+          alert("✅ Signup successful!");
+          window.location.href = "dashboard.html";
+        })
+        .catch(err => alert("❌ " + err.message));
+    }
+
+    function googleLogin() {
+      const provider = new firebase.auth.GoogleAuthProvider();
+      auth.signInWithPopup(provider)
+        .then(result => {
+          localStorage.setItem("trialStart", Date.now());
+          alert("✅ Google signup successful!");
           window.location.href = "dashboard.html";
         })
         .catch(error => alert("❌ " + error.message));
