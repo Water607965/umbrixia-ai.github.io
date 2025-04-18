@@ -5145,4 +5145,31 @@ html {
   cursor: pointer;
 }
 
+.btn-google-dark {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 12px 20px;
+  font-weight: 600;
+  font-size: 16px;
+  background-color: #121212;
+  color: white;
+  border: 1px solid #2a2a2a;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+  box-shadow: 0 0 10px rgba(255, 77, 77, 0.2);
+  cursor: pointer;
+}
+
+.btn-google-dark:hover {
+  background-color: #1f1f1f;
+  box-shadow: 0 0 16px rgba(255, 77, 77, 0.4);
+}
+
+.btn-google-dark .icon {
+  width: 20px;
+  height: 20px;
+}
+
 
