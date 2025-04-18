@@ -436,7 +436,11 @@ firebase.auth().onAuthStateChanged(user => {
   }
 }
 
-<script>
+
+    
+</script>
+
+  <script>
   document.getElementById("signupBtn").addEventListener("click", () => {
     const email = prompt("Enter your email to sign up:");
     const password = prompt("Enter your password:");
@@ -456,10 +460,6 @@ firebase.auth().onAuthStateChanged(user => {
   document.getElementById("logoutBtn").addEventListener("click", () => {
     logout();
   });
-</script>
-
-
-    
 </script>
 
   
