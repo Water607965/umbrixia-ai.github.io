@@ -441,24 +441,39 @@ firebase.auth().onAuthStateChanged(user => {
 </script>
 
   <script>
-  document.getElementById("signupBtn").addEventListener("click", () => {
-    const email = prompt("Enter your email to sign up:");
-    const password = prompt("Enter your password:");
-    signup(email, password);
-  });
+  document.addEventListener("DOMContentLoaded", () => {
+    const signupBtn = document.getElementById("signupBtn");
+    const loginBtn = document.getElementById("loginBtn");
+    const googleBtn = document.getElementById("googleBtn");
+    const logoutBtn = document.getElementById("logoutBtn");
 
-  document.getElementById("loginBtn").addEventListener("click", () => {
-    const email = prompt("Enter your email to login:");
-    const password = prompt("Enter your password:");
-    login(email, password);
-  });
+    if (signupBtn) {
+      signupBtn.addEventListener("click", () => {
+        const email = prompt("Enter your email to sign up:");
+        const password = prompt("Enter your password:");
+        signup(email, password);
+      });
+    }
 
-  document.getElementById("googleBtn").addEventListener("click", () => {
-    googleLogin();
-  });
+    if (loginBtn) {
+      loginBtn.addEventListener("click", () => {
+        const email = prompt("Enter your email to login:");
+        const password = prompt("Enter your password:");
+        login(email, password);
+      });
+    }
 
-  document.getElementById("logoutBtn").addEventListener("click", () => {
-    logout();
+    if (googleBtn) {
+      googleBtn.addEventListener("click", () => {
+        googleLogin();
+      });
+    }
+
+    if (logoutBtn) {
+      logoutBtn.addEventListener("click", () => {
+        logout();
+      });
+    }
   });
 </script>
 
