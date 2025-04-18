@@ -1137,3 +1137,21 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 });
 
+// Animate .fade-in elements when they scroll into view
+document.addEventListener("DOMContentLoaded", () => {
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add("show");
+        observer.unobserve(entry.target); // Trigger once
+      }
+    });
+  }, {
+    threshold: 0.2,
+  });
+
+  document.querySelectorAll('.fade-in').forEach(el => {
+    observer.observe(el);
+  });
+});
+
