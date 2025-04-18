@@ -3,18 +3,105 @@
 <head>
   <meta charset="UTF-8" />
   <title>Sign Up | Umbrixia</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="stylesheet" href="styles.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: #0a0a0a;
+      font-family: 'Inter', sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      color: white;
+    }
+
+    .signup-container {
+      background: rgba(20, 20, 20, 0.9);
+      padding: 2.5rem;
+      border-radius: 16px;
+      box-shadow: 0 0 30px rgba(255, 77, 77, 0.6);
+      max-width: 400px;
+      width: 90%;
+      text-align: center;
+      position: relative;
+    }
+
+    h2 {
+      margin-bottom: 1.5rem;
+      color: #ff4d4d;
+      font-weight: 600;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      border-radius: 8px;
+      border: none;
+      background: #1a1a1a;
+      color: white;
+      font-size: 1rem;
+      box-shadow: inset 0 0 6px rgba(255, 77, 77, 0.3);
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      margin-top: 15px;
+      border: none;
+      border-radius: 8px;
+      background: #ff4d4d;
+      color: white;
+      font-weight: bold;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    button:hover {
+      background: #e63e3e;
+    }
+
+    .back-link {
+      margin-top: 20px;
+      display: block;
+      color: #999;
+      text-decoration: underline;
+      font-size: 0.9rem;
+    }
+
+    #googleBtn {
+      background: #ffffff;
+      color: #333;
+      margin-top: 10px;
+    }
+
+    #googleBtn:hover {
+      background: #e2e2e2;
+    }
+  </style>
 </head>
 <body>
-  <div class="glow-card">
+
+  <div class="signup-container">
     <h2>Create an Account</h2>
     <input id="email" type="email" placeholder="Email" />
     <input id="password" type="password" placeholder="Password" />
     <button onclick="signupHandler()">Sign Up</button>
+    <button id="googleBtn">Sign Up with Google</button>
+    <a href="index.html" class="back-link">← Back to Home</a>
   </div>
 
+  <!-- Firebase Auth -->
   <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-auth-compat.js"></script>
+
   <script>
     const firebaseConfig = {
       apiKey: "AIzaSyDDcAp59mkTutfXgnRIBWpVww3jFyzOtIc",
@@ -26,6 +113,7 @@
     };
     firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
+    auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
 
     function signupHandler() {
       const email = document.getElementById("email").value;
@@ -38,6 +126,21 @@
         })
         .catch(err => alert("❌ " + err.message));
     }
+
+    // Google Auth
+    document.getElementById("googleBtn").addEventListener("click", () => {
+      const provider = new firebase.auth.GoogleAuthProvider();
+      auth.signInWithPopup(provider)
+        .then(result => {
+          localStorage.setItem("trialStart", Date.now());
+          alert("✅ Signed up with Google!");
+          window.location.href = "dashboard.html";
+        })
+        .catch(err => {
+          alert("❌ Google Signup Failed: " + err.message);
+        });
+    });
   </script>
+
 </body>
 </html>
