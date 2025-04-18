@@ -3,87 +3,108 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Log In | Umbrixia</title>
+  <title>Login | Umbrixia</title>
   <link rel="stylesheet" href="styles.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet" />
   <style>
     body {
       margin: 0;
+      padding: 0;
       font-family: 'Inter', sans-serif;
-      background: #0d0d0d;
-      color: white;
-      display: flex;
-      justify-content: center;
-      align-items: center;
+      background: linear-gradient(to bottom right, #0d0d0d, #1a1a1a);
+      color: #fff;
       height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     .login-container {
-      background: rgba(255, 255, 255, 0.05);
-      padding: 3rem 2rem;
-      border-radius: 20px;
-      box-shadow: 0 0 50px #ff4d4d44;
       width: 100%;
       max-width: 400px;
+      padding: 40px;
+      border-radius: 16px;
+      background: rgba(20, 20, 20, 0.95);
+      box-shadow: 0 0 60px rgba(255, 77, 77, 0.15);
       text-align: center;
     }
 
     h2 {
-      margin-bottom: 1.5rem;
-      font-size: 1.8rem;
+      font-size: 28px;
+      margin-bottom: 30px;
+      color: #ff4d4d;
     }
 
     input {
       width: 100%;
-      padding: 12px 16px;
-      margin-bottom: 1rem;
+      padding: 14px;
+      margin: 12px 0;
       border: none;
-      border-radius: 10px;
-      font-size: 1rem;
+      border-radius: 8px;
       background: #1a1a1a;
-      color: white;
+      color: #fff;
+      font-size: 16px;
+      outline: none;
+      box-shadow: inset 0 0 0 1px #333;
+      transition: all 0.3s ease;
     }
 
-    button {
+    input:focus {
+      box-shadow: inset 0 0 0 2px #ff4d4d;
+    }
+
+    .btn {
       width: 100%;
-      padding: 12px;
-      background: #ff4d4d;
-      border: none;
-      border-radius: 10px;
-      color: white;
-      font-size: 1rem;
+      padding: 14px;
+      margin-top: 16px;
+      background: #000;
+      color: #fff;
+      font-weight: 600;
+      border: 1px solid #ff4d4d;
+      border-radius: 8px;
       cursor: pointer;
-      margin-top: 0.5rem;
+      transition: all 0.3s ease;
     }
 
-    .back-links {
-      margin-top: 1.5rem;
-      font-size: 0.9rem;
+    .btn:hover {
+      background: #ff4d4d;
+      color: #000;
     }
 
-    .back-links a {
+    .nav-buttons {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 24px;
+    }
+
+    .nav-buttons button {
+      background: none;
+      border: none;
+      color: #ccc;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .nav-buttons button:hover {
       color: #ff4d4d;
-      text-decoration: none;
-    }
-
-    .back-links a:hover {
-      text-decoration: underline;
     }
   </style>
 </head>
 <body>
-
   <div class="login-container">
-    <h2>Log In to Umbrixia</h2>
-    <input id="email" type="email" placeholder="Email" autocomplete="email" />
-    <input id="password" type="password" placeholder="Password" autocomplete="current-password" />
-    <button onclick="loginHandler()">Log In</button>
-    <button onclick="googleLogin()">Sign in with Google</button>
-    <div class="back-links">
-      <p>New here? <a href="signup.html">Create an account</a></p>
-      <p><a href="index.html">← Back to Home</a></p>
+    <h2>Welcome Back to Umbrixia</h2>
+    <input id="email" type="email" placeholder="Email" />
+    <input id="password" type="password" placeholder="Password" />
+    <button class="btn" onclick="loginHandler()">Log In</button>
+    <button class="btn" onclick="googleLogin()">Sign in with Google</button>
+
+    <div class="nav-buttons">
+      <button onclick="window.location.href='index.html'">← Home</button>
+      <button onclick="window.location.href='signup.html'">Create Account →</button>
     </div>
   </div>
 
+  <!-- Firebase SDK -->
   <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-auth-compat.js"></script>
   <script>
@@ -91,7 +112,7 @@
       apiKey: "AIzaSyDDcAp59mkTutfXgnRIBWpVww3jFyzOtIc",
       authDomain: "umbrixia-d804f.firebaseapp.com",
       projectId: "umbrixia-d804f",
-      storageBucket: "umbrixia-d804f.firebasestorage.app",
+      storageBucket: "umbrixia-d804f.appspot.com",
       messagingSenderId: "532093768601",
       appId: "1:532093768601:web:4e94149269d88213edb908"
     };
@@ -99,18 +120,13 @@
     firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
 
-    // Redirect if already logged in
-    auth.onAuthStateChanged(user => {
-      if (user) window.location.href = "dashboard.html";
-    });
-
     function loginHandler() {
       const email = document.getElementById("email").value;
       const password = document.getElementById("password").value;
-
       auth.signInWithEmailAndPassword(email, password)
         .then(() => {
           alert("✅ Login successful!");
+          localStorage.setItem("trialStart", Date.now());
           window.location.href = "dashboard.html";
         })
         .catch(err => alert("❌ " + err.message));
@@ -126,6 +142,18 @@
         })
         .catch(error => alert("❌ " + error.message));
     }
+
+    // Auto redirect if already logged in with valid trial
+    auth.onAuthStateChanged(user => {
+      if (user) {
+        const trialStart = parseInt(localStorage.getItem("trialStart"), 10);
+        const now = Date.now();
+        const sevenDays = 7 * 24 * 60 * 60 * 1000;
+        if (trialStart && now - trialStart <= sevenDays) {
+          window.location.href = "dashboard.html";
+        }
+      }
+    });
   </script>
 </body>
 </html>
