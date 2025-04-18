@@ -991,3 +991,83 @@ async function unifiedAuthHandler() {
   }
 }
 
+// script.js
+
+document.addEventListener("DOMContentLoaded", () => {
+  // 1) SMOOTH SCROLL FOR IN‑PAGE LINKS
+  document.querySelectorAll('a[href^="#"]').forEach(link => {
+    link.addEventListener("click", e => {
+      e.preventDefault();
+      const target = document.querySelector(link.getAttribute("href"));
+      if (!target) return;
+      target.scrollIntoView({ behavior: "smooth" });
+    });
+  });
+
+  // 2) HERO CONTENT ENTRANCE
+  const heroContent = document.querySelector(".hero-content");
+  if (heroContent) {
+    heroContent.classList.add("preload");
+    // Allow CSS to pick up initial state, then trigger
+    requestAnimationFrame(() => {
+      heroContent.classList.add("in-view");
+    });
+  }
+
+  // 3) ROTATING HEADLINE TEXT
+  const phrases = [
+    "Trusted by students.",
+    "Powered by AI.",
+    "Personalized paths.",
+    "Zero distractions."
+  ];
+  let idx = 0;
+  const rotatingEl = document.getElementById("rotating-text");
+  if (rotatingEl) {
+    setInterval(() => {
+      rotatingEl.classList.remove("fade-in");
+      void rotatingEl.offsetWidth;
+      rotatingEl.textContent = phrases[idx = (idx + 1) % phrases.length];
+      rotatingEl.classList.add("fade-in");
+    }, 4000);
+  }
+
+  // 4) FADE‑IN + SLIDE‑UP ON SCROLL
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add("in-view");
+        io.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.15 });
+
+  document.querySelectorAll(".fade-in, .slide-up, .zoom-in").forEach(el => {
+    el.classList.add("preload");
+    io.observe(el);
+  });
+
+  // 5) BUTTON RIPPLE EFFECT
+  document.querySelectorAll(".btn, button").forEach(btn => {
+    btn.addEventListener("click", function(e) {
+      const circle = document.createElement("span");
+      const diameter = Math.max(this.clientWidth, this.clientHeight);
+      const radius = diameter / 2;
+      circle.style.width = circle.style.height = `${diameter}px`;
+      circle.style.left = `${e.clientX - this.offsetLeft - radius}px`;
+      circle.style.top = `${e.clientY - this.offsetTop - radius}px`;
+      circle.classList.add("ripple");
+      const ripple = this.getElementsByClassName("ripple")[0];
+      if (ripple) ripple.remove();
+      this.appendChild(circle);
+    });
+  });
+
+  // 6) FORM FIELD FOCUS UNDERSCORE
+  document.querySelectorAll("input, textarea").forEach(input => {
+    const wrapper = input.closest(".form-group") || input.parentElement;
+    input.addEventListener("focus",  () => wrapper.classList.add("focused"));
+    input.addEventListener("blur",   () => wrapper.classList.remove("focused"));
+  });
+});
+
