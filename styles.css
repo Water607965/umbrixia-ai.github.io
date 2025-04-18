@@ -5212,4 +5212,32 @@ html {
   line-height: 1.6;
 }
 
+/* === Google Button Fix === */
+.btn-google {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 24px;
+  background-color: #111 !important;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 15px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 0 12px rgba(255, 77, 77, 0.2);
+}
+
+.btn-google:hover {
+  background-color: #ff4d4d !important;
+  color: white;
+  box-shadow: 0 0 16px rgba(255, 77, 77, 0.4);
+}
+
+.btn-google img.icon {
+  width: 20px;
+  height: 20px;
+}
+
 
