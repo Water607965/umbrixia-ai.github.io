@@ -2,44 +2,163 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Umbrixia | SHSAT Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Umbrixia | Dashboard</title>
   <link rel="stylesheet" href="styles.css" />
-  <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-auth-compat.js"></script>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      background-color: #0d0d0d;
+      color: white;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px 20px;
+    }
+
+    .dashboard-title {
+      font-size: 2.5rem;
+      margin-bottom: 10px;
+    }
+
+    .subtitle {
+      color: #ccc;
+      margin-bottom: 30px;
+      text-align: center;
+      max-width: 600px;
+    }
+
+    .test-selection {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 15px;
+      margin-bottom: 40px;
+    }
+
+    .test-button {
+      background-color: #1a1a1a;
+      border: 1px solid #444;
+      color: white;
+      padding: 15px 25px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: all 0.2s ease;
+    }
+
+    .test-button.active {
+      background-color: #ff4d4d;
+      border-color: #ff4d4d;
+      font-weight: 600;
+    }
+
+    .test-section {
+      margin-bottom: 60px;
+      width: 100%;
+      max-width: 1000px;
+    }
+
+    .test-section h2 {
+      font-size: 1.8rem;
+      margin-bottom: 10px;
+    }
+
+    .practice-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 20px;
+    }
+
+    .practice-card {
+      background-color: #1a1a1a;
+      border: 1px solid #333;
+      padding: 20px;
+      border-radius: 12px;
+      transition: transform 0.2s ease;
+    }
+
+    .practice-card:hover {
+      transform: scale(1.03);
+    }
+
+    .practice-card h3 {
+      color: #ff4d4d;
+      margin-bottom: 8px;
+    }
+
+    .practice-card p {
+      color: #aaa;
+      font-size: 0.95rem;
+    }
+  </style>
 </head>
 <body>
-  <div class="dashboard-container">
-    <h1 class="glow">🧠 SHSAT AI Trial Dashboard</h1>
-    <p>You're currently in your 7-day trial. Complete questions and get step-by-step help!</p>
 
-    <div class="question-card">
-      <h2>Question 1</h2>
-      <p>In the passage, what does the author most likely mean by the word "perilous"?</p>
-      <input type="text" id="q1" placeholder="Your answer..." />
-    </div>
+  <h1 class="dashboard-title">👋 Welcome to Your Umbrixia Dashboard</h1>
+  <p class="subtitle">Choose the exams you want to study. Your 7-day free trial is active. Select any test to see what’s available so far!</p>
 
-    <div class="question-card">
-      <h2>Question 2</h2>
-      <p>What is the central idea of the passage?</p>
-      <input type="text" id="q2" placeholder="Your answer..." />
-    </div>
-
-    <div class="question-card">
-      <h2>Question 3</h2>
-      <p>Which sentence best supports the claim that the character is brave?</p>
-      <input type="text" id="q3" placeholder="Your answer..." />
-    </div>
-
-    <button onclick="submitAnswers()" class="glow">Submit Answers</button>
-
-    <div id="ai-response" class="ai-response hidden">
-      <h3>AI Feedback</h3>
-      <p id="ai-message">...</p>
-      <button onclick="closeAI()">Close</button>
-    </div>
+  <!-- Test Type Buttons -->
+  <div class="test-selection">
+    <button class="test-button" onclick="toggleTest('shsat')">SHSAT</button>
+    <button class="test-button" onclick="toggleTest('isee')">ISEE</button>
+    <button class="test-button" onclick="toggleTest('sat')">SAT</button>
   </div>
 
-  <script src="script.js"></script>
+  <!-- Practice Tests Placeholder -->
+  <div id="testSections"></div>
+
+  <script>
+    const selectedTests = new Set();
+
+    const tests = {
+      shsat: "SHSAT",
+      isee: "ISEE",
+      sat: "SAT"
+    };
+
+    function toggleTest(testKey) {
+      const button = document.querySelector(`.test-button[onclick*="${testKey}"]`);
+      if (selectedTests.has(testKey)) {
+        selectedTests.delete(testKey);
+        button.classList.remove("active");
+      } else {
+        selectedTests.add(testKey);
+        button.classList.add("active");
+      }
+      renderTests();
+    }
+
+    function renderTests() {
+      const container = document.getElementById("testSections");
+      container.innerHTML = "";
+
+      selectedTests.forEach(testKey => {
+        const testName = tests[testKey];
+        const section = document.createElement("section");
+        section.className = "test-section";
+        section.innerHTML = `
+          <h2>${testName} Practice Tests</h2>
+          <div class="practice-grid">
+            <div class="practice-card">
+              <h3>Test 1</h3>
+              <p>Status: In Development</p>
+            </div>
+            <div class="practice-card">
+              <h3>Test 2</h3>
+              <p>Status: In Development</p>
+            </div>
+            <div class="practice-card">
+              <h3>Test 3</h3>
+              <p>Status: In Development</p>
+            </div>
+          </div>
+        `;
+        container.appendChild(section);
+      });
+    }
+  </script>
+
 </body>
 </html>
