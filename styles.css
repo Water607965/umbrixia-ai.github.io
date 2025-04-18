@@ -5213,7 +5213,7 @@ html {
 }
 
 /* === Google Button Fix === */
-.btn-google {
+.btn-special {
   display: flex;
   align-items: center;
   gap: 10px;
@@ -5229,13 +5229,13 @@ html {
   box-shadow: 0 0 12px rgba(255, 77, 77, 0.2);
 }
 
-.btn-google:hover {
+.btn-special:hover {
   background-color: #ff4d4d !important;
   color: white;
   box-shadow: 0 0 16px rgba(255, 77, 77, 0.4);
 }
 
-.btn-google img.icon {
+.btn-special img.icon {
   width: 20px;
   height: 20px;
 }
