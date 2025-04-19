@@ -1767,3 +1767,121 @@ document.addEventListener("DOMContentLoaded", () => {
 
 })();
 
+// ───────────────────────────────────────────────────────────────────────────────
+// Umbrixia UI — Voice, Transcript & Clipboard Utilities (Part 4)
+// Append this to the end of script.js
+// ───────────────────────────────────────────────────────────────────────────────
+(() => {
+  'use strict';
+
+  // ─── Voice Recognition (Press V) ─────────────────────────────────────────────
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  let recognition;
+  if (SpeechRecognition) {
+    recognition = new SpeechRecognition();
+    recognition.lang = 'en-US';
+    recognition.interimResults = false;
+    recognition.maxAlternatives = 1;
+    on('keydown', e => {
+      if (e.key.toLowerCase() === 'v') {
+        startVoiceInput();
+      }
+    });
+  }
+
+  function startVoiceInput() {
+    if (!recognition) return showToast('🎙️ Voice not supported');
+    showToast('🎙️ Listening...', 2000);
+    recognition.start();
+    recognition.onresult = evt => {
+      const transcript = evt.results[0][0].transcript;
+      const input = document.getElementById('userInput');
+      if (input) {
+        input.value = transcript;
+        sendMessage();
+      }
+    };
+    recognition.onerror = () => showToast('❌ Voice recognition error');
+  }
+
+  // ─── Voice Synthesis (Bot Responses) ─────────────────────────────────────────
+  const synth = window.speechSynthesis;
+  function speak(text) {
+    if (!synth) return;
+    const utter = new SpeechSynthesisUtterance(text);
+    utter.lang = 'en-US';
+    utter.rate = 1;
+    synth.speak(utter);
+  }
+  // Patch bot message rendering to speak aloud
+  const origSendMessage = window.sendMessage;
+  window.sendMessage = async function(...args) {
+    await origSendMessage.apply(this, args);
+    // after message appears:
+    const msgs = document.querySelectorAll('.message.bot');
+    if (msgs.length) {
+      const last = msgs[msgs.length - 1];
+      const content = last.textContent.replace(/^Bot:\s*/, '');
+      speak(content);
+    }
+  };
+
+  // ─── Download Chat Transcript ────────────────────────────────────────────────
+  function downloadTranscript() {
+    const chat = document.getElementById('chat');
+    if (!chat) return;
+    const lines = Array.from(chat.querySelectorAll('.message')).map(p => p.textContent);
+    const blob = new Blob([lines.join('\n')], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `umbrixia-chat-${Date.now()}.txt`;
+    a.click();
+    URL.revokeObjectURL(url);
+    showToast('💾 Transcript downloaded');
+  }
+  // bind to Ctrl+S
+  document.addEventListener('keydown', e => {
+    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 's') {
+      e.preventDefault();
+      downloadTranscript();
+    }
+  });
+
+  // ─── Copy Last Bot Response ────────────────────────────────────────────────────
+  function copyLastResponse() {
+    const msgs = document.querySelectorAll('.message.bot');
+    if (!msgs.length) return showToast('No response to copy');
+    const text = msgs[msgs.length - 1].textContent.replace(/^Bot:\s*/, '');
+    navigator.clipboard.writeText(text)
+      .then(() => showToast('📋 Copied response'))
+      .catch(() => showToast('❌ Copy failed'));
+  }
+  // bind to Ctrl+C when focus in chat
+  document.addEventListener('keydown', e => {
+    if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'c' && document.activeElement.id === 'chat') {
+      e.preventDefault();
+      copyLastResponse();
+    }
+  });
+
+  // ─── Clean Exit on Page Unload ────────────────────────────────────────────────
+  window.addEventListener('beforeunload', e => {
+    // store scroll position and input draft
+    localStorage.setItem('chatScroll', document.getElementById('chat')?.scrollTop || 0);
+    localStorage.setItem('inputDraft', document.getElementById('userInput')?.value || '');
+  });
+  window.addEventListener('DOMContentLoaded', () => {
+    const scroll = parseInt(localStorage.getItem('chatScroll'), 10);
+    if (!isNaN(scroll)) document.getElementById('chat').scrollTop = scroll;
+    const draft = localStorage.getItem('inputDraft');
+    if (draft) document.getElementById('userInput').value = draft;
+  });
+
+  // ─── Export Utilities ─────────────────────────────────────────────────────────
+  Object.assign(window.UmbrixiaUI, {
+    startVoiceInput,
+    downloadTranscript,
+    copyLastResponse
+  });
+})();
