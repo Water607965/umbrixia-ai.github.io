@@ -1540,5 +1540,230 @@ document.addEventListener("DOMContentLoaded", () => {
     track
   });
 
+// ───────────────────────────────────────────────────────────────────────────────
+// Umbrixia UI — Additional Interactive Modules (Part 3)
+// Insert everything below at the very end of script.js
+// ───────────────────────────────────────────────────────────────────────────────
+(() => {
+  'use strict';
+
+  // ─── Simple Utilities ─────────────────────────────────────────────────────────
+  const qs   = sel => document.querySelector(sel);
+  const qsa  = sel => Array.from(document.querySelectorAll(sel));
+  const on   = (evt, sel, fn) => document.addEventListener(evt, e => e.target.matches(sel) && fn(e));
+  const debounce = (fn, wait=300) => {
+    let t;
+    return (...args) => {
+      clearTimeout(t);
+      t = setTimeout(() => fn.apply(this, args), wait);
+    };
+  };
+
+  // ─── Accessibility: Skip to Content Link ──────────────────────────────────────
+  (function injectSkipLink() {
+    const link = document.createElement('a');
+    link.href = '#features';
+    link.innerText = 'Skip to content';
+    link.className = 'skip-link';
+    link.style.cssText = `
+      position: absolute; top: -40px; left: 0;
+      background: #4f46e5; color: #fff;
+      padding: 8px 12px; z-index: 10000;
+      transition: top 0.3s;
+    `;
+    link.addEventListener('focus', () => link.style.top = '0');
+    link.addEventListener('blur', () => link.style.top = '-40px');
+    document.body.prepend(link);
+  })();
+
+  // ─── High-Contrast Mode Toggle (Press C) ───────────────────────────────────────
+  let highContrast = false;
+  function toggleContrast() {
+    highContrast = !highContrast;
+    document.body.classList.toggle('high-contrast', highContrast);
+    showToast(`High Contrast ${highContrast ? 'On' : 'Off'}`);
+  }
+  document.addEventListener('keydown', e => {
+    if (e.key.toLowerCase() === 'c') toggleContrast();
+  });
+
+  // ─── Command Palette (Press Cmd+K) ─────────────────────────────────────────────
+  const paletteHTML = `
+    <div id="cmdPalette" class="modal hidden" role="dialog" aria-modal="true">
+      <div class="modal-content palette">
+        <input id="cmdInput" placeholder="Type a command (e.g., 'subscribe')" autofocus />
+        <ul id="cmdList"></ul>
+      </div>
+      <div class="modal-backdrop"></div>
+    </div>`;
+  document.body.insertAdjacentHTML('beforeend', paletteHTML);
+  const palette = qs('#cmdPalette');
+  const cmdInput = qs('#cmdInput');
+  const cmdList  = qs('#cmdList');
+  const commands = {
+    subscribe:   () => UmbrixiaUI.openSubscribeModal(),
+    tour:        () => startTour(),
+    toggletheme: () => UmbrixiaUI.toggleTheme(),
+    focuschat:   () => qs('#userInput')?.focus(),
+    help:        () => showToast('Try commands: subscribe, tour, toggletheme, focuschat')
+  };
+
+  function openPalette() {
+    palette.classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+    updateCmdList('');
+    cmdInput.value = '';
+    cmdInput.focus();
+  }
+  function closePalette() {
+    palette.classList.add('hidden');
+    document.body.style.overflow = '';
+  }
+  document.addEventListener('keydown', e => {
+    if ((e.metaKey||e.ctrlKey) && e.key.toLowerCase() === 'k') {
+      e.preventDefault();
+      openPalette();
+    } else if (e.key === 'Escape' && !palette.classList.contains('hidden')) {
+      closePalette();
+    }
+  });
+  on('click', '.palette + .modal-backdrop', closePalette);
+  cmdInput.addEventListener('input', () => updateCmdList(cmdInput.value.trim().toLowerCase()));
+  function updateCmdList(query) {
+    cmdList.innerHTML = '';
+    Object.keys(commands)
+      .filter(k => k.startsWith(query))
+      .forEach(k => {
+        const li = document.createElement('li');
+        li.className = 'cmd-item';
+        li.innerText = k;
+        li.addEventListener('click', () => {
+          commands[k]();
+          closePalette();
+        });
+        cmdList.append(li);
+      });
+  }
+
+  // ─── Onboarding Guided Tour ───────────────────────────────────────────────────
+  const tourSteps = [
+    { sel: '.modern-navbar', text: 'This is the navigation bar. Use it to move around.' },
+    { sel: '.hero', text: 'Our hero section. Get started quickly here.' },
+    { sel: '#chatbox', text: 'Chat with our AI tutor for instant help.' },
+    { sel: '#features', text: 'Explore key features of Umbrixia.' },
+    { sel: '.vision-call', text: 'Ready? Click here for a free demo!' }
+  ];
+  function startTour() {
+    let i = 0;
+    const overlay = document.createElement('div');
+    overlay.id = 'tourOverlay';
+    overlay.className = 'tour-overlay';
+    document.body.appendChild(overlay);
+
+    function showStep() {
+      const { sel, text } = tourSteps[i];
+      const target = qs(sel);
+      if (!target) return endTour();
+      const rect = target.getBoundingClientRect();
+      overlay.innerHTML = `<div class="tour-tooltip" style="
+        top:${rect.bottom + 10}px; left:${rect.left}px;
+      ">${text}<button id="tourNext">${i < tourSteps.length-1 ? 'Next' : 'Done'}</button></div>`;
+      qs('#tourNext').onclick = () => {
+        i++;
+        if (i < tourSteps.length) showStep();
+        else endTour();
+      };
+    }
+    function endTour() {
+      overlay.remove();
+      showToast('Tour complete! Enjoy Umbrixia.');
+      localStorage.setItem('onboardDone', 'true');
+    }
+    showStep();
+  }
+  if (!localStorage.getItem('onboardDone')) {
+    setTimeout(startTour, 1000);
+  }
+
+  // ─── Cookie Consent Banner ────────────────────────────────────────────────────
+  if (!localStorage.getItem('cookiesAccepted')) {
+    const banner = document.createElement('div');
+    banner.className = 'cookie-banner';
+    banner.innerHTML = `
+      <p>We use cookies to improve your experience. <button id="acceptCookies">Accept</button></p>
+    `;
+    document.body.append(banner);
+    qs('#acceptCookies').addEventListener('click', () => {
+      localStorage.setItem('cookiesAccepted', 'true');
+      banner.remove();
+      showToast('Cookies accepted. Thank you!');
+    });
+  }
+
+  // ─── Particle Background Canvas ────────────────────────────────────────────────
+  function initParticles() {
+    const canvas = document.createElement('canvas');
+    canvas.id = 'bgParticles';
+    document.body.prepend(canvas);
+    const ctx = canvas.getContext('2d');
+    let w, h, particles;
+    function resize() {
+      w = canvas.width = window.innerWidth;
+      h = canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resize);
+    resize();
+    particles = Array.from({length: 80}, () => ({
+      x: Math.random()*w,
+      y: Math.random()*h,
+      vx: (Math.random()-0.5)*0.3,
+      vy: (Math.random()-0.5)*0.3,
+      size: Math.random()*2+1
+    }));
+    function animate() {
+      ctx.clearRect(0,0,w,h);
+      particles.forEach(p => {
+        p.x += p.vx; p.y += p.vy;
+        if (p.x<0||p.x>w) p.vx*=-1;
+        if (p.y<0||p.y>h) p.vy*=-1;
+        ctx.fillStyle = 'rgba(255,77,77,0.4)';
+        ctx.beginPath();
+        ctx.arc(p.x,p.y,p.size,0,2*Math.PI);
+        ctx.fill();
+      });
+      requestAnimationFrame(animate);
+    }
+    animate();
+  }
+  initParticles();
+
+  // ─── Chatboard Quick Focus (Press "/") ─────────────────────────────────────────
+  document.addEventListener('keydown', e => {
+    if (e.key === '/' && document.activeElement !== cmdInput) {
+      e.preventDefault();
+      qs('#userInput')?.focus();
+    }
+  });
+
+  // ─── Localization Snippets ────────────────────────────────────────────────────
+  const i18n = {
+    en: { welcome: 'Welcome to Umbrixia!' },
+    es: { welcome: '¡Bienvenido a Umbrixia!' }
+  };
+  let locale = navigator.language.startsWith('es') ? 'es' : 'en';
+  showToast(i18n[locale].welcome);
+
+  // ─── Export Additional APIs ───────────────────────────────────────────────────
+  Object.assign(window.UmbrixiaUI, {
+    openPalette,
+    closePalette,
+    toggleContrast,
+    startTour,
+    initParticles
+  });
+
+})();
+
+
 })();
 
