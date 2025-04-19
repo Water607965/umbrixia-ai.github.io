@@ -10,6 +10,7 @@
    <link rel="preconnect" href="https://fonts.googleapis.com" />
    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   
 
  </head>
@@ -36,23 +37,65 @@
 
 
  
+<!-- Full Hero Section -->
 <header class="hero">
+  <!-- Animated background blobs -->
+  <div class="hero-bg">
+    <span class="circle circle-1"></span>
+    <span class="circle circle-2"></span>
+    <span class="circle circle-3"></span>
+  </div>
+
   <div class="hero-content">
-    <h1 class="hero-title">Welcome to Umbrixia</h1>
-    <p class="hero-subtitle">AI-powered prep for SHSAT, ISEE & SAT — refined, efficient, yours.</p>
-    <div class="hero-buttons">
-      <a href="signup.html" class="btn btn-primary">Start Free</a>
-      <a href="login.html" class="btn btn-secondary">Log In</a>
-    </div>
+    <!-- Left: Copy & Rotating Sub‑Headline -->
+    <div class="hero-text">
+      <h1 class="hero-title">Welcome to Umbrixia</h1>
+      <div class="hero-rotating" id="hero-rotating">
+        <span>Your AI‑powered edge in</span>
+        <span>SHSAT mastery.</span>
+        <span>ISEE confidence.</span>
+        <span>SAT success.</span>
+      </div>
+      <p class="hero-subtitle">
+        Personalized, precise, and designed to make every minute of your prep count.
+      </p>
+      <div class="hero-cta">
+        <a href="signup.html" class="btn btn-primary">Start Free</a>
+        <a href="login.html" class="btn btn-outline">Log In</a>
        <div class="hero-google">
   <button id="btn-special" class="btn btn-google-special">
   <img src="google-icon.svg" alt="Google" class="icon" />
   <span class="google-text">Continue with Google</span>
 </button>
 </div>
+      </div>
+    </div>
 
+    <!-- Right: Illustrative Success Gauges -->
+    <div class="hero-visual">
+      <div class="metrics-charts">
+        <div class="chart-item">
+          <canvas id="gauge-mastery"></canvas>
+          <div class="chart-label">Mastery</div>
+        </div>
+        <div class="chart-item">
+          <canvas id="gauge-focus"></canvas>
+          <div class="chart-label">Focus</div>
+        </div>
+        <div class="chart-item">
+          <canvas id="gauge-confidence"></canvas>
+          <div class="chart-label">Confidence</div>
+        </div>
+      </div>
+    </div>
   </div>
+
+  <!-- Scroll hint -->
+  <div class="scroll-hint">⌄ Scroll to explore</div>
 </header>
+
+
+  
 
   
   <!-- Avatar & Dropdown -->
