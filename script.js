@@ -3207,16 +3207,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  /* 5) Email Capture */
-  qs('#hero-email-submit')?.addEventListener('click',()=>{
-    const inp=qs('#hero-email-input'), email=inp.value.trim();
-    if(!/.+@.+\..+/.test(email)){
-      inp.classList.add('shake'); setTimeout(()=>inp.classList.remove('shake'),500);
-      return;
-    }
-    toast(`📩 Thanks! We’ll email you at ${email}`);
-  });
-
   /* 6) Scroll‑down Hint */
   qs('.scroll-down')?.addEventListener('click',()=>{
     qs('#features')?.scrollIntoView({behavior:'smooth'});
@@ -3415,5 +3405,9 @@ document.addEventListener('DOMContentLoaded', () => {
     })();
   };
 })();
+
+// ─── Google button hookup ────────────────────────────────────────────────────
+document.getElementById('btn-google-special')?.addEventListener('click', googleLogin);
+
 
 
