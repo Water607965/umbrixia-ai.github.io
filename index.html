@@ -34,65 +34,113 @@
     </div>
   </div>
 </header>
+  
+  <header class="hero">
+    <!-- Particle background -->
+    <canvas id="hero-particles"></canvas>
+    <div class="gradient-overlay"></div>
 
+    <!-- Hero Inner Content -->
+    <div class="hero-inner">
+      <div class="hero-copy">
+        <!-- Typewriter Title -->
+        <h1 class="hero-title">
+          <span id="typewriter"></span><span class="cursor">|</span>
+        </h1>
+        <p class="hero-subtitle">
+          AI‑powered prep for SHSAT, ISEE &amp; SAT—refined, efficient, entirely yours.
+        </p>
 
- 
-<!-- Full Hero Section -->
-<header class="hero">
-  <!-- Animated background blobs -->
-  <div class="hero-bg">
-    <span class="circle circle-1"></span>
-    <span class="circle circle-2"></span>
-    <span class="circle circle-3"></span>
-  </div>
-
-  <div class="hero-content">
-    <!-- Left: Copy & Rotating Sub‑Headline -->
-    <div class="hero-text">
-      <h1 class="hero-title">Welcome to Umbrixia</h1>
-      <div class="hero-rotating" id="hero-rotating">
-        <span>Your AI‑powered edge in</span>
-        <span>SHSAT mastery.</span>
-        <span>ISEE confidence.</span>
-        <span>SAT success.</span>
-      </div>
-      <p class="hero-subtitle">
-        Personalized, precise, and designed to make every minute of your prep count.
-      </p>
-      <div class="hero-cta">
-        <a href="signup.html" class="btn btn-primary">Start Free</a>
-        <a href="login.html" class="btn btn-outline">Log In</a>
-       <div class="hero-google">
-  <button id="btn-special" class="btn btn-google-special">
-  <img src="google-icon.svg" alt="Google" class="icon" />
-  <span class="google-text">Continue with Google</span>
-</button>
-</div>
-      </div>
-    </div>
-
-    <!-- Right: Illustrative Success Gauges -->
-    <div class="hero-visual">
-      <div class="metrics-charts">
-        <div class="chart-item">
-          <canvas id="gauge-mastery"></canvas>
-          <div class="chart-label">Mastery</div>
+        <!-- CTAs -->
+        <div class="hero-cta">
+          <a href="signup.html" class="btn btn-primary">Start Free</a>
+          <button id="demo-btn" class="btn btn-outline">Try Demo</button>
+          <button id="btn-google-special" class="btn btn-google-special">
+            <img src="google-icon.svg" alt="Google" class="icon"/><span>Continue with Google</span>
+          </button>
         </div>
-        <div class="chart-item">
-          <canvas id="gauge-focus"></canvas>
-          <div class="chart-label">Focus</div>
-        </div>
-        <div class="chart-item">
-          <canvas id="gauge-confidence"></canvas>
-          <div class="chart-label">Confidence</div>
+
+        <!-- Email Capture -->
+        <div class="hero-email">
+          <input type="email" id="hero-email-input" placeholder="Enter your email" />
+          <button id="hero-email-submit" class="btn btn-email">Get Early Access</button>
         </div>
       </div>
     </div>
-  </div>
 
-  <!-- Scroll hint -->
-  <div class="scroll-hint">⌄ Scroll to explore</div>
-</header>
+    <!-- Scroll‑down Hint -->
+    <div class="scroll-down">▼</div>
+  </header>
+
+  <!-- Above‑the‑fold Extras -->
+  <section class="rotating-headline">
+    <h2 id="rotating-text">
+      Trusted by students. Powered by AI. Mastery in minutes. Confidence every day.
+    </h2>
+  </section>
+
+  <section class="stats-section">
+    <div class="stats-row">
+      <div class="stat-box"><strong>➤</strong><span>Adaptive Learning</span></div>
+      <div class="stat-box"><strong>✓</strong><span>Instant Feedback</span></div>
+      <div class="stat-box"><strong>⚡</strong><span>Faster Mastery</span></div>
+    </div>
+  </section>
+
+  <section id="features" class="features-section">
+    <div class="features-container">
+      <h2 class="section-title">Why Umbrixia Stands Out</h2>
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="card-icon">🔬</div>
+          <h3>Precision AI</h3>
+          <p>Adaptive questions that evolve with your skill level.</p>
+        </div>
+        <div class="feature-card">
+          <div class="card-icon">📊</div>
+          <h3>Live Insights</h3>
+          <p>Real‑time dashboards show exactly where to focus next.</p>
+        </div>
+        <div class="feature-card">
+          <div class="card-icon">💡</div>
+          <h3>Smart Feedback</h3>
+          <p>Step‑by‑step explanations that deepen understanding.</p>
+        </div>
+        <div class="feature-card">
+          <div class="card-icon">🚀</div>
+          <h3>Quick‑Start Quiz</h3>
+          <p>Your personalized study path in under a minute.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="designed-for-mastery">
+    <h2 class="section-title">Designed for Mastery</h2>
+    <div class="mastery-grid">
+      <div class="mastery-card">
+        <h3>Adaptive Practice</h3>
+        <p>The harder you get, the smarter we get.</p>
+      </div>
+      <div class="mastery-card">
+        <h3>Focus Mode</h3>
+        <p>Distraction‑free interface—just you and your goals.</p>
+      </div>
+      <div class="mastery-card">
+        <h3>Confidence Bar</h3>
+        <p>Track progress with visual milestones and streaks.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Containers for dynamic modules -->
+  <section id="leaderboard"></section>
+
+  <!-- Puzzle Progress Graph -->
+  <section id="puzzleProgressGraph"></section>
+
+  <!-- Toast Container -->
+  <div class="toast-container"></div>
 
 
   
