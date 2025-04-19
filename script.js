@@ -1885,3 +1885,154 @@ document.addEventListener("DOMContentLoaded", () => {
     copyLastResponse
   });
 })();
+
+// ───────────────────────────────────────────────────────────────────────────────
+// Umbrixia UI — Autosuggest, Performance & Notification Module (Part 5)
+// Append this to the end of script.js
+// ───────────────────────────────────────────────────────────────────────────────
+(() => {
+  'use strict';
+
+  // ─── Simple Selectors & Events ────────────────────────────────────────────────
+  const qs   = sel => document.querySelector(sel);
+  const qsa  = sel => Array.from(document.querySelectorAll(sel));
+  const on   = (evt, sel, fn) => document.addEventListener(evt, e => e.target.matches(sel) && fn(e));
+
+  // ─── Chat History Autosuggest ────────────────────────────────────────────────
+  const HISTORY_KEY = 'chatHistory';
+  const MAX_HISTORY = 20;
+  const inputEl     = qs('#userInput');
+
+  function getHistory() {
+    return JSON.parse(localStorage.getItem(HISTORY_KEY) || '[]');
+  }
+  function saveHistory(msg) {
+    if (!msg) return;
+    const h = getHistory();
+    h.unshift(msg);
+    while (h.length > MAX_HISTORY) h.pop();
+    localStorage.setItem(HISTORY_KEY, JSON.stringify(h));
+    renderHistory();
+  }
+  function renderHistory() {
+    let list = qs('#historyList');
+    if (!list) {
+      list = document.createElement('datalist');
+      list.id = 'historyList';
+      document.body.appendChild(list);
+      if (inputEl) inputEl.setAttribute('list', 'historyList');
+    }
+    list.innerHTML = '';
+    getHistory().forEach(item => {
+      const opt = document.createElement('option');
+      opt.value = item;
+      list.appendChild(opt);
+    });
+  }
+
+  // hook into sendMessage to record user inputs
+  const origSend = window.sendMessage;
+  window.sendMessage = async function(...args) {
+    const text = inputEl?.value.trim();
+    saveHistory(text);
+    await origSend.apply(this, args);
+  };
+  renderHistory();
+
+  // recall last message with ArrowUp
+  on('keydown', '#userInput', e => {
+    if (e.key === 'ArrowUp') {
+      const h = getHistory();
+      if (h.length) inputEl.value = h[0];
+    }
+  });
+
+  // ─── Performance Monitor Overlay ──────────────────────────────────────────────
+  const perf = { frames: 0, lastTime: performance.now(), fps: 0, ping: null };
+  const perfOverlay = document.createElement('div');
+  perfOverlay.id = 'perfMonitor';
+  Object.assign(perfOverlay.style, {
+    position: 'fixed', bottom: '10px', right: '10px',
+    background: 'rgba(0,0,0,0.6)', color: '#fff',
+    padding: '6px 10px', borderRadius: '8px',
+    fontSize: '12px', fontFamily: 'monospace', zIndex: '9999'
+  });
+  document.body.appendChild(perfOverlay);
+
+  function updatePerf() {
+    const now = performance.now();
+    perf.frames++;
+    if (now - perf.lastTime >= 1000) {
+      perf.fps = perf.frames;
+      perf.frames = 0;
+      perf.lastTime = now;
+      perfOverlay.textContent = `FPS: ${perf.fps} | Ping: ${perf.ping ?? '–'}ms`;
+    }
+    requestAnimationFrame(updatePerf);
+  }
+  updatePerf();
+
+  // ping server every 30s
+  async function pingServer() {
+    const start = Date.now();
+    try {
+      await fetch('/ping', { cache: 'no-store' });
+      perf.ping = Date.now() - start;
+    } catch {
+      perf.ping = null;
+    }
+  }
+  pingServer();
+  setInterval(pingServer, 30000);
+
+  // ─── Title Badge & Desktop Notifications ───────────────────────────────────────
+  let unread = 0;
+  const origReceive = window.sendMessage; // after patch above, origReceive no longer direct; use MutationObserver instead
+
+  const chatEl = qs('#chat');
+  const titleBase = document.title;
+
+  // desktop notify
+  function notify(text) {
+    if (Notification.permission === 'granted') {
+      new Notification('Umbrixia says:', { body: text });
+    }
+  }
+
+  // track new bot messages
+  new MutationObserver(muts => {
+    muts.forEach(m => {
+      m.addedNodes.forEach(node => {
+        if (node.nodeType === 1 && node.matches('.message.bot')) {
+          const msg = node.textContent.replace(/^Bot:\s*/, '');
+          if (!document.hasFocus()) {
+            unread++;
+            document.title = `(${unread}) ${titleBase}`;
+            notify(msg);
+          }
+        }
+      });
+    });
+  }).observe(chatEl, { childList: true });
+
+  window.addEventListener('focus', () => {
+    unread = 0;
+    document.title = titleBase;
+  });
+
+  // request notification permission once
+  if (Notification && Notification.permission === 'default') {
+    Notification.requestPermission();
+  }
+
+  // ─── Heartbeat Keep‑Alive ─────────────────────────────────────────────────────
+  setInterval(() => fetch('/heartbeat', { cache: 'no-store' }), 5 * 60 * 1000);
+
+  // ─── Export New Features ──────────────────────────────────────────────────────
+  Object.assign(window.UmbrixiaUI, {
+    startVoiceInput: window.startVoiceInput,
+    downloadTranscript: window.downloadTranscript,
+    copyLastResponse: window.copyLastResponse
+  });
+})();
+
