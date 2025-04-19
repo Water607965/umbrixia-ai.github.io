@@ -1155,3 +1155,186 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 });
 
+// ───────────────────────────────────────────────────────────────────────────────
+// Umbrixia Enhanced UI & Architecture Module
+// Insert everything below at the very end of script.js
+// ───────────────────────────────────────────────────────────────────────────────
+(() => {
+  'use strict';
+
+  // ─── State Management ────────────────────────────────────────────────────────
+  const State = {
+    theme: localStorage.getItem('theme') || 'dark',
+    user: null,
+    currentExam: 'shsat',
+    trialStart: Number(localStorage.getItem('trialStart')) || null,
+    tipsShown: false
+  };
+
+  // ─── Utilities ────────────────────────────────────────────────────────────────
+  function qs(selector, ctx = document) {
+    return ctx.querySelector(selector);
+  }
+  function qsa(selector, ctx = document) {
+    return Array.from(ctx.querySelectorAll(selector));
+  }
+  function on(event, selector, handler) {
+    document.addEventListener(event, e => {
+      if (e.target.matches(selector)) handler(e);
+    });
+  }
+  function throttle(fn, wait = 200) {
+    let time = Date.now();
+    return function(...args) {
+      if ((time + wait - Date.now()) < 0) {
+        fn.apply(this, args);
+        time = Date.now();
+      }
+    };
+  }
+  function create(el, props = {}, parent = document.body) {
+    const node = document.createElement(el);
+    Object.entries(props).forEach(([k, v]) => node[k] = v);
+    parent.appendChild(node);
+    return node;
+  }
+
+  // ─── Theme Initialization ────────────────────────────────────────────────────
+  function applyTheme() {
+    document.body.dataset.theme = State.theme;
+    localStorage.setItem('theme', State.theme);
+  }
+  function toggleTheme() {
+    State.theme = State.theme === 'dark' ? 'light' : 'dark';
+    applyTheme();
+    showToast(`Switched to ${State.theme.charAt(0).toUpperCase() + State.theme.slice(1)} Mode`);
+  }
+  on('keydown', e => e.key === 'T' && toggleTheme());
+
+  // ─── Toast Notifications ─────────────────────────────────────────────────────
+  const toasts = create('div', { className: 'toast-container' });
+  function showToast(msg, duration = 3000) {
+    const t = create('div', { className: 'toast fade-in', innerText: msg }, toasts);
+    setTimeout(() => t.classList.add('visible'), 50);
+    setTimeout(() => t.classList.remove('visible'), duration);
+    setTimeout(() => t.remove(), duration + 500);
+  }
+  applyTheme();
+
+  // ─── Hero Section Parallax & Reveal ──────────────────────────────────────────
+  const hero = qs('.hero-content');
+  if (hero) {
+    window.addEventListener('scroll', throttle(() => {
+      const offset = window.scrollY / 3;
+      hero.style.transform = `translateY(${offset}px)`;
+    }, 16));
+  }
+
+  // ─── Rotating Headline (Notion‑style) ─────────────────────────────────────────
+  const rotatingText = qs('#rotating-text');
+  const rotatingPhrases = [
+    'Trusted by students. Powered by AI.',
+    'Adapt. Learn. Conquer.',
+    'Your edge in exam prep.',
+    'Focus. Master. Excel.',
+    'Confidence = Clarity.'
+  ];
+  let rIdx = 0;
+  if (rotatingText) {
+    setInterval(() => {
+      rotatingText.classList.add('fade-in');
+      rotatingText.textContent = rotatingPhrases[rIdx];
+      setTimeout(() => rotatingText.classList.remove('fade-in'), 900);
+      rIdx = (rIdx + 1) % rotatingPhrases.length;
+    }, 4000);
+  }
+
+  // ─── Intersection Animations ─────────────────────────────────────────────────
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(({ target, isIntersecting }) => {
+      if (isIntersecting) target.classList.add('fade-in');
+    });
+  }, { threshold: 0.2 });
+  qsa('.feature-card, .stat-box, .mastery-card').forEach(el => io.observe(el));
+
+  // ─── Exam Switcher with Micro‑Animation ──────────────────────────────────────
+  function switchExamSection() {
+    const val = qs('#exam-select').value;
+    ['shsat','isee','sat'].forEach(id => {
+      const el = qs(`#${id}`);
+      if (el) {
+        el.style.display = id === val ? 'block' : 'none';
+        if (id === val) {
+          el.classList.add('pop-in');
+          setTimeout(() => el.classList.remove('pop-in'), 500);
+        }
+      }
+    });
+    State.currentExam = val;
+  }
+  qs('#exam-select')?.addEventListener('change', switchExamSection);
+  switchExamSection();
+
+  // ─── Confetti on Subscription CTA ─────────────────────────────────────────────
+  function launchConfetti() {
+    const colors = ['#ff4d4d', '#ff6b81', '#e74c3c'];
+    const duration = 1500;
+    const end = Date.now() + duration;
+    (function frame() {
+      const timeLeft = end - Date.now();
+      if (timeLeft <= 0) return;
+      const particle = document.createElement('div');
+      particle.className = 'confetti';
+      particle.style.background = colors[Math.floor(Math.random() * colors.length)];
+      particle.style.left = `${Math.random() * 100}%`;
+      document.body.appendChild(particle);
+      setTimeout(() => particle.remove(), 2000);
+      requestAnimationFrame(frame);
+    })();
+  }
+  on('click', '.cta-btn.red', () => {
+    launchConfetti();
+    showToast('Enjoy your free demo!');
+  });
+
+  // ─── Trial Countdown Reminder ─────────────────────────────────────────────────
+  function showTrialReminder() {
+    if (!State.trialStart) return;
+    const msLeft = 7*24*60*60*1000 - (Date.now() - State.trialStart);
+    if (msLeft < 2*24*60*60*1000 && !State.tipsShown) {
+      State.tipsShown = true;
+      showToast('🕒 Only 2 days left in your trial. Subscribe now!', 5000);
+    }
+  }
+  setInterval(showTrialReminder, 6*60*60*1000); // every 6h
+
+  // ─── Smooth Scroll for Navbar Links ───────────────────────────────────────────
+  qsa('.navbar-links a, .hero-buttons a, .vision-call a').forEach(a => {
+    a.addEventListener('click', e => {
+      e.preventDefault();
+      const tgt = document.querySelector(a.getAttribute('href'));
+      tgt?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  });
+
+  // ─── Profile Dropdown Toggle ──────────────────────────────────────────────────
+  function toggleUserMenu() {
+    qs('#userDropdownPanel')?.classList.toggle('hidden');
+  }
+  window.toggleUserMenu = toggleUserMenu;
+
+  // ─── Initialize on DOM Ready ──────────────────────────────────────────────────
+  window.addEventListener('DOMContentLoaded', () => {
+    applyTheme();
+    showToast('Welcome to Umbrixia!', 2000);
+  });
+
+  // ─── Export for Testing ───────────────────────────────────────────────────────
+  window.UmbrixiaUI = {
+    toggleTheme,
+    switchExamSection,
+    launchConfetti,
+    showToast
+  };
+})();
+
