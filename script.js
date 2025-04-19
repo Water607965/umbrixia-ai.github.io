@@ -2236,4 +2236,205 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 })();
 
+// ───────────────────────────────────────────────────────────────────────────────
+// Umbrixia UI — Advanced Apple/Notion Features (Part 7)
+// Paste this at the end of script.js
+// ───────────────────────────────────────────────────────────────────────────────
+(() => {
+  'use strict';
+
+  // ─── Basic Utils ─────────────────────────────────────────────────────────────
+  const qs    = s => document.querySelector(s);
+  const qsa   = s => Array.from(document.querySelectorAll(s));
+  const on    = (e, s, fn) => document.addEventListener(e, ev => ev.target.matches(s) && fn(ev));
+  const create= (t,p={},parent=document.body)=>{ const el=document.createElement(t); Object.assign(el,p); parent.appendChild(el); return el; };
+
+  // ─── 1) PWA: Service Worker Registration ────────────────────────────────────
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/sw.js')
+      .then(reg=> console.log('SW registered:', reg.scope))
+      .catch(err=> console.warn('SW failed:', err));
+  }
+
+  // ─── 2) Shortcut Help Overlay ────────────────────────────────────────────────
+  const shortcutList = [
+    { key: '?',   desc: 'Show this help' },
+    { key: 'T',   desc: 'Toggle theme' },
+    { key: 'K',   desc: 'Toggle fullscreen' },
+    { key: 'M',   desc: 'Toggle markdown preview' },
+    { key: 'Ctrl+Z', desc: 'Undo input' },
+    { key: 'Ctrl+Y', desc: 'Redo input' }
+  ];
+  const helpOverlay = create('div',{ id:'shortcut-help', className:'modal hidden' });
+  helpOverlay.innerHTML = `
+    <div class="modal-content small">
+      <h2>Keyboard Shortcuts</h2>
+      <ul>${shortcutList.map(s=>`<li><kbd>${s.key}</kbd> — ${s.desc}</li>`).join('')}</ul>
+      <button id="close-shortcuts" class="btn btn-outline small">Close</button>
+    </div>
+    <div class="modal-backdrop"></div>`;
+  qs('#close-shortcuts').onclick = ()=> helpOverlay.classList.add('hidden');
+  document.body.addEventListener('keydown', e=>{
+    if (e.key === '?') {
+      helpOverlay.classList.toggle('hidden');
+      e.preventDefault();
+    }
+  });
+
+  // ─── 3) Fullscreen Toggle (Press K) ─────────────────────────────────────────
+  document.addEventListener('keydown', e => {
+    if (e.key.toLowerCase() === 'k') {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch(()=>{/*fail silently*/});
+      } else {
+        document.exitFullscreen();
+      }
+    }
+  });
+
+  // ─── 4) Markdown Preview (Press M) ───────────────────────────────────────────
+  let mdPreviewVisible = false;
+  const mdLibUrl = 'https://cdn.jsdelivr.net/npm/marked/marked.min.js';
+  function loadMarked(cb) {
+    if (window.marked) return cb();
+    const s = document.createElement('script');
+    s.src = mdLibUrl;
+    s.onload = cb;
+    document.head.appendChild(s);
+  }
+  const previewBox = create('div',{ id:'md-preview', className:'hidden' });
+  previewBox.innerHTML = '<h3>Preview</h3><div class="content"></div>';
+  document.addEventListener('keydown', e=>{
+    if (e.key.toLowerCase() === 'm') {
+      const input = qs('#userInput');
+      if (!input) return;
+      mdPreviewVisible = !mdPreviewVisible;
+      previewBox.classList.toggle('hidden', !mdPreviewVisible);
+      if (mdPreviewVisible) {
+        loadMarked(()=>{
+          const html = marked(input.value);
+          qs('.content', previewBox).innerHTML = html;
+        });
+      }
+    }
+  });
+
+  // ─── 5) Undo/Redo for Chat Input ──────────────────────────────────────────────
+  const undoStack = [], redoStack = [];
+  const input = qs('#userInput');
+  if (input) {
+    input.addEventListener('input', () => {
+      undoStack.push(input.value);
+      if (undoStack.length > 50) undoStack.shift();
+      redoStack.length = 0;
+    });
+    document.addEventListener('keydown', e => {
+      if ((e.ctrlKey||e.metaKey) && e.key.toLowerCase()==='z') {
+        e.preventDefault();
+        if (undoStack.length > 1) {
+          redoStack.push(undoStack.pop());
+          input.value = undoStack[undoStack.length-1] || '';
+        }
+      }
+      if ((e.ctrlKey||e.metaKey) && e.key.toLowerCase()==='y') {
+        e.preventDefault();
+        if (redoStack.length) {
+          const val = redoStack.pop();
+          undoStack.push(val);
+          input.value = val;
+        }
+      }
+    });
+  }
+
+  // ─── 6) Resizable Split‑View (Chat ↔️ History) ─────────────────────────────────
+  (function makeResizable() {
+    const container = create('div',{ className:'split-container' }, qs('body'));
+    const chatBox   = qs('#chatbox');
+    const histBox   = create('div',{ id:'history-panel', className:'hidden'}, container);
+    histBox.innerHTML = '<h3>Your Chat History</h3><div id="history-list"></div>';
+    chatBox.parentNode.insertBefore(container, chatBox);
+    container.append(histBox, chatBox);
+    const handle = create('div',{ className:'split-handle' }, container);
+
+    let dragging = false;
+    handle.addEventListener('mousedown', ()=> dragging = true);
+    document.addEventListener('mouseup', ()=> dragging = false);
+    document.addEventListener('mousemove', e=>{
+      if (!dragging) return;
+      const pct = (e.clientX / window.innerWidth)*100;
+      histBox.style.width = pct+'%';
+      chatBox.style.width = (100-pct)+'%';
+    });
+
+    // populate history
+    const list = qs('#history-list');
+    const save = JSON.parse(localStorage.getItem('chatHistory')||'[]');
+    save.forEach(msg => {
+      const p = document.createElement('p'); p.textContent = msg;
+      list.append(p);
+    });
+    // toggle panel
+    on('keydown','[data-toggle-history]',()=> histBox.classList.toggle('hidden'));
+  })();
+
+  // ─── 7) BroadcastChannel Stub for Collaboration ───────────────────────────────
+  if ('BroadcastChannel' in window) {
+    const chan = new BroadcastChannel('umbrixia-collab');
+    chan.onmessage = msg=>{
+      showToast(`Collaborator says: ${msg.data}`,2000);
+    };
+    // expose for future use
+    window.Collab = msg => chan.postMessage(msg);
+  }
+
+  // ─── Styling for Part 7 UI ─────────────────────────────────────────────────────
+  create('style',{ textContent: `
+    /* Shortcut Help */
+    #shortcut-help .modal-content.small { max-width:320px; padding:20px; }
+    #shortcut-help ul { list-style:none; margin:0; padding:0; }
+    #shortcut-help li { margin:8px 0; font-size:0.9rem; }
+    #shortcut-help kbd { background:#333; padding:2px 6px; border-radius:4px; }
+
+    /* Markdown Preview */
+    #md-preview {
+      position:fixed; right:20px; bottom:20px;
+      width:300px; max-height:400px; overflow:auto;
+      background:#1a1a1a; color:#fff; border:1px solid #444;
+      border-radius:8px; padding:12px; z-index:9999;
+    }
+
+    /* Resizable Split */
+    .split-container {
+      display:flex; height:calc(100vh - 200px); /* adjust for header/footer */
+    }
+    #history-panel {
+      background:#111; color:#ccc; overflow:auto;
+      padding:12px; width:25%;
+    }
+    .split-handle {
+      width:8px; cursor:ew-resize; background:#444;
+    }
+    #chatbox { width:75%; }
+
+    /* Fullscreen helper (none needed) */
+  ` }, document.head);
+
+  // ─── Init any Part 7 UI ───────────────────────────────────────────────────────
+  window.addEventListener('DOMContentLoaded', () => {
+    // nothing extra to call; all self‐initializing
+  });
+
+  // ─── Expose for Testing ───────────────────────────────────────────────────────
+  Object.assign(window.UmbrixiaUI, {
+    toggleFullscreen: () => document.fullscreenElement ? document.exitFullscreen() : document.documentElement.requestFullscreen(),
+    showShortcutHelp: () => helpOverlay.classList.remove('hidden'),
+    toggleMarkdown: () => document.dispatchEvent(new KeyboardEvent('keydown',{key:'m'})),
+    undoInput:    () => document.dispatchEvent(new KeyboardEvent('keydown',{key:'z',ctrlKey:true})),
+    redoInput:    () => document.dispatchEvent(new KeyboardEvent('keydown',{key:'y',ctrlKey:true})),
+    sendCollab:   msg => window.Collab && window.Collab(msg)
+  });
+
+})();
+
 
