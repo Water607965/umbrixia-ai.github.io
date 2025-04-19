@@ -2437,4 +2437,162 @@ document.addEventListener("DOMContentLoaded", () => {
 
 })();
 
+// ───────────────────────────────────────────────────────────────────────────────
+// Umbrixia UI — Plugin System, WebSocket, & Settings Drawer (Part 8)
+// Paste this at the VERY end of script.js
+// ───────────────────────────────────────────────────────────────────────────────
+(() => {
+  'use strict';
+
+  // ─── Core Utils ──────────────────────────────────────────────────────────────
+  const qs    = sel => document.querySelector(sel);
+  const qsa   = sel => Array.from(document.querySelectorAll(sel));
+  const on    = (evt, sel, fn) => document.addEventListener(evt, e => e.target.matches(sel) && fn(e));
+  const emit  = (ev, detail) => window.dispatchEvent(new CustomEvent(ev, { detail }));
+
+  // ─── 1) Plugin Architecture ───────────────────────────────────────────────────
+  const Plugins = {};
+  window.UmbrixiaUI.registerPlugin = (name, initFn) => {
+    if (Plugins[name]) return console.warn(`Plugin "${name}" already registered.`);
+    Plugins[name] = initFn;
+    try { initFn({ qs, qsa, on, emit }); }
+    catch (e) { console.error(`Plugin "${name}" failed:`, e); }
+  };
+  window.UmbrixiaUI.unregisterPlugin = name => { delete Plugins[name]; };
+
+  // ─── 2) Settings Drawer ───────────────────────────────────────────────────────
+  const drawer = create('div', { className:'settings-drawer hidden' });
+  drawer.innerHTML = `
+    <h3>Settings</h3>
+    <label><input type="checkbox" data-setting="animations" checked> Animations</label>
+    <label><input type="checkbox" data-setting="sounds" checked> Sounds</label>
+    <label><input type="checkbox" data-setting="notifications" checked> Desktop Notifications</label>
+    <label>Text Size: <input type="range" min="14" max="24" data-setting="textSize" value="16"></label>
+    <button id="close-settings" class="btn btn-outline small">Close</button>
+  `;
+  document.body.appendChild(drawer);
+  create('button',{ id:'open-settings', innerText:'⚙️', className:'settings-btn' }, document.body);
+  qs('#open-settings').onclick = ()=> drawer.classList.remove('hidden');
+  qs('#close-settings').onclick = ()=> drawer.classList.add('hidden');
+  drawer.querySelectorAll('[data-setting]').forEach(input => {
+    input.addEventListener('input', e => {
+      const key = e.target.dataset.setting;
+      const val = e.target.type==='checkbox' ? e.target.checked : e.target.value;
+      localStorage.setItem(`setting:${key}`, val);
+      applySetting(key, val);
+    });
+    // initialize from storage
+    const stored = localStorage.getItem(`setting:${input.dataset.setting}`);
+    if (stored !== null) {
+      if (input.type==='checkbox') input.checked = stored==='true';
+      else input.value = stored;
+      applySetting(input.dataset.setting, input.checked || input.value);
+    }
+  });
+  function applySetting(key, val) {
+    switch(key) {
+      case 'animations':
+        document.body.classList.toggle('no-animations', !val);
+        break;
+      case 'sounds':
+        window.UmbrixiaUI.soundsEnabled = !!val;
+        break;
+      case 'notifications':
+        window.UmbrixiaUI.notifsEnabled = !!val;
+        break;
+      case 'textSize':
+        document.documentElement.style.fontSize = `${val}px`;
+        break;
+    }
+  }
+
+  // ─── 3) In-App Notification Center ────────────────────────────────────────────
+  const notifCenter = create('div',{ className:'notif-center hidden' });
+  notifCenter.innerHTML = '<h3>Notifications</h3><ul id="notif-list"></ul><button id="close-notifs" class="btn btn-outline small">Close</button>';
+  document.body.appendChild(notifCenter);
+  qs('#close-notifs').onclick = ()=> notifCenter.classList.add('hidden');
+  window.UmbrixiaUI.notifyInApp = msg => {
+    const li = document.createElement('li');
+    li.textContent = msg;
+    qs('#notif-list').prepend(li);
+    showToast(msg, 2000);
+  };
+  on('keydown', null, e => {
+    // Ctrl+N opens center
+    if (e.ctrlKey && e.key.toLowerCase()==='n') {
+      notifCenter.classList.toggle('hidden');
+    }
+  });
+
+  // ─── 4) WebSocket Chat Stub ──────────────────────────────────────────────────
+  let ws;
+  function connectChatWS(url='wss://example.com/chat') {
+    if (!('WebSocket' in window)) return;
+    ws = new WebSocket(url);
+    ws.addEventListener('open', () => showToast('🔗 WS connected',1500));
+    ws.addEventListener('message', e => {
+      const data = JSON.parse(e.data);
+      emit('ws:message', data);
+      chat.innerHTML += `<p class="message bot"><strong>WS Bot:</strong> ${data.text}</p>`;
+    });
+    ws.addEventListener('close', () => showToast('⚠️ WS disconnected',2000));
+    ws.addEventListener('error', ()=> showToast('⚠️ WS error',2000));
+  }
+  window.UmbrixiaUI.sendWS = (data) => ws?.send(JSON.stringify(data));
+  // Auto‐connect if setting enabled
+  if (localStorage.getItem('setting:websocket')==='true') connectChatWS();
+
+  // ─── 5) Remote Error Logging ─────────────────────────────────────────────────
+  const ERR_URL = '/logError';
+  window.addEventListener('error', e => {
+    fetch(ERR_URL, {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({ msg:e.message, file:e.filename, line:e.lineno })
+    }).catch(()=>{/*silent*/});
+  });
+
+  // ─── 6) Device Orientation Card Tilt ─────────────────────────────────────────
+  qsa('.feature-card').forEach(card => {
+    window.addEventListener('deviceorientation', ({ gamma, beta }) => {
+      const x = Math.min(30, Math.max(-30, gamma));
+      const y = Math.min(30, Math.max(-30, beta));
+      card.style.transform = `rotateY(${x/5}deg) rotateX(${-y/5}deg)`;
+    });
+  });
+
+  // ─── 7) Expose & Init ────────────────────────────────────────────────────────
+  window.addEventListener('DOMContentLoaded', () => {
+    // nothing extra
+  });
+  Object.assign(window.UmbrixiaUI, {
+    connectChatWS,
+    registerPlugin: window.UmbrixiaUI.registerPlugin,
+    unregisterPlugin: window.UmbrixiaUI.unregisterPlugin
+  });
+
+  // ─── Minimal Styles for Part 8 ───────────────────────────────────────────────
+  create('style',{ textContent: `
+    /* Settings button */
+    .settings-btn { position:fixed; bottom:20px; right:20px; z-index:10000; }
+    .settings-drawer {
+      position:fixed; top:0; right:0; width:260px; height:100vh;
+      background:#111; color:#ddd; padding:20px; box-shadow:-4px 0 10px rgba(0,0,0,0.5);
+      overflow:auto; z-index:10000;
+    }
+    .settings-drawer.hidden { transform:translateX(100%); transition:transform .3s; }
+    .settings-drawer:not(.hidden) { transform:translateX(0); }
+    /* Notifications center */
+    .notif-center {
+      position:fixed; top:20px; right:20px; width:300px;
+      background:#111; color:#ddd; padding:16px; border-radius:8px;
+      box-shadow:0 0 10px rgba(0,0,0,0.7); z-index:10000;
+    }
+    .notif-center.hidden { display:none; }
+    .notif-center ul { list-style:none; padding:0; margin:8px 0; max-height:200px; overflow:auto;}
+    .split-container { --not-used:0; }
+  `}, document.head);
+
+})();
+
 
