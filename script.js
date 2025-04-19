@@ -2595,4 +2595,130 @@ document.addEventListener("DOMContentLoaded", () => {
 
 })();
 
+// ───────────────────────────────────────────────────────────────────────────────
+// Umbrixia UI — Chart.js Metrics, OS Theme Sync & Connectivity Indicator (Part 9)
+// Paste this at the very end of script.js
+// ───────────────────────────────────────────────────────────────────────────────
+(() => {
+  'use strict';
+
+  // ─── Helpers ────────────────────────────────────────────────────────────────
+  const qs  = s => document.querySelector(s);
+  const qsa = s => Array.from(document.querySelectorAll(s));
+  const create = (t,p={},parent=document.body) => {
+    const el = document.createElement(t);
+    Object.assign(el,p);
+    parent.appendChild(el);
+    return el;
+  };
+
+  // ─── 1) OS Dark/Light Theme Sync ─────────────────────────────────────────────
+  const mq = window.matchMedia('(prefers-color-scheme: dark)');
+  mq.addEventListener('change', e => {
+    document.body.dataset.theme = e.matches ? 'dark' : 'light';
+  });
+
+  // ─── 2) Connectivity Status Banner ───────────────────────────────────────────
+  const statusBar = create('div',{ id:'conn-status', className:'conn-status hidden' }, document.body);
+  function updateStatus() {
+    if (navigator.onLine) {
+      statusBar.textContent = '🟢 You are online';
+      statusBar.classList.add('online'); statusBar.classList.remove('offline');
+    } else {
+      statusBar.textContent = '🔴 You are offline — some features may not work';
+      statusBar.classList.add('offline'); statusBar.classList.remove('online');
+    }
+    statusBar.classList.remove('hidden');
+    setTimeout(() => statusBar.classList.add('hidden'), 3000);
+  }
+  window.addEventListener('online', updateStatus);
+  window.addEventListener('offline', updateStatus);
+
+  // ─── 3) Chart.js in “Why Students Trust Us” ──────────────────────────────────
+  // Ensure Chart.js is loaded via <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  if (window.Chart) {
+    const stats = [ {label:'Addictive', value:85}, {label:'Tests', value:10}, {label:'Accuracy', value:100} ];
+    const container = qs('.stats-row');
+    if (container) {
+      // insert canvas
+      const ctx = create('canvas',{ id:'statsChart' }, container);
+      // hide the fallback stat-boxes
+      qsa('.stat-box').forEach(el => el.style.display = 'none');
+      // draw donut
+      new Chart(ctx.getContext('2d'), {
+        type: 'doughnut',
+        data: {
+          labels: stats.map(s=>s.label),
+          datasets: [{
+            data: stats.map(s=>s.value),
+            backgroundColor: ['#ff4d4d','#4f46e5','#60a5fa'],
+            hoverOffset: 4
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { position: 'bottom', labels: { color: '#fff' } },
+          }
+        }
+      });
+      // size canvas
+      ctx.parentNode.style.position = 'relative';
+      ctx.style.width = '100%';
+      ctx.style.height = '250px';
+    }
+  }
+
+  // ─── 4) AI Suggestion Chip ───────────────────────────────────────────────────
+  const chip = create('button',{ className:'suggestion-chip hidden' }, document.body);
+  chip.onclick = () => { qs('#userInput').value = chip.textContent; chip.classList.add('hidden'); qs('#userInput').focus(); };
+  function showSuggestion(text) {
+    chip.textContent = text;
+    chip.classList.remove('hidden');
+    setTimeout(() => chip.classList.add('hidden'), 8000);
+  }
+  // example: suggest based on inactivity
+  let idle=0;
+  setInterval(() => {
+    idle++;
+    if (idle===3) showSuggestion('Try asking: “Explain central idea.”');
+  }, 60000);
+  ['keydown','click'].forEach(ev => document.addEventListener(ev,()=>idle=0));
+
+  // ─── 5) Animated Gradient Background ─────────────────────────────────────────
+  const bg = create('div',{ className:'animated-gradient' }, document.body);
+  bg.style.cssText = `
+    position:fixed; top:0; left:0; width:100%; height:100%; z-index:-1;
+    background: linear-gradient(45deg, #111, #222, #111);
+    background-size: 400% 400%; animation: gradientMove 15s ease infinite;
+  `;
+  create('style',{ textContent: `
+    @keyframes gradientMove {
+      0%{background-position:0% 50%} 50%{background-position:100% 50%} 100%{background-position:0% 50%}
+    }
+  `}, document.head);
+
+  // ─── 6) Hotkey to toggle split‑view (Press S) ─────────────────────────────────
+  document.addEventListener('keydown', e => {
+    if (e.key.toLowerCase()==='s') {
+      qs('#history-panel')?.classList.toggle('hidden');
+    }
+  });
+
+  // ─── 7) Expose Part 9 APIs ────────────────────────────────────────────────────
+  Object.assign(window.UmbrixiaUI, {
+    showSuggestion,
+    updateStatus,
+    refreshChart: () => window.dispatchEvent(new Event('resize'))
+  });
+
+  // ─── Init ─────────────────────────────────────────────────────────────────────
+  window.addEventListener('DOMContentLoaded', () => {
+    document.body.dataset.theme = mq.matches ? 'dark' : 'light';
+    updateStatus();
+  });
+})();
+
+
 
