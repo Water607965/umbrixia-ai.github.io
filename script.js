@@ -3121,5 +3121,299 @@ document.addEventListener('DOMContentLoaded', () => {
 })();
 
 
+// ───────────────────────────────────────────────────────────────────────────────
+// Umbrixia UI — All‑In‑One Engagement Suite (Append to script.js)
+// ───────────────────────────────────────────────────────────────────────────────
+(() => {
+  'use strict';
+
+  /* Utilities */
+  const qs = s => document.querySelector(s);
+  const qsa = s => Array.from(document.querySelectorAll(s));
+  const on = (evt, sel, fn) => document.addEventListener(evt, e => e.target.matches(sel) && fn(e));
+  const toast = (msg, dur=3000) => {
+    const c = qs('.toast-container');
+    const t = document.createElement('div');
+    t.className='toast'; t.textContent=msg; c.append(t);
+    requestAnimationFrame(() => t.classList.add('visible'));
+    setTimeout(() => { t.classList.remove('visible'); setTimeout(()=>t.remove(),300); }, dur);
+  };
+
+  /* 1) Particle Background */
+  const canvas = qs('#hero-particles'), ctx = canvas?.getContext('2d');
+  if (ctx) {
+    let w,h,parts=[];
+    const init = () => {
+      w=canvas.width=innerWidth; h=canvas.height=innerHeight;
+      parts = Array.from({length:80},() => ({
+        x:Math.random()*w, y:Math.random()*h,
+        vx:(Math.random()-0.5)*0.5, vy:(Math.random()-0.5)*0.5,
+        r:Math.random()*2+1
+      }));
+    };
+    const draw = () => {
+      ctx.clearRect(0,0,w,h);
+      parts.forEach(p=>{
+        p.x+=p.vx; p.y+=p.vy;
+        if(p.x<0||p.x>w) p.vx*=-1;
+        if(p.y<0||p.y>h) p.vy*=-1;
+        ctx.fillStyle='rgba(255,255,255,0.2)';
+        ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,2*Math.PI); ctx.fill();
+      });
+      requestAnimationFrame(draw);
+    };
+    window.addEventListener('resize',init);
+    init(); draw();
+  }
+
+  /* 2) Typewriter Headline */
+  const phrases = ['Trusted by students.','Powered by AI.','Mastery in minutes.','Confidence every day.'];
+  let pi=0, li=0, add=true; const tw=qs('#typewriter');
+  const type = () => {
+    const txt=phrases[pi];
+    tw.textContent = txt.substring(0,li);
+    if(add) { if(li<txt.length) li++; else add=false; }
+    else    { if(li>0)               li--; else { add=true; pi=(pi+1)%phrases.length; } }
+    setTimeout(type, add?100:50);
+  };
+  tw && type();
+
+  /* 3) Demo Modal */
+  const demoBtn=qs('#demo-btn');
+  if(demoBtn) {
+    const modal=document.createElement('div'); modal.className='modal hidden';
+    modal.innerHTML=`
+      <div class="modal-backdrop"></div>
+      <div class="modal-content">
+        <button class="modal-close">&times;</button>
+        <iframe width="560" height="315" src="https://www.youtube.com/embed/dQw4w9WgXcQ" 
+          frameborder="0" allowfullscreen></iframe>
+      </div>`;
+    document.body.append(modal);
+    demoBtn.onclick = ()=> modal.classList.remove('hidden');
+    on('click','.modal-close, .modal-backdrop',()=> modal.classList.add('hidden'));
+  }
+
+  /* 4) Google Sign‑In */
+  const gBtn=qs('#btn-google-special');
+  if(gBtn && window.firebase?.auth) {
+    gBtn.addEventListener('click',async()=>{
+      const provider=new firebase.auth.GoogleAuthProvider();
+      try {
+        await firebase.auth().signInWithPopup(provider);
+        if(!localStorage.getItem('trialStart')) localStorage.setItem('trialStart',Date.now());
+        window.location.href='dashboard.html';
+      } catch(e){ console.error(e); toast('Google login failed'); }
+    });
+  }
+
+  /* 5) Email Capture */
+  qs('#hero-email-submit')?.addEventListener('click',()=>{
+    const inp=qs('#hero-email-input'), email=inp.value.trim();
+    if(!/.+@.+\..+/.test(email)){
+      inp.classList.add('shake'); setTimeout(()=>inp.classList.remove('shake'),500);
+      return;
+    }
+    toast(`📩 Thanks! We’ll email you at ${email}`);
+  });
+
+  /* 6) Scroll‑down Hint */
+  qs('.scroll-down')?.addEventListener('click',()=>{
+    qs('#features')?.scrollIntoView({behavior:'smooth'});
+  });
+
+  /* 7) Gamification XP Bar */
+  const Gamify={
+    xp:Number(localStorage.getItem('umbrixiaXP'))||0,
+    lvl:Number(localStorage.getItem('umbrixiaLvl'))||1,
+    bar:null,
+    init(){
+      this.bar=document.createElement('div'); this.bar.id='xp-bar';
+      document.body.append(this.bar); this.update();
+    },
+    goal(){return this.lvl*this.lvl*100},
+    add(x){ this.xp+=x; if(this.xp>=this.goal()){this.xp-=this.goal();this.lvl++;toast(`🎉 Level ${this.lvl}!`);} localStorage.setItem('umbrixiaXP',this.xp); localStorage.setItem('umbrixiaLvl',this.lvl); this.update(); },
+    update(){ this.bar.style.width=Math.min(100,(this.xp/this.goal())*100)+'%'; }
+  };
+  document.addEventListener('DOMContentLoaded',()=>Gamify.init());
+  on('click','.btn-primary, .btn-outline',()=>Gamify.add(20));
+
+  /* 8) Leaderboard */
+  const Leaderboard={
+    el:qs('#leaderboard'),
+    init(){
+      this.el.innerHTML='<h2>Top Learners</h2><ol></ol>';
+      this.ol=this.el.querySelector('ol'); this.fetch();
+    },
+    async fetch(){
+      let data=[]; try{ const r=await fetch('/api/leaderboard'); data=await r.json(); }catch{ data=[{name:'Alex',xp:5200},{name:'Sam',xp:4800},{name:'Jordan',xp:4500}]; }
+      this.render(data);
+    },
+    render(d){ this.ol.innerHTML=''; d.slice(0,10).forEach(u=>{const li=document.createElement('li');li.textContent=`${u.name} — ${u.xp} XP`;this.ol.append(li);}); }
+  };
+  document.addEventListener('DOMContentLoaded',()=>Leaderboard.init());
+
+  /* 9) Puzzle Progress & Graph */
+  let pProg=JSON.parse(localStorage.getItem('puzzleProgress')||'{}'), pHist=JSON.parse(localStorage.getItem('puzzleHistory')||'[]');
+  const exams=['shsat','isee','sat'];
+  const initPuz=()=>{
+    exams.forEach(exam=>{
+      const sec=qs(`#${exam} .puzzle-section`); if(!sec)return;
+      sec.dataset.exam=exam;
+      const cont=document.createElement('div');cont.className='puzzle-progress-container';cont.innerHTML=`
+        <div class="puzzle-progress-label"><span>Progress</span><span class="puzzle-progress-percent">0%</span></div>
+        <div class="puzzle-progress-bar"><div class="puzzle-progress-fill"></div></div>
+        <button class="btn btn-outline small">+20%</button>`;
+      sec.append(cont);
+      cont.querySelector('button').addEventListener('click',()=>updateP(exam,20));
+      renderP(exam);
+    });
+    renderGraph();
+  };
+  const renderP=exam=>{
+    const pct=pProg[exam]||0, cont=qs(`.puzzle-progress-container[data-exam="${exam}"]`);
+    cont.querySelector('.puzzle-progress-fill').style.width=pct+'%';
+    cont.querySelector('.puzzle-progress-percent').textContent=pct+'%';
+  };
+  const updateP=(exam,delta)=>{
+    pProg[exam]=Math.min(100,(pProg[exam]||0)+delta);
+    localStorage.setItem('puzzleProgress',JSON.stringify(pProg));
+    pHist.push({time:Date.now(),exam,progress:pProg[exam]});
+    localStorage.setItem('puzzleHistory',JSON.stringify(pHist));
+    renderP(exam); renderGraph();
+  };
+  const renderGraph=()=>{
+    let wrap=qs('#puzzleProgressGraph'); if(!wrap){ wrap=document.createElement('section');wrap.id='puzzleProgressGraph';document.body.append(wrap);}
+    wrap.innerHTML=`<h2>Puzzle Progress</h2><canvas id="puzzleGraphCanvas"></canvas>`;
+    const c=qs('#puzzleGraphCanvas'), ctx=c.getContext('2d');
+    const data=pHist.slice(-20), w=c.clientWidth, h=200;
+    c.width=w*devicePixelRatio; c.height=h*devicePixelRatio; ctx.scale(devicePixelRatio,devicePixelRatio);
+    ctx.clearRect(0,0,w,h);
+    if(data.length<2)return;
+    const stepX=w/(data.length-1);
+    ctx.lineWidth=3; ctx.strokeStyle='#ff4d4d'; ctx.beginPath();
+    data.forEach((pt,i)=>{const x=i*stepX, y=h-(pt.progress/100)*(h-20)-10; i?ctx.lineTo(x,y):ctx.moveTo(x,y);});
+    ctx.stroke();
+    data.forEach((pt,i)=>{const x=i*stepX, y=h-(pt.progress/100)*(h-20)-10;ctx.beginPath();ctx.arc(x,y,4,0,2*Math.PI);ctx.fillStyle='#ff4d4d';ctx.fill();});
+  };
+  document.addEventListener('DOMContentLoaded',initPuz);
+
+  /* 10) Onboarding Wizard */
+  const Wizard={
+    steps:[
+      {sel:'.hero',text:'This is the command center.'},
+      {sel:'.stats-section',text:'Key proof‑points right here.'},
+      {sel:'#features',text:'Discover standout features.'},
+      {sel:'.designed-for-mastery',text:'Learn how we ensure mastery.'}
+    ], idx:0, overlay:null,
+    init(){
+      if(localStorage.getItem('onboardDone'))return;
+      this.overlay=document.createElement('div');this.overlay.className='wizard-overlay';document.body.append(this.overlay);
+      this.next();
+    },
+    next(){
+      if(this.idx>=this.steps.length)return this.end();
+      const {sel,text}=this.steps[this.idx], el=qs(sel);
+      if(!el){this.idx++;return this.next();}
+      const r=el.getBoundingClientRect();
+      this.overlay.innerHTML=`<div class="wizard-tooltip" style="top:${r.bottom+10}px;left:${r.left}px">
+        <p>${text}</p><button id="wiz-next">${this.idx<this.steps.length-1?'Next':'Done'}</button></div>`;
+      qs('#wiz-next').onclick=()=>{this.idx++;this.next();};
+    },
+    end(){this.overlay.remove();localStorage.setItem('onboardDone','1');}
+  };
+  document.addEventListener('DOMContentLoaded',()=>Wizard.init());
+
+  /* 11) A/B Testing */
+  const ab=localStorage.getItem('abVar')||((Math.random()<.5?'A':'B'));
+  localStorage.setItem('abVar',ab); document.body.classList.add(`ab-${ab}`);
+  if(ab==='B') qsa('.btn-primary').forEach(b=>b.style.background='linear-gradient(90deg,#4f46e5,#8282ff)');
+
+  /* 12) Reminder Notification */
+  if(Notification&&Notification.permission==='default')Notification.requestPermission();
+  setTimeout(()=>{ if(Notification.permission==='granted')new Notification('Umbrixia Reminder',{body:'🕐 Ready for another session?'}); else toast('🕐 Ready for another session?'); },3600e3);
+
+  /* 13) Accessibility Enhancements */
+  qsa('button,a').forEach(el=>el.setAttribute('tabindex','0'));
+  document.addEventListener('focusin',e=>e.target.classList.add('focus-outline'));
+  document.addEventListener('focusout',e=>e.target.classList.remove('focus-outline'));
+
+  /* 14) Performance Monitor */
+  const perf={frames:0,last:performance.now(),fps:0,ping:null};
+  const perfEl=document.createElement('div');perfEl.id='perfMonitor';document.body.append(perfEl);
+  (function upd(){perf.frames++;const now=performance.now();if(now-perf.last>=1e3){perf.fps=perf.frames;perf.frames=0;perf.last=now;perfEl.textContent=`FPS:${perf.fps}|Ping:${perf.ping??'–'}ms`;}requestAnimationFrame(upd);}());
+  const ping=async()=>{const t=Date.now();try{await fetch('/ping',{cache:'no-store'});perf.ping=Date.now()-t;}catch{perf.ping=null;}};
+  ping(); setInterval(ping,3e4);
+
+  /* 15) Command Palette */
+  const paletteHTML=`<div id="cmdPalette" class="modal hidden"><div class="modal-content palette"><input id="cmdInput" placeholder="Cmd+K to..." autofocus/><ul id="cmdList"></ul></div><div class="modal-backdrop"></div></div>`;
+  document.body.insertAdjacentHTML('beforeend',paletteHTML);
+  const commands={subscribe:()=>toast('Subscribe modal would open'),help:()=>toast('Try: subscribe')};
+  const openPal=()=>{qs('#cmdPalette').classList.remove('hidden');qs('#cmdInput').focus();};
+  const closePal=()=>{qs('#cmdPalette').classList.add('hidden');};
+  document.addEventListener('keydown',e=>{if((e.metaKey||e.ctrlKey)&&e.key==='k'){e.preventDefault();openPal();}else if(e.key==='Escape')closePal();});
+  on('click','.modal-backdrop',closePal);
+  qs('#cmdInput').addEventListener('input',()=>{
+    const q=qs('#cmdInput').value.toLowerCase(),list=qs('#cmdList');
+    list.innerHTML='';Object.keys(commands).filter(k=>k.startsWith(q)).forEach(k=>{
+      const li=document.createElement('li');li.className='cmd-item';li.textContent=k;li.onclick=()=>{commands[k]();closePal();};list.append(li);
+    });
+  });
+
+  /* 16) Voice Recognition & Synthesis */
+  const SpeechRec=window.SpeechRecognition||window.webkitSpeechRecognition;
+  if(SpeechRec){
+    const rec=new SpeechRec();
+    rec.lang='en-US'; rec.interimResults=false;
+    document.addEventListener('keydown',e=>{if(e.key.toLowerCase()==='v'){
+      toast('🎙️ Listening...'); rec.start();
+    }});
+    rec.onresult=e=>{
+      const txt=e.results[0][0].transcript;qs('#hero-email-input').value=txt;
+    };
+  }
+  const synth=window.speechSynthesis;
+  const speak=text=>{if(!synth)return;const u=new SpeechSynthesisUtterance(text);synth.speak(u);};
+  // Example: speak hero subtitle on load
+  window.addEventListener('load',()=>speak(qs('.hero-subtitle').textContent));
+
+  /* 17) Transcript Download & Copy */
+  const downloadTranscript=()=>{
+    const lines=Array.from(qsa('.message')).map(m=>m.textContent).join('\n');
+    const blob=new Blob([lines],{type:'text/plain'}),url=URL.createObjectURL(blob);
+    const a=document.createElement('a');a.href=url;a.download=`chat-${Date.now()}.txt`;a.click();URL.revokeObjectURL(url);
+  };
+  document.addEventListener('keydown',e=>{if((e.ctrlKey||e.metaKey)&&e.key==='s'){e.preventDefault();downloadTranscript();}});
+
+  /* 18) Autosuggest History */
+  const HIST='chatHistory',MAXH=20,inputEl=qs('#hero-email-input');
+  const getH=()=>JSON.parse(localStorage.getItem(HIST)||'[]');
+  const saveH=txt=>{if(!txt) return;let h=getH();h.unshift(txt);while(h.length>MAXH)h.pop();localStorage.setItem(HIST,JSON.stringify(h));renderH();};
+  const renderH=()=>{let dl=qs('#historyList');if(!dl){dl=document.createElement('datalist');dl.id=HIST;document.body.append(dl);inputEl.setAttribute('list',HIST);}dl.innerHTML='';getH().forEach(item=>{const o=document.createElement('option');o.value=item;dl.append(o);});};
+  inputEl&&inputEl.addEventListener('input',e=>saveH(e.target.value));
+  renderH();
+
+  /* 19) Title Badge & Desktop Notifications */
+  const baseDoc=document.title;
+  let unread=0;
+  new MutationObserver(muts=>{muts.forEach(m=>{m.addedNodes.forEach(n=>{if(n.matches?.('.toast')){if(!document.hasFocus()){unread++;document.title=`(${unread}) ${baseDoc}`;if(Notification.permission==='granted')new Notification('Umbrixia',{body:n.textContent});}}});});})
+    .observe(qs('.toast-container'),{childList:true});
+  window.addEventListener('focus',()=>{unread=0;document.title=baseDoc;});
+
+  /* 20) Confetti Trigger */
+  window.showConfetti=()=>{
+    const colors=['#ff4d4d','#ff6b81','#e74c3c'];
+    const end=Date.now()+1500;
+    (function pop(){
+      if(Date.now()>end) return;
+      const p=document.createElement('div');p.className='confetti';
+      p.style.background=colors[Math.floor(Math.random()*colors.length)];
+      p.style.left=Math.random()*100+'%';
+      document.body.append(p);
+      setTimeout(()=>p.remove(),2000);
+      requestAnimationFrame(pop);
+    })();
+  };
+})();
 
 
