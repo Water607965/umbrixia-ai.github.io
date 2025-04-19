@@ -1338,3 +1338,207 @@ document.addEventListener("DOMContentLoaded", () => {
   };
 })();
 
+// ───────────────────────────────────────────────────────────────────────────────
+// Umbrixia UI — Additional Interactive Modules (Part 2)
+// Insert everything below at the very end of script.js
+// ───────────────────────────────────────────────────────────────────────────────
+(() => {
+  'use strict';
+
+  // ─── Global Error Handler ────────────────────────────────────────────────────
+  window.addEventListener('error', e => {
+    console.error('Umbrixia Error:', e.message, e);
+    if (window.UmbrixiaUI?.showToast) {
+      UmbrixiaUI.showToast('⚠️ Something went wrong. Please refresh.', 5000);
+    }
+  });
+
+  // ─── Chat Typing Indicator Monkey-Patch ───────────────────────────────────────
+  if (typeof window.sendMessage === 'function') {
+    const _send = window.sendMessage;
+    window.sendMessage = async function patchedSend() {
+      showTypingIndicator();
+      await _send.apply(this, arguments);
+      hideTypingIndicator();
+    };
+  }
+  function showTypingIndicator() {
+    const chat = document.getElementById('chat');
+    if (!chat) return;
+    let indicator = document.getElementById('typing-indicator');
+    if (!indicator) {
+      indicator = document.createElement('div');
+      indicator.id = 'typing-indicator';
+      indicator.className = 'message bot typing';
+      indicator.innerHTML = '<strong>Bot:</strong> <span class="dot">.</span><span class="dot">.</span><span class="dot">.</span>';
+      chat.appendChild(indicator);
+    }
+  }
+  function hideTypingIndicator() {
+    const ind = document.getElementById('typing-indicator');
+    ind?.remove();
+  }
+
+  // ─── Subscription Modal ───────────────────────────────────────────────────────
+  const subModalHTML = `
+    <div id="subModal" class="modal hidden" role="dialog" aria-modal="true">
+      <div class="modal-content">
+        <button class="modal-close" aria-label="Close">&times;</button>
+        <h2>Subscribe to Umbrixia</h2>
+        <p>Unlock unlimited access to personalized AI tutoring.</p>
+        <button id="modal-subscribe-btn" class="btn btn-primary">Subscribe Now</button>
+      </div>
+      <div class="modal-backdrop"></div>
+    </div>`;
+  document.body.insertAdjacentHTML('beforeend', subModalHTML);
+  const subModal = document.getElementById('subModal');
+  on('click', '[data-subscribe]', () => openSubscribeModal());
+  on('click', '.modal-close, .modal-backdrop', () => closeSubscribeModal());
+  function openSubscribeModal() {
+    subModal.classList.remove('hidden');
+    document.body.style.overflow = 'hidden';
+    trapFocus(subModal);
+  }
+  function closeSubscribeModal() {
+    subModal.classList.add('hidden');
+    document.body.style.overflow = '';
+  }
+  function trapFocus(modal) {
+    const focusable = modal.querySelectorAll('button, [href], input, select, textarea');
+    if (!focusable.length) return;
+    const first = focusable[0], last = focusable[focusable.length - 1];
+    modal.addEventListener('keydown', e => {
+      if (e.key === 'Tab') {
+        if (e.shiftKey && document.activeElement === first) {
+          e.preventDefault();
+          last.focus();
+        } else if (!e.shiftKey && document.activeElement === last) {
+          e.preventDefault();
+          first.focus();
+        }
+      } else if (e.key === 'Escape') {
+        closeSubscribeModal();
+      }
+    });
+    first.focus();
+  }
+
+  // ─── Testimonials Carousel ────────────────────────────────────────────────────
+  const testimonials = [
+    { quote: "Umbrixia boosted my SHSAT score by 25 points in 2 weeks!", author: "— Jordan L." },
+    { quote: "I love the adaptive AI feedback. It knows exactly what I struggle with.", author: "— Maya S." },
+    { quote: "Sleek, intuitive, and it just works. Like magic.", author: "— Aaron P." }
+  ];
+  let testIdx = 0;
+  function rotateTestimonials() {
+    const box = qs('.testimonial-banner');
+    if (!box) return;
+    box.classList.add('fade-in');
+    box.innerHTML = `<p>${testimonials[testIdx].quote}</p><span>${testimonials[testIdx].author}</span>`;
+    setTimeout(() => box.classList.remove('fade-in'), 800);
+    testIdx = (testIdx + 1) % testimonials.length;
+  }
+  setInterval(rotateTestimonials, 7000);
+  rotateTestimonials();
+
+  // ─── FAQ Accordion ────────────────────────────────────────────────────────────
+  qsa('.faq-item .faq-question').forEach(q => {
+    q.addEventListener('click', () => {
+      const parent = q.closest('.faq-item');
+      parent?.classList.toggle('open');
+    });
+  });
+
+  // ─── Idle Timeout Reminder ─────────────────────────────────────────────────────
+  let idleTimer;
+  function resetIdleTimer() {
+    clearTimeout(idleTimer);
+    idleTimer = setTimeout(() => {
+      showToast('👋 Still there? Ask me anything about your test prep!', 4000);
+    }, 60_000); // 60s
+  }
+  ['mousemove','keydown','click','touchstart'].forEach(evt => {
+    document.addEventListener(evt, resetIdleTimer);
+  });
+  resetIdleTimer();
+
+  // ─── Lazy Load Images ─────────────────────────────────────────────────────────
+  const lazyObserver = new IntersectionObserver((entries, obs) => {
+    entries.forEach(e => {
+      if (e.isIntersecting && e.target.dataset.src) {
+        e.target.src = e.target.dataset.src;
+        e.target.removeAttribute('data-src');
+        obs.unobserve(e.target);
+      }
+    });
+  }, { rootMargin: '0px 0px 200px 0px' });
+  qsa('img[data-src]').forEach(img => lazyObserver.observe(img));
+
+  // ─── Animate Growth Curve on Scroll ───────────────────────────────────────────
+  const curve = qs('.why-graph-wrapper img');
+  if (curve) {
+    const graphObs = new IntersectionObserver((entries, o) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          curve.classList.add('pop-in');
+          o.unobserve(curve);
+        }
+      });
+    }, { threshold: 0.3 });
+    graphObs.observe(curve);
+  }
+
+  // ─── Skeleton Loader Pulse ─────────────────────────────────────────────────────
+  const style = document.createElement('style');
+  style.innerHTML = `
+    .skeleton-pulse {
+      animation: pulse 1.5s infinite ease-in-out;
+      background: linear-gradient(90deg, #1a1a1a, #2a2a2a, #1a1a1a);
+      background-size: 200% 100%;
+    }
+    @keyframes pulse {
+      0% { background-position: -200% 0; }
+      100% { background-position: 200% 0; }
+    }`;
+  document.head.appendChild(style);
+  qsa('.skeleton').forEach(el => el.classList.add('skeleton-pulse'));
+
+  // ─── Like Button Micro‑Animation ──────────────────────────────────────────────
+  on('click', '.like-btn', e => {
+    const btn = e.target;
+    btn.classList.toggle('liked');
+    btn.animate([
+      { transform: 'scale(1)' },
+      { transform: 'scale(1.4)' },
+      { transform: 'scale(1)' }
+    ], { duration: 400, easing: 'ease-out' });
+  });
+
+  // ─── Analytics Placeholder ────────────────────────────────────────────────────
+  function track(eventName, data = {}) {
+    // TODO: wire to real analytics
+    console.log('🔍 Track:', eventName, data);
+  }
+  on('click', '[data-track]', e => {
+    const ev = e.target.dataset.track;
+    track(ev);
+  });
+
+  // ─── Auto–Scroll Chat to Bottom ────────────────────────────────────────────────
+  const chatEl = qs('#chat');
+  function scrollChat() {
+    if (chatEl) chatEl.scrollTop = chatEl.scrollHeight;
+  }
+  new MutationObserver(scrollChat).observe(chatEl, { childList: true });
+
+  // ─── Export New APIs ──────────────────────────────────────────────────────────
+  Object.assign(window.UmbrixiaUI, {
+    openSubscribeModal,
+    closeSubscribeModal,
+    rotateTestimonials,
+    resetIdleTimer,
+    track
+  });
+
+})();
+
