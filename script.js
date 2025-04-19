@@ -2886,5 +2886,240 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 });
 
+// ───────────────────────────────────────────────────────────────────────────────
+// Umbrixia UI — Extreme Growth & Engagement Modules (Part 11)
+// Append this at the very end of script.js
+// ───────────────────────────────────────────────────────────────────────────────
+(() => {
+  'use strict';
+
+  // ─── 1) USER PERSONALIZATION ─────────────────────────────────────────────────
+  const User = {
+    name: localStorage.getItem('displayName') || null,
+    greet() {
+      if (this.name) {
+        const greetEl = document.querySelector('.hero-subtitle');
+        if (greetEl) {
+          greetEl.textContent = `Welcome back, ${this.name}! Your AI‑powered prep awaits.`;
+        }
+      }
+    },
+    setName(name) {
+      this.name = name;
+      localStorage.setItem('displayName', name);
+      this.greet();
+    }
+  };
+  document.addEventListener('DOMContentLoaded', () => User.greet());
+
+  // ─── 2) GAMIFICATION MODULE ───────────────────────────────────────────────────
+  const Gamify = {
+    xp: Number(localStorage.getItem('umbrixiaXP')) || 0,
+    level: Number(localStorage.getItem('umbrixiaLevel')) || 1,
+    xpToNext() { return Math.pow(this.level, 2) * 100; },
+    init() {
+      this.bar = document.createElement('div');
+      this.bar.id = 'xp-bar';
+      this.bar.style.cssText = 'position:fixed;bottom:0;left:0;height:6px;background:#ff4d4d;width:0;transition:width .3s;';
+      document.body.appendChild(this.bar);
+      this.updateUI();
+    },
+    addXP(amount) {
+      this.xp += amount;
+      localStorage.setItem('umbrixiaXP', this.xp);
+      if (this.xp >= this.xpToNext()) this.levelUp();
+      this.updateUI();
+    },
+    levelUp() {
+      this.xp -= this.xpToNext();
+      this.level++;
+      localStorage.setItem('umbrixiaLevel', this.level);
+      this.notify(`🎉 Leveled up to ${this.level}!`);
+    },
+    updateUI() {
+      const pct = Math.min(100, (this.xp / this.xpToNext()) * 100);
+      this.bar.style.width = pct + '%';
+    },
+    notify(msg) {
+      if (window.UmbrixiaUI && UmbrixiaUI.notifyInApp) UmbrixiaUI.notifyInApp(msg);
+    }
+  };
+  document.addEventListener('DOMContentLoaded', () => Gamify.init());
+
+  // Grant XP for quiz submissions
+  on('submit', '#auth-section form, .quiz-form', e => {
+    Gamify.addXP(20);
+  });
+
+  // ─── 3) LEADERBOARD MODULE ────────────────────────────────────────────────────
+  const Leaderboard = {
+    endpoint: '/api/leaderboard',
+    container: null,
+    init() {
+      this.container = document.getElementById('leaderboard');
+      if (!this.container) {
+        this.container = document.createElement('section');
+        this.container.id = 'leaderboard';
+        this.container.innerHTML = '<h2>Top Learners</h2><ol></ol>';
+        document.body.appendChild(this.container);
+      }
+      this.listEl = this.container.querySelector('ol');
+      this.fetchAndRender();
+    },
+    async fetchAndRender() {
+      let data = [];
+      try {
+        const res = await fetch(this.endpoint);
+        data = await res.json();
+      } catch {
+        // fallback dummy data
+        data = [
+          { name: 'Alex', xp: 5200 },
+          { name: 'Sam', xp: 4800 },
+          { name: 'Jordan', xp: 4500 }
+        ];
+      }
+      this.render(data);
+    },
+    render(data) {
+      this.listEl.innerHTML = '';
+      data.slice(0,10).forEach(user => {
+        const li = document.createElement('li');
+        li.textContent = `${user.name} — ${user.xp} XP`;
+        this.listEl.appendChild(li);
+      });
+    }
+  };
+  document.addEventListener('DOMContentLoaded', () => Leaderboard.init());
+
+  // ─── 4) REMINDER & NOTIFICATIONS ─────────────────────────────────────────────
+  const Reminder = {
+    schedule(timeOffsetMs, msg) {
+      const id = setTimeout(() => {
+        if (Notification.permission === 'granted') {
+          new Notification('Umbrixia Reminder', { body: msg });
+        } else {
+          UmbrixiaUI.notifyInApp?.(msg);
+        }
+      }, timeOffsetMs);
+      return id;
+    }
+  };
+  // auto-remind 1 hour after loading to practice again
+  document.addEventListener('DOMContentLoaded', () => {
+    if (Notification && Notification.permission === 'default') {
+      Notification.requestPermission();
+    }
+    Reminder.schedule(60*60*1000, '🕐 Time to sharpen your skills with Umbrixia!');
+  });
+
+  // ─── 5) A/B TESTING FRAMEWORK ────────────────────────────────────────────────
+  const ABTest = {
+    variation: localStorage.getItem('abVar') || (Math.random() < 0.5 ? 'A' : 'B'),
+    init() {
+      localStorage.setItem('abVar', this.variation);
+      document.body.classList.add(`ab-${this.variation}`);
+      this.apply();
+    },
+    apply() {
+      if (this.variation === 'B') {
+        // example: swap primary CTA color
+        document.querySelectorAll('.btn-primary').forEach(b => {
+          b.style.background = 'linear-gradient(90deg,#4f46e5,#818cf8)';
+        });
+      }
+    }
+  };
+  document.addEventListener('DOMContentLoaded', () => ABTest.init());
+
+  // ─── 6) ONBOARDING WIZARD ────────────────────────────────────────────────────
+  const Wizard = {
+    steps: [
+      { sel: '.hero-section', text: 'This is your command center.' },
+      { sel: '#features',      text: 'Explore our key features here.' },
+      { sel: '#chatbox',       text: 'Chat live with our AI tutor.' },
+      { sel: '#leaderboard',   text: 'See top learners on the leaderboard.' }
+    ],
+    idx: 0,
+    overlay: null,
+    init() {
+      if (localStorage.getItem('onboardDone')) return;
+      this.overlay = document.createElement('div');
+      this.overlay.id = 'wizard';
+      this.overlay.className = 'wizard-overlay';
+      document.body.appendChild(this.overlay);
+      this.showStep();
+    },
+    showStep() {
+      if (this.idx >= this.steps.length) return this.end();
+      const { sel, text } = this.steps[this.idx];
+      const el = document.querySelector(sel);
+      if (!el) { this.idx++; return this.showStep(); }
+      const rect = el.getBoundingClientRect();
+      this.overlay.innerHTML = `
+        <div class="wizard-tooltip" style="
+          top:${rect.bottom + 10}px; left:${rect.left}px;
+        ">
+          <p>${text}</p>
+          <button id="wiz-next">${this.idx < this.steps.length -1 ? 'Next' : 'Done'}</button>
+        </div>`;
+      document.getElementById('wiz-next').onclick = () => {
+        this.idx++;
+        this.showStep();
+      };
+    },
+    end() {
+      this.overlay.remove();
+      localStorage.setItem('onboardDone','true');
+    }
+  };
+  document.addEventListener('DOMContentLoaded', () => Wizard.init());
+
+  // ─── 7) ACCESSIBILITY ENHANCEMENTS ────────────────────────────────────────────
+  document.querySelectorAll('button, a').forEach(el => {
+    el.setAttribute('tabindex', '0');
+    el.addEventListener('focus', () => el.classList.add('focus-outline'));
+    el.addEventListener('blur', () => el.classList.remove('focus-outline'));
+  });
+
+  // ─── 8) PERFORMANCE MONITORING ───────────────────────────────────────────────
+  const Perf = {
+    marks: {},
+    mark(label) { this.marks[label] = performance.now(); },
+    measure(a,b) {
+      if (this.marks[a] && this.marks[b]) {
+        console.log(`Perf:${a}->${b}:`, (this.marks[b]-this.marks[a]).toFixed(1),'ms');
+      }
+    }
+  };
+  window.addEventListener('load', () => {
+    Perf.mark('loadEnd');
+    Perf.measure('navStart','loadEnd');
+  });
+  Perf.mark('navStart');
+
+  // ─── 9) REAL‑TIME UPDATES STUB (SSE) ──────────────────────────────────────────
+  if (typeof EventSource !== 'undefined') {
+    const es = new EventSource('/events');
+    es.addEventListener('xpUpdate', e => {
+      const data = JSON.parse(e.data);
+      Gamify.addXP(data.xp);
+    });
+  }
+
+  // ─── 10) EXPORT & INIT ───────────────────────────────────────────────────────
+  Object.assign(window.UmbrixiaUI, {
+    User,
+    Gamify,
+    Leaderboard,
+    Reminder,
+    ABTest,
+    Wizard,
+    Perf
+  });
+
+})();
+
+
 
 
