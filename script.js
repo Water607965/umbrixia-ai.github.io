@@ -2720,5 +2720,135 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 })();
 
+// ───────────────────────────────────────────────────────────────────────────────
+// Umbrixia UI — Scroll Progress, Wave Sections & Dynamic Table of Contents (Part 10)
+// Paste this at the very end of script.js
+// ───────────────────────────────────────────────────────────────────────────────
+(() => {
+  'use strict';
+
+  // ─── Helpers ────────────────────────────────────────────────────────────────
+  const qs    = s => document.querySelector(s);
+  const qsa   = s => Array.from(document.querySelectorAll(s));
+  const on    = (evt, sel, fn) => document.addEventListener(evt, e => e.target.matches(sel) && fn(e));
+  const create= (tag, props={}, parent=document.body) => {
+    const el = document.createElement(tag);
+    Object.assign(el, props);
+    parent.appendChild(el);
+    return el;
+  };
+
+  // ─── 1) Scroll Progress Indicator ─────────────────────────────────────────────
+  const progress = create('div',{ id:'scroll-progress' }, document.body);
+  progress.style.cssText = `
+    position: fixed; top: 0; left: 0; height: 4px; width: 0;
+    background: linear-gradient(90deg,#ff4d4d,#e74c3c);
+    z-index: 9999; transition: width 0.2s ease;
+  `;
+  window.addEventListener('scroll', () => {
+    const docH = document.documentElement.scrollHeight - window.innerHeight;
+    const pct  = (window.scrollY / docH)*100;
+    progress.style.width = `${pct}%`;
+  });
+
+  // ─── 2) Wave Section Dividers ──────────────────────────────────────────────────
+  qsa('section').forEach(sec => {
+    const wave = create('div',{ className:'wave-divider' }, sec);
+    wave.innerHTML = `
+      <svg viewBox="0 0 1440 60" preserveAspectRatio="none" style="display:block;width:100%;height:60px;">
+        <path fill="#0d0d0d" d="M0,0 C360,60 1080,0 1440,60 L1440,60 L0,60 Z"></path>
+      </svg>`;
+  });
+
+  // ─── 3) Dynamic Table of Contents ──────────────────────────────────────────────
+  const toc = create('nav',{ id:'toc', className:'toc hidden' }, document.body);
+  toc.innerHTML = '<h4>On This Page</h4><ul></ul>';
+  const tocList = qs('#toc ul');
+  qsa('h2.section-title, h3').forEach(heading => {
+    const id = heading.id || heading.textContent.trim().toLowerCase().replace(/\W+/g,'-');
+    heading.id = id;
+    const li = create('li',{ innerHTML:`<a href="#${id}">${heading.textContent}</a>` }, tocList);
+  });
+  on('keydown', null, e => {
+    if (e.key === 'o' && (e.ctrlKey || e.metaKey)) {
+      toc.classList.toggle('hidden');
+      e.preventDefault();
+    }
+  });
+  const tocStyle = create('style',{ textContent: `
+    #toc {
+      position: fixed; top: 100px; right: 20px; width: 200px;
+      background: rgba(20,20,20,0.8); color: #ddd;
+      padding: 12px; border-radius: 8px; font-size: 0.9rem;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.5); z-index: 9999;
+      max-height: 70vh; overflow:auto;
+    }
+    #toc.hidden { display: none; }
+    #toc h4 { margin-top:0; color:#ff4d4d; }
+    #toc ul { list-style:none; padding:0; margin:8px 0; }
+    #toc li { margin:6px 0; }
+    #toc a { color:#ccc; text-decoration:none; }
+    #toc a:hover { text-decoration:underline; }
+  `}, document.head);
+
+  // ─── 4) Section Reveal Delay by Index ─────────────────────────────────────────
+  qsa('.features-grid .feature-card').forEach((card,i) => {
+    card.style.opacity = '0';
+    card.style.transform = 'translateY(20px)';
+    card.style.transition = `opacity 0.6s ease ${i*0.15}s, transform 0.6s ease ${i*0.15}s`;
+  });
+  const revealObserver = new IntersectionObserver((entries, obs) => {
+    entries.forEach(ent => {
+      if (ent.isIntersecting) {
+        ent.target.style.opacity = '1';
+        ent.target.style.transform = 'translateY(0)';
+        obs.unobserve(ent.target);
+      }
+    });
+  },{ threshold:0.2 });
+  qsa('.features-grid .feature-card').forEach(card => revealObserver.observe(card));
+
+  // ─── 5) “Back to Top” Floating Label ──────────────────────────────────────────
+  const label = create('div',{ id:'back-to-top', innerText:'Back to Top' }, document.body);
+  label.style.cssText = `
+    position: fixed; bottom: 80px; right: 20px;
+    background:#ff4d4d; color:#fff; padding:8px 12px;
+    border-radius:20px; cursor:pointer; opacity:0;
+    transition:opacity 0.3s, transform 0.3s;
+    font-size:0.9rem; user-select:none; z-index:9999;
+  `;
+  label.onclick = () => window.scrollTo({ top:0, behavior:'smooth' });
+  window.addEventListener('scroll', () => {
+    if (window.scrollY > 300) {
+      label.style.opacity = '1';
+      label.style.transform = 'translateY(0)';
+    } else {
+      label.style.opacity = '0';
+      label.style.transform = 'translateY(20px)';
+    }
+  });
+
+  // ─── 6) Analytics Event on Section View ───────────────────────────────────────
+  qsa('section').forEach(sec => {
+    const id = sec.id || sec.querySelector('.section-title')?.id;
+    if (!id) return;
+    const obs = new IntersectionObserver((ents, o) => {
+      ents.forEach(e => {
+        if (e.isIntersecting) {
+          if (window.UmbrixiaUI.track) UmbrixiaUI.track('view:'+id);
+          o.unobserve(e.target);
+        }
+      });
+    },{ threshold:0.3 });
+    obs.observe(sec);
+  });
+
+  // ─── 7) Expose Part 10 APIs ───────────────────────────────────────────────────
+  Object.assign(window.UmbrixiaUI, {
+    toggleTOC: () => toc.classList.toggle('hidden'),
+    showBackToTop: () => label.style.opacity = '1'
+  });
+})();
+
 
 
