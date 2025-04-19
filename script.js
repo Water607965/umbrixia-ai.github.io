@@ -2850,5 +2850,41 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 })();
 
+// ───────────────────────────────────────────────────────────────────────────────
+// Hero Illustrative Gauges (Mastery/Focus/Confidence) — requires Chart.js
+// ───────────────────────────────────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+  const gaugeConfigs = [
+    { id: 'gauge-mastery',     percent: 75, color: '#ff4d4d' },
+    { id: 'gauge-focus',       percent: 85, color: '#4f46e5' },
+    { id: 'gauge-confidence',  percent: 65, color: '#60a5fa' }
+  ];
+
+  gaugeConfigs.forEach(({id, percent, color}) => {
+    const ctx = document.getElementById(id).getContext('2d');
+    new Chart(ctx, {
+      type: 'doughnut',
+      data: {
+        // [filled, remaining]
+        datasets: [{
+          data: [percent, 100 - percent],
+          backgroundColor: [color, '#2a2a2a'],
+          borderWidth: 0
+        }]
+      },
+      options: {
+        cutout: '80%',
+        responsive: false,
+        maintainAspectRatio: false,
+        animation: { animateRotate: true, duration: 1200 },
+        plugins: {
+          legend: { display: false },
+          tooltip: { enabled: false }
+        }
+      }
+    });
+  });
+});
+
 
 
