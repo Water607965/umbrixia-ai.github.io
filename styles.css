@@ -5609,4 +5609,32 @@ html {
 /* Voice & Misc */
 .secret-mode { text-align:center; margin:40px auto; color:#ff4d4d; }
 
+/* ───────────────── Cursor Blink ───────────────── */
+.cursor {
+  display: inline-block;
+  width: 1ch;
+  background: transparent;
+  /* step‐blinking gives a crisp on/off every 1s */
+  animation: blink-cursor 1s steps(2) infinite;
+}
+@keyframes blink-cursor {
+  0%, 50%   { opacity: 1; }
+  50.1%,100%{ opacity: 0; }
+}
+
+/* ───────────────── Stat‑Box Pulse ───────────────── */
+/* A gentle 3s ease‑in‑out scale + glow pulse */
+.stat-box {
+  animation: pulse-highlight 3s ease-in-out infinite;
+}
+@keyframes pulse-highlight {
+  0%,100% {
+    transform: scale(1);
+    box-shadow: 0 0  8px rgba(255, 77, 77, 0.2);
+  }
+  50% {
+    transform: scale(1.05);
+    box-shadow: 0 0 16px rgba(255, 77, 77, 0.4);
+  }
+}
 
