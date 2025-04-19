@@ -2036,3 +2036,204 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 })();
 
+// ───────────────────────────────────────────────────────────────────────────────
+// Umbrixia UI — Puzzle Progress & Graph Module (Part 6)
+// Append this to the end of script.js
+// ───────────────────────────────────────────────────────────────────────────────
+(() => {
+  'use strict';
+
+  // ─── Simple Helpers ──────────────────────────────────────────────────────────
+  const qs     = selector => document.querySelector(selector);
+  const qsa    = selector => Array.from(document.querySelectorAll(selector));
+  const create = (tag, props = {}, parent = document.body) => {
+    const el = document.createElement(tag);
+    Object.assign(el, props);
+    parent.appendChild(el);
+    return el;
+  };
+
+  // ─── Load / Save State ───────────────────────────────────────────────────────
+  let puzzleProgress = JSON.parse(localStorage.getItem('puzzleProgress') || '{}');
+  let puzzleHistory  = JSON.parse(localStorage.getItem('puzzleHistory')  || '[]');
+  const exams = ['shsat', 'isee', 'sat'];
+
+  // ─── Inject Required CSS ─────────────────────────────────────────────────────
+  function injectPuzzleStyles() {
+    const css = `
+      .puzzle-progress-container {
+        margin: 16px 0;
+        font-family: 'Inter', sans-serif;
+      }
+      .puzzle-progress-label {
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.9rem;
+        color: #ccc;
+        margin-bottom: 6px;
+      }
+      .puzzle-progress-bar {
+        position: relative;
+        background: #222;
+        border-radius: 8px;
+        height: 10px;
+        overflow: hidden;
+      }
+      .puzzle-progress-fill {
+        background: #ff4d4d;
+        height: 100%;
+        width: 0;
+        transition: width 0.5s ease;
+      }
+      .puzzle-progress-container .btn-outline.small {
+        margin-top: 8px;
+        padding: 6px 12px;
+        font-size: 0.85rem;
+      }
+      #puzzleProgressGraph {
+        margin: 40px 0;
+        text-align: center;
+      }
+      #puzzleProgressGraph h2 {
+        color: #fff;
+        margin-bottom: 12px;
+        font-size: 1.5rem;
+      }
+      #puzzleGraphCanvas {
+        width: 100%;
+        height: 200px;
+        background: #111;
+        border: 1px solid #333;
+        border-radius: 8px;
+      }
+    `;
+    const style = create('style', { textContent: css }, document.head);
+  }
+
+  // ─── Initialize Puzzle UI ────────────────────────────────────────────────────
+  function initPuzzles() {
+    exams.forEach(exam => {
+      const section   = qs(`#${exam}`);
+      if (!section) return;
+      const puzzleEl  = section.querySelector('.puzzle-section');
+      if (!puzzleEl) return;
+
+      // mark for lookup
+      puzzleEl.dataset.exam = exam;
+
+      // build progress container
+      const container = create('div', { className: 'puzzle-progress-container' }, puzzleEl);
+      container.innerHTML = `
+        <div class="puzzle-progress-label">
+          <span>Progress</span>
+          <span class="puzzle-progress-percent">0%</span>
+        </div>
+        <div class="puzzle-progress-bar">
+          <div class="puzzle-progress-fill"></div>
+        </div>
+      `;
+
+      // demo “Solve +20%” button
+      const btn = create('button', {
+        className: 'btn btn-outline small',
+        innerText: 'Solve +20%'
+      }, container);
+      btn.addEventListener('click', () => updatePuzzleProgress(exam, 20));
+
+      // render initial state
+      renderPuzzleProgress(exam);
+    });
+  }
+
+  // ─── Render Single Puzzle Progress ───────────────────────────────────────────
+  function renderPuzzleProgress(exam) {
+    const percent = puzzleProgress[exam] || 0;
+    const selector = `.puzzle-section[data-exam="${exam}"]`;
+    const container = qs(selector + ' .puzzle-progress-container');
+    if (!container) return;
+    qs('.puzzle-progress-fill', container).style.width = percent + '%';
+    qs('.puzzle-progress-percent', container).innerText = percent + '%';
+  }
+
+  // ─── Update Progress & History ───────────────────────────────────────────────
+  function updatePuzzleProgress(exam, delta) {
+    puzzleProgress[exam] = Math.min(100, (puzzleProgress[exam] || 0) + delta);
+    localStorage.setItem('puzzleProgress', JSON.stringify(puzzleProgress));
+
+    // record timestamped history entry
+    puzzleHistory.push({
+      time: Date.now(),
+      exam,
+      progress: puzzleProgress[exam]
+    });
+    localStorage.setItem('puzzleHistory', JSON.stringify(puzzleHistory));
+
+    renderPuzzleProgress(exam);
+    renderPuzzleGraph();
+  }
+
+  // ─── Draw Progress-Over-Time Graph ────────────────────────────────────────────
+  function renderPuzzleGraph() {
+    let wrapper = qs('#puzzleProgressGraph');
+    if (!wrapper) {
+      // place after dashboard
+      const dash = qs('.dashboard') || qs('body');
+      wrapper = create('section', { id: 'puzzleProgressGraph' }, dash);
+      wrapper.innerHTML = `<h2>Puzzle Progress Over Time</h2><canvas id="puzzleGraphCanvas"></canvas>`;
+    }
+    const canvas = qs('#puzzleGraphCanvas');
+    if (!canvas) return;
+
+    // size for high-DPI
+    const w = canvas.clientWidth;
+    const h = 200;
+    canvas.width = w * devicePixelRatio;
+    canvas.height = h * devicePixelRatio;
+    const ctx = canvas.getContext('2d');
+    ctx.scale(devicePixelRatio, devicePixelRatio);
+    ctx.clearRect(0, 0, w, h);
+
+    // prepare last 20 entries
+    const data = puzzleHistory.slice(-20);
+    if (data.length < 2) return;
+
+    // compute step
+    const stepX = w / (data.length - 1);
+
+    // draw smooth line
+    ctx.lineWidth = 3;
+    ctx.strokeStyle = '#ff4d4d';
+    ctx.beginPath();
+    data.forEach((pt, i) => {
+      const x = i * stepX;
+      const y = h - (pt.progress / 100) * (h - 20) - 10;
+      i === 0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+    });
+    ctx.stroke();
+
+    // draw circles at points
+    data.forEach((pt, i) => {
+      const x = i * stepX;
+      const y = h - (pt.progress / 100) * (h - 20) - 10;
+      ctx.beginPath();
+      ctx.arc(x, y, 4, 0, 2 * Math.PI);
+      ctx.fillStyle = '#ff4d4d';
+      ctx.fill();
+    });
+  }
+
+  // ─── DOM Ready ────────────────────────────────────────────────────────────────
+  window.addEventListener('DOMContentLoaded', () => {
+    injectPuzzleStyles();
+    initPuzzles();
+    renderPuzzleGraph();
+  });
+
+  // ─── Expose APIs ─────────────────────────────────────────────────────────────
+  window.UmbrixiaUI = Object.assign(window.UmbrixiaUI || {}, {
+    updatePuzzleProgress,
+    renderPuzzleGraph
+  });
+})();
+
+
