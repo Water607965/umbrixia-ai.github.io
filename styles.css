@@ -5389,3 +5389,29 @@ html {
   color: #ccc;
   line-height: 1.6;
 }
+
+/* ─── Hero Gauges ───────────────────────────────────────────────────────────── */
+.metrics-charts {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  gap: 24px;
+  max-width: 500px;
+  margin: 0 auto;
+}
+.chart-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.chart-item canvas {
+  width: 100px !important;
+  height: 100px !important;
+}
+.chart-label {
+  margin-top: 8px;
+  color: #f2f2f2;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
