@@ -7459,6 +7459,61 @@ html {
   100% { background-position: 0% }
 }
 
+.apple-section {
+  background-color: #0b0b0b;
+  padding: 80px 40px;
+  text-align: center;
+}
+
+.apple-title {
+  font-size: 2.5rem;
+  font-weight: 800;
+  margin-bottom: 2rem;
+}
+
+.apple-gradient {
+  background: linear-gradient(90deg, #007aff, #5856d6, #af52de, #ff2d55, #ff9500);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.apple-card-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 2rem;
+}
+
+.apple-card {
+  background: #111111;
+  padding: 30px;
+  border-radius: 20px;
+  box-shadow: 0 0 20px rgba(255, 70, 70, 0.2);
+  transition: all 0.3s ease;
+  width: 280px;
+  max-width: 100%;
+}
+
+.apple-card:hover {
+  box-shadow: 0 0 40px rgba(255, 70, 70, 0.5);
+  transform: scale(1.05);
+}
+
+.apple-card h3 {
+  color: white;
+  margin-top: 1rem;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+}
+
+.apple-card p {
+  color: #aaa;
+  font-size: 0.95rem;
+}
+
+.apple-card .emoji {
+  font-size: 2rem;
+}
 
 
 
