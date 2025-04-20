@@ -8023,3 +8023,44 @@ body.dashboard-body {
   border-radius: 10px;
 }
 
+.ai-predictor {
+  background: #111;
+  padding: 2rem;
+  border-radius: 16px;
+  box-shadow: 0 0 40px rgba(255, 255, 255, 0.05);
+  color: #fff;
+  max-width: 600px;
+  margin: 2rem auto;
+  text-align: center;
+}
+
+.ai-predictor input,
+.ai-predictor select {
+  padding: 0.8rem;
+  margin: 0.5rem;
+  width: 80%;
+  font-size: 1rem;
+  border-radius: 8px;
+  border: 1px solid #444;
+  background: #1a1a1a;
+  color: #fff;
+}
+
+.ai-predictor button {
+  margin-top: 1rem;
+  padding: 0.8rem 1.5rem;
+  background: linear-gradient(90deg, #ff6a00, #ee0979);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.ai-predictor button:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 12px #ff4d4d;
+}
+
+
