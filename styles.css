@@ -7129,4 +7129,27 @@ html {
   transform: translateY(-2px);
 }
 
+.rainbow-tagline {
+  margin-top: 1.5rem;
+  font-size: 1.25rem;
+  font-weight: 600;
+  background: linear-gradient(90deg,
+    #007aff,  /* blue */
+    #5e5ce6,  /* indigo */
+    #af52de,  /* purple */
+    #ff2d55,  /* red-pink */
+    #ff9500   /* orange */
+  );
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-align: center;
+  animation: gradient-flow 8s ease-in-out infinite;
+}
+
+@keyframes gradient-flow {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
 
