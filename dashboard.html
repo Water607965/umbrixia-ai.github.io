@@ -111,7 +111,47 @@
     font-weight: bold;
     animation: fadeIn 0.3s ease-in-out;
   }
+
+    h1 {
+  background: linear-gradient(90deg, #ff4d4d, #ff9900, #4caf50, #2196f3, #9c27b0);
+  -webkit-background-clip: text;
+  color: transparent;
+  font-weight: 800;
+}
+
 </style>
+
+  <style>
+  #universal-loader {
+    position: fixed;
+    inset: 0;
+    background: #0d0d0d;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    animation: fadeIn 0.4s ease-in-out;
+  }
+
+  .spinner {
+    border: 5px solid #333;
+    border-top: 5px solid #ff4d4d;
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    animation: spin 1s linear infinite;
+    margin-bottom: 16px;
+  }
+
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+
+    
+</style>
+
+  
 
 </head>
 
@@ -141,9 +181,10 @@
 
   <body class="dashboard-body">
   <div id="universal-loader">
-    <div class="spinner"></div>
-    <p style="color: white;">Loading Umbrixia...</p>
-  </div>
+  <div class="spinner"></div>
+  <p style="color: white;">Loading Umbrixia...</p>
+</div>
+
 
   
 <body class="dashboard-body">
@@ -193,6 +234,8 @@ firebase.auth().onAuthStateChanged(async (user) => {
   `;
   return;
 }
+
+  target.classList.add("active");
 
   new Chart(document.getElementById("improvementChart"), {
     type: "line",
@@ -567,8 +610,63 @@ async function runPrediction() {
   });
 </script>
 
+<script>
+  const firebaseConfig = {
+    apiKey: "AIzaSyDDcAp59mkTutfXgnRIBWpVww3jFyzOtIc",
+    authDomain: "umbrixia-d804f.firebaseapp.com",
+    projectId: "umbrixia-d804f",
+    storageBucket: "umbrixia-d804f.firebasestorage.app",
+    messagingSenderId: "532093768601",
+    appId: "1:532093768601:web:4e94149269d88213edb908"
+  };
 
-  
+  if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
+  const auth = firebase.auth();
+  const db = firebase.firestore();
+
+  window.addEventListener("load", () => {
+    const universalLoader = document.getElementById("universal-loader");
+    const loginScreen = document.getElementById("loading-screen");
+
+    auth.onAuthStateChanged((user) => {
+      if (!user) {
+        window.location.href = "login.html";
+      } else {
+        if (universalLoader) universalLoader.style.display = "none";
+        if (loginScreen) loginScreen.style.display = "none";
+
+        const name = user.displayName || user.email.split("@")[0];
+        const emailEl = document.getElementById("userEmailDisplay");
+        if (emailEl) emailEl.textContent = user.email;
+      }
+    });
+  });
+</script>
+
+  <script>
+  function toggleProfileMenu() {
+    const menu = document.getElementById("profileMenu");
+    if (menu.style.display === "block") {
+      menu.style.display = "none";
+    } else {
+      menu.style.display = "block";
+    }
+  }
+
+  function logout() {
+    firebase.auth().signOut().then(() => {
+      window.location.href = "login.html";
+    });
+  }
+</script>
+
+  <script>
+  setInterval(() => {
+    const now = new Date();
+    document.getElementById("current-time").textContent = now.toLocaleString();
+  }, 1000);
+</script>
+
 
 </body>
 </html>
