@@ -7913,3 +7913,39 @@ body.dashboard-body {
   }
 }
 
+.dashboard-analytics {
+  padding: 4rem 2rem;
+  background: linear-gradient(to bottom, #0d0d0d, #1a1a1a);
+  color: #fff;
+  text-align: center;
+}
+
+.chart-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+  justify-content: center;
+  margin-top: 2rem;
+}
+
+.chart-box {
+  background: #1c1c1c;
+  padding: 1.5rem;
+  border-radius: 20px;
+  box-shadow: 0 0 15px rgba(255, 77, 77, 0.1);
+  width: min(100%, 480px);
+}
+
+.predictor-estimate {
+  margin-top: 4rem;
+}
+
+.gradient-score {
+  font-size: 2rem;
+  font-weight: 700;
+  background: linear-gradient(to right, #ff4d4d, #ffc107);
+  -webkit-background-clip: text;
+  color: transparent;
+  margin-top: 1rem;
+}
+
