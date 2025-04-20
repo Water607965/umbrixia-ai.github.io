@@ -6712,4 +6712,106 @@ html {
   line-height: 1.6;
 }
 
+/* ========== Designed for Mastery Section ========== */
+.mastery-section {
+  background: #0d0d0d;
+  padding: 5rem 2rem;
+  text-align: center;
+}
+
+.section-heading {
+  font-size: 2.4rem;
+  font-weight: 800;
+  color: white;
+  margin-bottom: 2.5rem;
+}
+
+.glow-red {
+  color: #ff3c3c;
+  text-shadow: 0 0 12px rgba(255, 59, 92, 0.4);
+}
+
+.mastery-grid {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.mastery-card {
+  background: #111;
+  padding: 2rem;
+  border-radius: 18px;
+  width: 260px;
+  transition: all 0.3s ease;
+  box-shadow: 0 0 14px rgba(255, 0, 43, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.mastery-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 0 24px rgba(255, 0, 43, 0.2);
+}
+
+.mastery-card .emoji {
+  font-size: 2.1rem;
+  margin-bottom: 1rem;
+}
+
+.mastery-card h3 {
+  font-size: 1.25rem;
+  color: white;
+  margin-bottom: 0.6rem;
+}
+
+.mastery-card p {
+  font-size: 0.95rem;
+  color: #ccc;
+  line-height: 1.6;
+}
+
+
+/* ========== Vision Call to Action ========== */
+.vision-section {
+  background: #0a0a0a;
+  padding: 5rem 2rem 6rem;
+  text-align: center;
+}
+
+.vision-inner {
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+.vision-heading {
+  font-size: 2.25rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 1.25rem;
+}
+
+.vision-subtext {
+  font-size: 1rem;
+  line-height: 1.75;
+  color: #ccc;
+  margin-bottom: 2rem;
+}
+
+.btn-hero-glow {
+  background: #ff3b47;
+  color: #fff;
+  padding: 0.9rem 1.8rem;
+  border-radius: 50px;
+  font-weight: 600;
+  font-size: 1rem;
+  text-decoration: none;
+  transition: 0.3s ease;
+  box-shadow: 0 0 20px rgba(255, 59, 92, 0.4);
+}
+
+.btn-hero-glow:hover {
+  box-shadow: 0 0 35px rgba(255, 59, 92, 0.7);
+  transform: translateY(-2px);
+}
+
 
