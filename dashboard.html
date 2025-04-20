@@ -7,6 +7,9 @@
   <link rel="stylesheet" href="styles.css" />
   <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore-compat.js"></script>
+
+  
   <style>
     body {
       margin: 0;
@@ -171,8 +174,11 @@
       <h2>SHSAT Practice Tests</h2>
       <div class="practice-grid">
         <div class="practice-card"><h3>Test 1</h3><p>Coming Soon...</p></div>
+        <button onclick="markTestComplete()">Start Test</button>
         <div class="practice-card"><h3>Test 2</h3><p>Coming Soon...</p></div>
+        <button onclick="markTestComplete()">Start Test</button>
         <div class="practice-card"><h3>Test 3</h3><p>Coming Soon...</p></div>
+        <button onclick="markTestComplete()">Start Test</button>
       </div>
       <div class="puzzle-section">
         <h4>🧩 SHSAT Puzzle of the Day</h4>
@@ -231,6 +237,8 @@
       appId: "1:532093768601:web:4e94149269d88213edb908"
     };
     firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+const db = firebase.firestore();
   }
 
   firebase.auth().onAuthStateChanged(user => {
@@ -345,47 +353,67 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("admissionScore").innerHTML = `${chance.toFixed(2)}%`;
 });
 </script>
-
 <script>
-  async function runPrediction() {
-  function runPrediction() {
+async function runPrediction() {
   const school = document.getElementById("dream-school").value;
   const grade = document.getElementById("user-grade").value;
-  const email = localStorage.getItem("userEmail") || "unknown@example.com";
+  const email = firebase.auth().currentUser?.email || "unknown@example.com";
+  const userId = firebase.auth().currentUser?.uid;
 
-  // 🔍 Simulate test check
-  const hasCompletedTest = localStorage.getItem("hasTakenTest") === "true";
+  const db = firebase.firestore();
+  const userDoc = await db.collection("users").doc(userId).get();
+  const hasTakenTest = userDoc.exists && userDoc.data().hasTakenTest;
 
-  if (!hasCompletedTest) {
+  if (!hasTakenTest) {
     document.getElementById("chance").innerText = "❌ You need to complete a practice test first.";
     document.getElementById("justification").innerText = "📘 The AI needs test results to make an accurate prediction.";
     document.getElementById("suggestion").innerText = "📝 Please take a SHSAT, ISEE, or SAT test first.";
     return;
   }
 
-  // ✅ Fetch AI prediction
-  fetch("https://your-render-url.onrender.com/predict", {
+  const res = await fetch("https://your-render-url.onrender.com/predict", {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ school, grade, email })
-  })
-    .then(res => res.json())
-    .then(data => {
-      document.getElementById("chance").innerText = `🎯 Acceptance Chance: ${data.chance}`;
-      document.getElementById("justification").innerText = `🧠 Why: ${data.justification}`;
-      document.getElementById("suggestion").innerText = `📈 Focus On: ${data.suggestion}`;
-    })
-    .catch(err => {
-      document.getElementById("chance").innerText = "⚠️ Prediction failed. Try again.";
-      console.error("Prediction error:", err);
-    });
-}
+  });
 
+  const data = await res.json();
+
+  document.getElementById("chance").innerText = `🎯 Acceptance Chance: ${data.chance}`;
+  document.getElementById("justification").innerText = `🧠 Why: ${data.justification}`;
+  document.getElementById("suggestion").innerText = `📈 Focus On: ${data.suggestion}`;
 }
 
 </script>
 
+  <script>
+  function markTestComplete() {
+  const user = firebase.auth().currentUser;
+  if (!user) return;
+
+  const db = firebase.firestore();
+  db.collection("users").doc(user.uid).set({
+    hasTakenTest: true
+  }, { merge: true });
+}
+
+    <script>
+  firebase.auth().onAuthStateChanged(user => {
+    if (user) {
+      const name = user.displayName || user.email?.split("@")[0];
+      const greetingEl = document.createElement("div");
+      greetingEl.className = "dashboard-greeting";
+      greetingEl.innerHTML = `
+        <h1 style="text-align:center; font-size: 2.5rem; background: linear-gradient(to right, #ff4d4d, #ff9900, #00c853);
+                   -webkit-background-clip: text; color: transparent; font-weight: 800;">
+          👋 Welcome back, ${name}!
+        </h1>
+      `;
+      document.body.insertBefore(greetingEl, document.querySelector(".dashboard"));
+    }
+  });
+</script>
+
+</script>
 </body>
 </html>
