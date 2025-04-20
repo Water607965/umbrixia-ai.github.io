@@ -3500,5 +3500,28 @@ function showToast(msg) {
   setTimeout(()=>t.remove(), 3000);
 }
 
+// Toggles the user dropdown menu
+function toggleUserMenu() {
+  const dropdown = document.getElementById("userDropdownPanel");
+  dropdown.classList.toggle("hidden");
+}
+
+// Ensure settings button responds
+document.addEventListener("DOMContentLoaded", () => {
+  const settingsBtn = document.getElementById("settingsBtn");
+  const profileBtn = document.getElementById("profile-btn");
+
+  if (settingsBtn) {
+    settingsBtn.addEventListener("click", () => {
+      // Show or navigate to settings section
+      document.getElementById("settings-panel").classList.toggle("visible");
+    });
+  }
+
+  // Optional: toggle on avatar click
+  const avatar = document.querySelector(".avatar-circle");
+  avatar?.addEventListener("click", toggleUserMenu);
+});
+
 
 
