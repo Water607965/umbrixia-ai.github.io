@@ -181,7 +181,31 @@ body {
     to { transform: rotate(360deg); }
   }
 
-    
+    .nav-links a,
+.btn-link,
+.btn-solid {
+  transition: 0.3s ease;
+}
+.nav-links a:hover,
+.btn-link:hover,
+.btn-solid:hover {
+  text-shadow: 0 0 6px #ff4d4d;
+  color: #ff4d4d !important;
+}
+
+.puzzle-section {
+  animation: bounceIn 0.5s ease;
+}
+@keyframes bounceIn {
+  0% { transform: scale(0.9); opacity: 0; }
+  60% { transform: scale(1.05); opacity: 0.7; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+    .chart-box:hover {
+  box-shadow: 0 0 15px #ff4d4d;
+  transition: 0.3s ease;
+}
 
     
 </style>
@@ -229,6 +253,9 @@ body {
     <div id="current-time" style="text-align:center; font-size: 1.1rem; margin-top: -20px; color: #ccc;"></div>
 
     <section class="dashboard-analytics">
+      <p style="text-align: center; color: #ccc; margin-bottom: -10px;">
+  📅 Today: <span id="live-date"></span>
+</p>
   <h2 class="section-title">📊 Performance Trends</h2>
       
 
@@ -258,6 +285,7 @@ firebase.auth().onAuthStateChanged(async (user) => {
   document.querySelector(".dashboard-analytics").innerHTML = `
     <div style="text-align: center; padding: 40px; color: #ccc;">
       <h2>📭 No test data found!</h2>
+      <img src="https://lottie.host/2e9e8f1d-000e-4cf9-a98f-4f3f13184f10/loader.gif" width="120" style="margin: 20px 0;" alt="No Data" />
       <p>Let’s get you started with your first practice test:</p>
       <div style="margin-top: 20px;">
         <button onclick="showSection('shsat')" style="padding: 12px 24px; background-color: #ff4d4d; border: none; color: white; font-size: 1rem; border-radius: 10px; cursor: pointer;">📝 Start SHSAT Test</button>
@@ -701,12 +729,29 @@ async function runPrediction() {
     document.getElementById("current-time").textContent = now.toLocaleString();
   }, 1000);
 
+    <p id="welcome-msg" style="text-align:right; font-size: 1rem; margin-top: -10px; color: #888; margin-bottom: 20px;"></p>
+
     window.addEventListener("load", () => {
   document.querySelector(".dashboard")?.classList.add("loaded");
 });
 
+    
+
 </script>
 
+    <script>
+firebase.auth().onAuthStateChanged((user) => {
+  if (user) {
+    const name = user.displayName || user.email.split("@")[0];
+    const msg = document.getElementById("welcome-msg");
+    if (msg) msg.textContent = `👋 Welcome back, ${name}!`;
+  }
+});
+</script>
+
+    <script>
+      document.getElementById("live-date").textContent = new Date().toLocaleDateString();
+    </script>
 
 </body>
 </html>
