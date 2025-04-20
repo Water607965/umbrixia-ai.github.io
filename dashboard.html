@@ -97,6 +97,22 @@
       to { opacity: 1; transform: translateY(0); }
     }
   </style>
+  <style>
+  #loading-screen {
+    position: fixed;
+    inset: 0;
+    background: #0d0d0d;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    font-size: 1.5rem;
+    color: white;
+    font-weight: bold;
+    animation: fadeIn 0.3s ease-in-out;
+  }
+</style>
+
 </head>
 
   <!-- Apple-Style Navbar -->
@@ -116,9 +132,11 @@
 </header>
   
 <body class="dashboard-body">
+  <div id="loading-screen">🔒 Checking Login Status...</div>
   <div class="dashboard">
     <h1>🧠 Umbrixia AI Dashboard</h1>
     <p class="sub">Choose your test, try in-development practice tests, or challenge your mind with puzzles.</p>
+    <div id="current-time" style="text-align:center; font-size: 1.1rem; margin-top: -20px; color: #ccc;"></div>
 
     <section class="dashboard-analytics">
   <h2 class="section-title">📊 Performance Trends</h2>
