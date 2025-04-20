@@ -7395,5 +7395,70 @@ html {
   }
 }
 
+/* ───────────── APPLE-STYLED "DESIGNED FOR MASTERY" ───────────── */
+
+.section-masterpiece {
+  background: #0b0b0b;
+  padding: 100px 20px 80px;
+  text-align: center;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.masterpiece-title {
+  font-size: 2.8rem;
+  font-weight: 700;
+  background: linear-gradient(90deg, #ff4d4d, #ff2fcf, #6f40ff, #4dffb8);
+  background-size: 300%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: gradientWave 8s ease-in-out infinite;
+  margin-bottom: 60px;
+}
+
+.masterpiece-grid {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  flex-wrap: wrap;
+}
+
+.masterpiece-card {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 18px;
+  padding: 32px;
+  width: 320px;
+  color: #fff;
+  box-shadow: 0 0 18px rgba(255, 77, 77, 0.15);
+  transition: all 0.4s ease;
+  backdrop-filter: blur(16px);
+}
+
+.masterpiece-card:hover {
+  transform: scale(1.04);
+  box-shadow: 0 0 32px rgba(255, 77, 77, 0.4);
+}
+
+.masterpiece-card h3 {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-bottom: 12px;
+  color: #ffffff;
+}
+
+.masterpiece-card p {
+  font-size: 0.95rem;
+  line-height: 1.6;
+  color: #cccccc;
+}
+
+/* 🔄 Gradient Animation */
+@keyframes gradientWave {
+  0% { background-position: 0% }
+  50% { background-position: 100% }
+  100% { background-position: 0% }
+}
+
+
 
 
