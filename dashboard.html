@@ -98,6 +98,29 @@
     <h1>🧠 Umbrixia AI Dashboard</h1>
     <p class="sub">Choose your test, try in-development practice tests, or challenge your mind with puzzles.</p>
 
+    <section class="dashboard-analytics">
+  <h2 class="section-title">📊 Performance Trends</h2>
+
+  <div class="chart-row">
+    <!-- Line Chart -->
+    <div class="chart-box">
+      <canvas id="improvementChart"></canvas>
+    </div>
+
+    <!-- Pie Chart -->
+    <div class="chart-box">
+      <canvas id="categoryPieChart"></canvas>
+    </div>
+  </div>
+
+  <div class="predictor-estimate">
+    <h3>🎯 College Predictor</h3>
+    <p>Your estimated chance of admission to your dream school is:</p>
+    <div id="admissionScore" class="gradient-score">Calculating...</div>
+  </div>
+</section>
+
+
     <div class="test-buttons">
       <button onclick="showSection('shsat')">SHSAT</button>
       <button onclick="showSection('isee')">ISEE</button>
@@ -184,6 +207,80 @@
       document.body.insertBefore(greetingEl, document.querySelector(".dashboard"));
     }
   });
+</script>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  // 🔵 Improvement Line Chart
+  const improvementChart = new Chart(document.getElementById("improvementChart"), {
+    type: "line",
+    data: {
+      labels: ["Week 1", "Week 2", "Week 3", "Week 4", "Week 5"],
+      datasets: [{
+        label: "Math",
+        data: [62, 70, 74, 81, 88],
+        borderColor: "#ff4d4d",
+        backgroundColor: "rgba(255, 77, 77, 0.2)",
+        tension: 0.4,
+        fill: true,
+        pointRadius: 4
+      }, {
+        label: "ELA",
+        data: [58, 63, 69, 76, 85],
+        borderColor: "#ffc107",
+        backgroundColor: "rgba(255, 193, 7, 0.2)",
+        tension: 0.4,
+        fill: true,
+        pointRadius: 4
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { position: "top" },
+        title: {
+          display: true,
+          text: "Score Improvement Over Time",
+          font: { size: 18 }
+        }
+      }
+    }
+  });
+
+  // 🟢 Category Pie Chart
+  const categoryPieChart = new Chart(document.getElementById("categoryPieChart"), {
+    type: "pie",
+    data: {
+      labels: ["Algebra", "Reading", "Vocabulary", "Probability", "Geometry"],
+      datasets: [{
+        data: [22, 26, 18, 14, 20],
+        backgroundColor: ["#ff4d4d", "#ffc107", "#4caf50", "#2196f3", "#9c27b0"],
+        borderColor: "#111"
+      }]
+    },
+    options: {
+      plugins: {
+        title: {
+          display: true,
+          text: "Topic Strength Distribution",
+          font: { size: 18 }
+        }
+      }
+    }
+  });
+
+  // 🧠 Predict Admission Likelihood (placeholder logic)
+  const avgScore = (88 + 85) / 2;
+  let chance;
+  if (avgScore >= 90) chance = 96;
+  else if (avgScore >= 80) chance = 82;
+  else if (avgScore >= 70) chance = 66;
+  else if (avgScore >= 60) chance = 49;
+  else chance = 25;
+
+  document.getElementById("admissionScore").innerHTML = `${chance.toFixed(2)}%`;
+});
 </script>
 
 </body>
