@@ -3561,4 +3561,29 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 });
 
+document.addEventListener("DOMContentLoaded", () => {
+  const name = localStorage.getItem("displayName");
+
+  // Inject Welcome Banner
+  if (name) {
+    const greeting = document.getElementById("greetingBanner");
+    if (greeting) {
+      greeting.textContent = `👋 Welcome, ${name}`;
+      greeting.classList.remove("hidden");
+    }
+  }
+
+  // Fix Settings Toggle
+  const settingsBtn = document.getElementById("settingsBtn");
+  const settingsPanel = document.getElementById("settingsPanel");
+
+  if (settingsBtn && settingsPanel) {
+    settingsBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+      settingsPanel.classList.toggle("hidden");
+    });
+  }
+});
+
+
 
