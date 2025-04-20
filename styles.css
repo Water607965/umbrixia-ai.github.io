@@ -6814,4 +6814,79 @@ html {
   transform: translateY(-2px);
 }
 
+/* ========== Empower Section ========== */
+.umbrixia-empower {
+  background: #0d0d0d;
+  padding: 5rem 2rem 6rem;
+  text-align: center;
+}
+
+.empower-title {
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: white;
+  margin-bottom: 3rem;
+  line-height: 1.4;
+}
+
+.empower-title .bold-white {
+  color: #ffffff;
+}
+
+.empower-title .bold-highlight {
+  font-weight: 800;
+  font-size: 1.8rem;
+  color: #999;
+}
+
+.ai-pink {
+  color: #ff3366;
+  text-shadow: 0 0 6px rgba(255, 51, 102, 0.5);
+}
+
+.impress-red {
+  color: #ff3c3c;
+  text-shadow: 0 0 6px rgba(255, 60, 60, 0.5);
+}
+
+.empower-grid {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  flex-wrap: wrap;
+  margin-top: 2rem;
+}
+
+.empower-box {
+  background: #111;
+  padding: 2rem 1.5rem;
+  border-radius: 16px;
+  width: 260px;
+  box-shadow: 0 0 16px rgba(255, 59, 59, 0.05);
+  transition: all 0.3s ease;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.empower-box:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 0 20px rgba(255, 59, 92, 0.2);
+}
+
+.empower-box .emoji {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+.empower-box h3 {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 0.6rem;
+}
+
+.empower-box p {
+  font-size: 0.95rem;
+  color: #ccc;
+  line-height: 1.5;
+}
 
