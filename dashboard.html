@@ -319,11 +319,22 @@ firebase.auth().onAuthStateChanged(async (user) => {
   </div>
 
   <script>
-    function showSection(test) {
-      document.querySelectorAll('.test-section').forEach(sec => sec.style.display = 'none');
-      document.getElementById(test).style.display = 'block';
-    }
-  </script>
+function showSection(testId) {
+  document.querySelectorAll('.test-section').forEach(section => {
+    section.classList.remove('active');
+    section.style.display = 'none';
+  });
+
+  const target = document.getElementById(testId);
+  target.style.display = 'block';
+
+  // Force reflow to allow animation on re-show
+  void target.offsetWidth;
+
+  target.classList.add('active');
+}
+</script>
+
 
   <script>
 
