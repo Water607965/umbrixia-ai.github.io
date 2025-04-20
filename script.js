@@ -3523,5 +3523,23 @@ document.addEventListener("DOMContentLoaded", () => {
   avatar?.addEventListener("click", toggleUserMenu);
 });
 
+firebase.auth().onAuthStateChanged(user => {
+  if (user) {
+    const greeting = document.getElementById("greeting");
+    const name = user.displayName || user.email.split('@')[0];
+    greeting.innerHTML = `👋 Welcome back, <span style="font-weight: 800;">${name}</span>`;
+    greeting.classList.remove("hidden");
+
+    // Add dashboard buttons below greeting
+    const dashButton = document.createElement("a");
+    dashButton.href = "dashboard.html";
+    dashButton.className = "apple-btn dark";
+    dashButton.innerText = "Go to Dashboard";
+    dashButton.style.marginTop = "1rem";
+    greeting.appendChild(document.createElement("br"));
+    greeting.appendChild(dashButton);
+  }
+});
+
 
 
