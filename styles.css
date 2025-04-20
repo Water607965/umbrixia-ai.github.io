@@ -7705,3 +7705,63 @@ html {
   }
 }
 
+/* Apple-inspired Mastery Section */
+.mastery-showcase {
+  padding: 100px 40px;
+  background: radial-gradient(circle at center, #111 0%, #0a0a0a 100%);
+  text-align: center;
+  color: #ffffff;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen;
+}
+
+.mastery-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  background: linear-gradient(90deg, #ff4d4d, #ffa14d);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 50px;
+}
+
+.mastery-cards {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 30px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.mastery-card {
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: 16px;
+  box-shadow: 0 0 20px rgba(255, 0, 0, 0.12);
+  padding: 30px;
+  width: 300px;
+  transition: all 0.4s ease;
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.mastery-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 10px 40px rgba(255, 50, 50, 0.3);
+}
+
+.mastery-icon {
+  font-size: 2rem;
+  margin-bottom: 15px;
+}
+
+.mastery-card h3 {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-bottom: 10px;
+  color: #ffffff;
+}
+
+.mastery-card p {
+  font-size: 0.95rem;
+  color: #ccc;
+  line-height: 1.6;
+}
