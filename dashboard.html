@@ -365,10 +365,14 @@ function showSection(testId) {
   <script>
 
   firebase.auth().onAuthStateChanged(user => {
-    if (!user) {
-      // Not logged in — redirect to login
-      window.location.href = "login.html";
-        else {
+  const loadingScreen = document.getElementById("loading-screen");
+
+  if (!user) {
+    window.location.href = "login.html";
+  } else {
+    // Hide the loading screen
+    if (loadingScreen) loadingScreen.style.display = "none";
+
     const name = user.displayName || user.email.split("@")[0];
     const greetingEl = document.createElement("div");
     greetingEl.className = "dashboard-greeting";
@@ -379,8 +383,15 @@ function showSection(testId) {
       </h1>
     `;
     document.body.insertBefore(greetingEl, document.querySelector(".dashboard"));
+
+    // Display user email in profile menu
+    const userEmailDisplay = document.getElementById("userEmailDisplay");
+    if (userEmailDisplay) {
+      userEmailDisplay.innerText = user.email;
+    }
   }
 });
+
 
 </script>
 
