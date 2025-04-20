@@ -6340,5 +6340,97 @@ html {
   padding-bottom: 5rem;
 }
 
+/* ✨ Empower Section */
+.empower-section {
+  background: #f9f9f9;
+  text-align: center;
+  padding: 100px 30px 80px;
+}
+.empower-heading {
+  font-size: 2.4rem;
+  font-weight: 800;
+  color: #121212;
+  margin-bottom: 50px;
+  line-height: 1.4;
+}
+.empower-heading .highlight {
+  color: #ff2d55;
+}
+.empower-features {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  flex-wrap: wrap;
+}
+.empower-box {
+  background: white;
+  padding: 30px 20px;
+  border-radius: 20px;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08);
+  transition: transform 0.3s ease;
+  width: 220px;
+}
+.empower-box:hover {
+  transform: translateY(-6px);
+}
+.emoji-icon {
+  font-size: 2.3rem;
+  margin-bottom: 15px;
+}
+.empower-label {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: #222;
+}
+
+/* 💡 Umbrixia Features Section */
+.umbrixia-why-section {
+  background: #0d0d0d;
+  color: white;
+  text-align: center;
+  padding: 120px 30px 100px;
+}
+.umbrixia-title {
+  font-size: 2.2rem;
+  font-weight: 800;
+  margin-bottom: 12px;
+}
+.umbrixia-subtitle {
+  font-size: 1.05rem;
+  color: #bbb;
+  margin-bottom: 60px;
+}
+.umbrixia-feature-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 40px;
+}
+.feature-card {
+  background: #1a1a1a;
+  padding: 40px 28px;
+  border-radius: 20px;
+  width: 280px;
+  box-shadow: 0 0 25px rgba(255, 45, 85, 0.3);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.feature-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 0 35px rgba(255, 45, 85, 0.5);
+}
+.feature-emoji {
+  font-size: 2.5rem;
+  margin-bottom: 15px;
+}
+.feature-card h3 {
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+.feature-card p {
+  font-size: 0.97rem;
+  color: #ccc;
+}
+
 
 
