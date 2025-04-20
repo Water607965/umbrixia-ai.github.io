@@ -10,6 +10,8 @@
   <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore-compat.js"></script>
 
   
+
+  
   <style>
     body {
       margin: 0;
@@ -324,26 +326,11 @@ firebase.auth().onAuthStateChanged(async (user) => {
   </script>
 
   <script>
-  // Initialize Firebase if not already initialized
-  if (!firebase.apps.length) {
-    const firebaseConfig = {
-      apiKey: "AIzaSyDDcAp59mkTutfXgnRIBWpVww3jFyzOtIc",
-      authDomain: "umbrixia-d804f.firebaseapp.com",
-      projectId: "umbrixia-d804f",
-      storageBucket: "umbrixia-d804f.firebasestorage.app",
-      messagingSenderId: "532093768601",
-      appId: "1:532093768601:web:4e94149269d88213edb908"
-    };
-    firebase.initializeApp(firebaseConfig);
-    const auth = firebase.auth();
-const db = firebase.firestore();
-  }
 
   firebase.auth().onAuthStateChanged(user => {
     if (!user) {
       // Not logged in — redirect to login
       window.location.href = "login.html";
-    } else {
         else {
     const name = user.displayName || user.email.split("@")[0];
     const greetingEl = document.createElement("div");
@@ -525,5 +512,44 @@ async function runPrediction() {
 
   </script>
   <script src="script.js" defer></script>
+
+  <script src="script.js" defer></script>
+<script>
+  const firebaseConfig = {
+    apiKey: "AIzaSyDDcAp59mkTutfXgnRIBWpVww3jFyzOtIc",
+    authDomain: "umbrixia-d804f.firebaseapp.com",
+    projectId: "umbrixia-d804f",
+    storageBucket: "umbrixia-d804f.firebasestorage.app",
+    messagingSenderId: "532093768601",
+    appId: "1:532093768601:web:4e94149269d88213edb908"
+  };
+
+  if (!firebase.apps.length) {
+    firebase.initializeApp(firebaseConfig);
+  }
+
+  const auth = firebase.auth();
+  const db = firebase.firestore();
+
+  auth.onAuthStateChanged(user => {
+    if (!user) {
+      // 🚪 Redirect unauthenticated users
+      window.location.href = "login.html";
+    } else {
+      const name = user.displayName || user.email.split("@")[0];
+      const greetingEl = document.createElement("div");
+      greetingEl.className = "dashboard-greeting";
+      greetingEl.innerHTML = `
+        <h1 style="font-size: 2.4rem; text-align: center; background: linear-gradient(90deg, #ff4d4d, #ff9900, #4caf50, #2196f3, #9c27b0);
+                   -webkit-background-clip: text; color: transparent; font-weight: 800; margin-top: 30px;">
+          🎉 Welcome back, ${name}!
+        </h1>
+      `;
+      document.body.insertBefore(greetingEl, document.querySelector(".dashboard"));
+    }
+  });
+</script>
+
+
 </body>
 </html>
