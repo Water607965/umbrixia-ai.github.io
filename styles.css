@@ -7591,3 +7591,102 @@ html {
 .apple-mastery-card .emoji {
   font-size: 2rem;
 }
+
+/* 🌟 Umbrixia Impact Section (Apple-Inspired) */
+.umbrixia-impact-section {
+  background: #0a0a0a;
+  padding: 100px 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: "Inter", sans-serif;
+}
+
+.impact-content {
+  max-width: 1200px;
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 4rem;
+}
+
+.impact-benefits {
+  flex: 1;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  max-width: 500px;
+}
+
+.impact-title {
+  font-size: 2.4rem;
+  font-weight: 800;
+  margin-bottom: 1.5rem;
+  color: #ff453a;
+}
+
+.impact-list {
+  list-style: none;
+  padding-left: 0;
+  margin-bottom: 2rem;
+  font-size: 1rem;
+  line-height: 1.8;
+}
+
+.impact-list li {
+  margin-bottom: 0.6rem;
+  font-weight: 500;
+  color: #ccc;
+}
+
+.btn-subscribe {
+  display: inline-block;
+  padding: 14px 28px;
+  font-weight: 600;
+  color: white;
+  background: linear-gradient(to right, #ff2d55, #ff5e3a);
+  border: none;
+  border-radius: 12px;
+  text-decoration: none;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  text-align: center;
+  box-shadow: 0 0 14px rgba(255, 80, 80, 0.3);
+}
+
+.btn-subscribe:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 30px rgba(255, 80, 80, 0.6);
+}
+
+.impact-graph-card {
+  flex: 1;
+  background: #121212;
+  padding: 32px;
+  border-radius: 24px;
+  box-shadow: 0 0 30px rgba(255, 0, 60, 0.3);
+  max-width: 500px;
+  text-align: center;
+}
+
+.graph-title {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 0.4rem;
+}
+
+.graph-subtext {
+  color: #ccc;
+  font-size: 0.95rem;
+  margin-bottom: 2rem;
+}
+
+.graph-box img {
+  width: 100%;
+  border-radius: 12px;
+  box-shadow: 0 0 20px rgba(255, 0, 60, 0.2);
+}
+
