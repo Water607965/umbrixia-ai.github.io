@@ -7327,4 +7327,73 @@ html {
   line-height: 1;
 }
 
+/* Apple-Style Mastery Section */
+.mastery-showcase-section {
+  background-color: #0a0a0a;
+  padding: 6rem 1rem;
+  text-align: center;
+}
+
+.mastery-gradient-header {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 4rem;
+  background: linear-gradient(to right, #ff4d4d, #ff0066, #c800ff, #4d4dff, #00e6e6);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: pulseFadeIn 1s ease-out;
+}
+
+.mastery-card-deck {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  gap: 3rem;
+  flex-wrap: wrap;
+}
+
+.mastery-card {
+  background: #111111;
+  border-radius: 20px;
+  padding: 2rem;
+  width: 280px;
+  box-shadow: 0 0 20px rgba(255, 77, 77, 0.2);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.mastery-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 0 30px rgba(255, 77, 77, 0.6);
+}
+
+.mastery-emoji {
+  font-size: 2.5rem;
+  display: block;
+  margin-bottom: 1rem;
+}
+
+.mastery-card h3 {
+  color: #ffffff;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.mastery-card p {
+  color: #bfbfbf;
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+@keyframes pulseFadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+
 
