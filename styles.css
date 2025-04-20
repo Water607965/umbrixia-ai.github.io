@@ -7253,4 +7253,16 @@ html {
   to   { opacity: 1; transform: translateY(0); }
 }
 
+/* 🌈 Apple Landing Animation */
+.pre-animate {
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.9s ease-out, transform 0.9s ease-out;
+}
+.animate-in {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+
 
