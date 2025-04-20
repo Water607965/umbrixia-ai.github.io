@@ -613,6 +613,67 @@ tabs.forEach(tab => {
   });
 </script>
 
+<script>
+  const collegeData = {
+    "Harvard": { avgSAT: 1520, acceptanceRate: 0.04 },
+    "MIT": { avgSAT: 1535, acceptanceRate: 0.066 },
+    "Stanford": { avgSAT: 1505, acceptanceRate: 0.043 },
+    "Yale": { avgSAT: 1510, acceptanceRate: 0.049 },
+    "Princeton": { avgSAT: 1500, acceptanceRate: 0.058 }
+  };
+
+  function calculateChance(userSAT, college) {
+    const data = collegeData[college];
+    if (!data) return null;
+    const scoreFactor = Math.min(userSAT / data.avgSAT, 1);
+    const adjustedChance = scoreFactor * data.acceptanceRate * 100;
+    return adjustedChance.toFixed(2);
+  }
+
+  document.getElementById("runPredictor").addEventListener("click", () => {
+    const userSAT = parseInt(prompt("Enter your SAT score (400–1600):"), 10);
+    if (isNaN(userSAT)) return alert("Enter a valid SAT score.");
+    
+    const dreams = document.getElementById("dreamColleges").value.split(",").map(c => c.trim());
+    const resultsDiv = document.getElementById("predictorResults");
+    resultsDiv.innerHTML = "<h4>Predicted Chances:</h4>";
+
+    const chartLabels = [];
+    const chartData = [];
+
+    dreams.forEach(college => {
+      const chance = calculateChance(userSAT, college);
+      const label = chance !== null ? `${chance}% chance` : "Not in database";
+      resultsDiv.innerHTML += `<p><strong>${college}</strong>: ${label}</p>`;
+
+      if (chance !== null) {
+        chartLabels.push(college);
+        chartData.push(parseFloat(chance));
+      }
+    });
+
+    // Draw chart
+    const ctx = document.getElementById("predictorChart").getContext("2d");
+    new Chart(ctx, {
+      type: "bar",
+      data: {
+        labels: chartLabels,
+        datasets: [{
+          label: "Admission Likelihood (%)",
+          backgroundColor: "#ff4d4d",
+          data: chartData
+        }]
+      },
+      options: {
+        responsive: true,
+        scales: {
+          y: { beginAtZero: true, max: 100 }
+        }
+      }
+    });
+  });
+</script>
+
   
 
   
