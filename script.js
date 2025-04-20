@@ -3541,5 +3541,24 @@ firebase.auth().onAuthStateChanged(user => {
   }
 });
 
+// 🍎 Apple-style Landing Animation for All Sections
+document.addEventListener("DOMContentLoaded", () => {
+  const revealSections = document.querySelectorAll("section, .hero, .features-grid, .vision-section, .mastery-grid, .headline-stats-row, .why-umbrixia, .settings-panel, footer");
+
+  revealSections.forEach((el, i) => {
+    el.style.opacity = "0";
+    el.style.transform = "translateY(40px)";
+    el.style.transition = `opacity 1.2s ease ${i * 0.1}s, transform 1.2s ease ${i * 0.1}s`;
+  });
+
+  window.addEventListener("load", () => {
+    setTimeout(() => {
+      revealSections.forEach(el => {
+        el.style.opacity = "1";
+        el.style.transform = "translateY(0)";
+      });
+    }, 400); // Delay after load
+  });
+});
 
 
