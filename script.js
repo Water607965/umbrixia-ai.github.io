@@ -1,3 +1,13 @@
+function updateClock() {
+  const now = new Date();
+  const timeString = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  const dateString = now.toLocaleDateString();
+  document.getElementById("current-time").textContent = `📆 ${dateString} • 🕒 ${timeString}`;
+}
+setInterval(updateClock, 1000);
+updateClock();
+
+
 if (typeof checkTrial === "function") {
   checkTrial();
 }
@@ -3659,5 +3669,6 @@ async function runAIPrediction() {
     <p><strong>Suggested Focus:</strong> ${data.suggestion}</p>
   `;
 }
+
 
 
