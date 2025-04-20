@@ -7949,3 +7949,27 @@ body.dashboard-body {
   margin-top: 1rem;
 }
 
+.smart-predictor-inputs {
+  margin: 1.5rem auto;
+  max-width: 500px;
+  text-align: left;
+}
+
+.smart-predictor-inputs label {
+  display: block;
+  margin-top: 1rem;
+  font-weight: 600;
+  color: #ccc;
+}
+
+.smart-predictor-inputs select {
+  width: 100%;
+  padding: 0.75rem;
+  background: #1c1c1c;
+  color: white;
+  border: 1px solid #444;
+  border-radius: 8px;
+  font-size: 1rem;
+}
+
+
