@@ -8117,4 +8117,29 @@ body.dashboard-body {
   color: #ff4d4d;
 }
 
+.theme-toggle {
+  background: #111;
+  color: white;
+  border: 1px solid #ff4d4d;
+  padding: 6px 12px;
+  border-radius: 8px;
+  margin-left: 12px;
+  cursor: pointer;
+}
+
+body.light-mode {
+  background-color: #f4f4f4;
+  color: #222;
+}
+
+body.light-mode .dashboard,
+body.light-mode .practice-card,
+body.light-mode .puzzle-section {
+  background-color: #fff;
+  color: #222;
+}
+
+body.light-mode .practice-card:hover {
+  box-shadow: 0 0 10px #ff4d4d;
+}
 
