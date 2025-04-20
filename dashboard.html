@@ -216,14 +216,20 @@
       // Not logged in — redirect to login
       window.location.href = "login.html";
     } else {
-      // Show greeting message
-      const name = user.displayName || user.email.split("@")[0];
-      const greetingEl = document.createElement("div");
-      greetingEl.className = "dashboard-greeting";
-      greetingEl.innerHTML = `🎉 <strong>Welcome back, <span style="background: linear-gradient(to right, #ff4d4d, #ff9900); -webkit-background-clip: text; color: transparent;">${name}</span>!</strong>`;
-      document.body.insertBefore(greetingEl, document.querySelector(".dashboard"));
-    }
-  });
+        else {
+    const name = user.displayName || user.email.split("@")[0];
+    const greetingEl = document.createElement("div");
+    greetingEl.className = "dashboard-greeting";
+    greetingEl.innerHTML = `
+      <h1 style="font-size: 2.4rem; text-align: center; background: linear-gradient(90deg, #ff4d4d, #ff9900, #4caf50, #2196f3, #9c27b0);
+                 -webkit-background-clip: text; color: transparent; font-weight: 800; margin-top: 30px;">
+        🎉 Welcome back, ${name}!
+      </h1>
+    `;
+    document.body.insertBefore(greetingEl, document.querySelector(".dashboard"));
+  }
+});
+
 </script>
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
