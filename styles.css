@@ -7169,4 +7169,27 @@ html {
   background: #2a2a2a;
 }
 
+.rainbow-greeting {
+  font-size: 2rem;
+  font-weight: 800;
+  text-align: center;
+  margin: 2rem auto;
+  background: linear-gradient(90deg, #007aff, #5e5ce6, #af52de, #ff375f, #ff9f0a);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: fadeInMove 1s ease-in-out forwards;
+}
+
+@keyframes fadeInMove {
+  0% {
+    opacity: 0;
+    transform: translateY(-20px) scale(0.95);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+
 
