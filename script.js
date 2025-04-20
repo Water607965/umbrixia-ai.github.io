@@ -3586,4 +3586,39 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 
+document.getElementById("runPredictor").addEventListener("click", () => {
+  const grade = parseInt(document.getElementById("userGrade").value);
+  const test = document.getElementById("testPreferences").value;
+  const dreams = document.getElementById("dreamColleges").value;
+  const resultBox = document.getElementById("predictorResults");
+
+  if (!grade || !test || !dreams) {
+    resultBox.innerHTML = `<p style="color:#ff4d4d">⚠️ Please fill out all fields.</p>`;
+    return;
+  }
+
+  let institutionType;
+  if (grade <= 5) institutionType = "middle school";
+  else if (grade <= 8) institutionType = "high school";
+  else institutionType = "college";
+
+  // Future data can enhance this — use real scores later
+  const sampleScore = 82 + Math.random() * 15;
+  const confidence = (sampleScore / 100) * 100;
+
+  // Color-grade chance
+  let level = "average";
+  if (confidence >= 90) level = "very likely";
+  else if (confidence >= 75) level = "likely";
+  else if (confidence >= 50) level = "competitive";
+  else level = "reach";
+
+  resultBox.innerHTML = `
+    <p style="font-size: 1.1rem;">🎓 Based on your grade and test type:</p>
+    <p><strong>You are applying to: <span style="color:#ff4d4d">${institutionType.toUpperCase()}</span></strong></p>
+    <p>🧠 Based on future test results, your estimated chance of admission to: <br/><strong><span style="color:#ffc107">${dreams}</span></strong> is:</p>
+    <div style="font-size:2rem; font-weight: bold; background: linear-gradient(to right, #ff4d4d, #ffc107); -webkit-background-clip: text; color: transparent;">${confidence.toFixed(2)}% chance</div>
+    <p>🎯 Assessment: <strong>${level.toUpperCase()}</strong></p>
+  `;
+});
 
