@@ -348,23 +348,41 @@ document.addEventListener("DOMContentLoaded", () => {
 
 <script>
   async function runPrediction() {
+  function runPrediction() {
   const school = document.getElementById("dream-school").value;
   const grade = document.getElementById("user-grade").value;
   const email = localStorage.getItem("userEmail") || "unknown@example.com";
 
-  const res = await fetch("https://your-render-url.onrender.com/predict", {
+  // 🔍 Simulate test check
+  const hasCompletedTest = localStorage.getItem("hasTakenTest") === "true";
+
+  if (!hasCompletedTest) {
+    document.getElementById("chance").innerText = "❌ You need to complete a practice test first.";
+    document.getElementById("justification").innerText = "📘 The AI needs test results to make an accurate prediction.";
+    document.getElementById("suggestion").innerText = "📝 Please take a SHSAT, ISEE, or SAT test first.";
+    return;
+  }
+
+  // ✅ Fetch AI prediction
+  fetch("https://your-render-url.onrender.com/predict", {
     method: "POST",
     headers: {
       "Content-Type": "application/json"
     },
     body: JSON.stringify({ school, grade, email })
-  });
+  })
+    .then(res => res.json())
+    .then(data => {
+      document.getElementById("chance").innerText = `🎯 Acceptance Chance: ${data.chance}`;
+      document.getElementById("justification").innerText = `🧠 Why: ${data.justification}`;
+      document.getElementById("suggestion").innerText = `📈 Focus On: ${data.suggestion}`;
+    })
+    .catch(err => {
+      document.getElementById("chance").innerText = "⚠️ Prediction failed. Try again.";
+      console.error("Prediction error:", err);
+    });
+}
 
-  const data = await res.json();
-
-  document.getElementById("chance").innerText = `🎯 Acceptance Chance: ${data.chance}`;
-  document.getElementById("justification").innerText = `🧠 Why: ${data.justification}`;
-  document.getElementById("suggestion").innerText = `📈 Focus On: ${data.suggestion}`;
 }
 
 </script>
