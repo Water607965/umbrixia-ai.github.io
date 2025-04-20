@@ -5807,59 +5807,158 @@ html {
   width: 100% !important; height: 240px !important;
 }
 
-<!-- Apple-Style Navbar -->
-<header class="umbrixia-header">
-  <div class="umbrixia-navbar">
-    <div class="logo-area"><a href="/">Umbrixia</a></div>
-    <nav class="nav-links">
-      <a href="#features">Features</a>
-      <a href="#chatbox">Demo</a>
-      <a href="#auth-section">Pricing</a>
-      <a href="#success">Success</a>
-    </nav>
-    <div class="nav-actions">
-      <a href="login.html" class="btn-link">Login</a>
-      <a href="signup.html" class="btn-solid">Get Started</a>
-    </div>
-  </div>
-</header>
+/* Apple-style UI */
 
-<!-- Hero: Umbrixia AI Tutor -->
-<section class="hero hero-light">
-  <div class="hero-content">
-    <h1>Meet Umbrixia AI Tutor</h1>
-    <p>AI prep for SHSAT, ISEE & SAT. Smart, personal, and built to elevate.</p>
-    <div class="hero-buttons">
-      <a href="signup.html" class="btn-solid">Start Free</a>
-      <a href="demo.html" class="btn-outline">Try Demo</a>
-    </div>
-    <img src="assets/hero‑tutor.png" alt="Umbrixia Tutor UI" class="hero-img" />
-  </div>
-</section>
+.umbrixia-header {
+  background: #000;
+  padding: 1.5rem 3rem;
+  color: white;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+}
 
-<!-- Hero: Dashboard -->
-<section class="hero hero-dark">
-  <div class="hero-content">
-    <h1>Dashboard That Thinks With You</h1>
-    <p>Visualize performance, track growth, and get better, faster.</p>
-    <div class="hero-buttons">
-      <a href="dashboard.html" class="btn-solid">See Dashboard</a>
-      <a href="signup.html" class="btn-outline">Join Now</a>
-    </div>
-    <img src="assets/hero‑dashboard.png" alt="Umbrixia Dashboard" class="hero-img" />
-  </div>
-</section>
+.umbrixia-navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
 
-<!-- Rotating Statement -->
-<section class="statement-highlight">
-  <h2>Built to Empower. Backed by AI. Designed to Impress.</h2>
-</section>
+.logo-area a {
+  font-size: 1.7rem;
+  font-weight: 600;
+  color: white;
+  text-decoration: none;
+  letter-spacing: 0.5px;
+}
 
-<!-- Quick Stats -->
-<section class="stats">
-  <div class="stat"><span>➤</span> Adaptive Learning</div>
-  <div class="stat"><span>✓</span> Real-Time Feedback</div>
-  <div class="stat"><span>⚡</span> Precision Accuracy</div>
-</section>
+.nav-links a {
+  margin: 0 1rem;
+  color: white;
+  text-decoration: none;
+  font-size: 1rem;
+  transition: 0.2s ease-in-out;
+}
 
+.nav-links a:hover {
+  color: #ff3e3e;
+}
 
+.nav-actions .btn-link,
+.nav-actions .btn-solid {
+  padding: 0.6rem 1.2rem;
+  margin-left: 1rem;
+  border-radius: 50px;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  text-decoration: none;
+}
+
+.nav-actions .btn-link {
+  color: white;
+  background: transparent;
+  border: 1px solid white;
+}
+
+.nav-actions .btn-link:hover {
+  background: white;
+  color: black;
+}
+
+.nav-actions .btn-solid {
+  background: #ff3e3e;
+  color: white;
+}
+
+.nav-actions .btn-solid:hover {
+  background: #ff1f1f;
+}
+
+.hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 6rem 2rem;
+  text-align: center;
+}
+
+.hero-light {
+  background: #f5f5f7;
+}
+
+.hero-dark {
+  background: #000;
+  color: white;
+}
+
+.hero h1 {
+  font-size: 3rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.hero p {
+  font-size: 1.25rem;
+  max-width: 600px;
+  margin-bottom: 2rem;
+}
+
+.hero-buttons {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-bottom: 2rem;
+}
+
+.hero-img {
+  max-width: 700px;
+  width: 90%;
+  border-radius: 15px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
+  margin-top: 2rem;
+}
+
+.btn-outline {
+  border: 1.5px solid #ff3e3e;
+  padding: 0.75rem 1.5rem;
+  border-radius: 40px;
+  background: transparent;
+  color: #ff3e3e;
+  font-weight: 500;
+  transition: all 0.3s ease-in-out;
+}
+
+.btn-outline:hover {
+  background: #ff3e3e;
+  color: white;
+}
+
+.statement-highlight {
+  padding: 3rem 2rem;
+  text-align: center;
+  font-size: 1.8rem;
+  font-weight: 500;
+  color: #000;
+  background: #fff;
+}
+
+.stats {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 2rem;
+  padding: 3rem 2rem;
+  background: #f9f9f9;
+  font-size: 1.25rem;
+  font-weight: 500;
+}
+
+.stats .stat {
+  background: white;
+  padding: 1rem 2rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.06);
+  min-width: 180px;
+  text-align: center;
+}
