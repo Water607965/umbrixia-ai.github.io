@@ -3670,5 +3670,22 @@ async function runAIPrediction() {
   `;
 }
 
+function toggleProfileMenu() {
+  const menu = document.getElementById("profileMenu");
+  menu.style.display = menu.style.display === "block" ? "none" : "block";
+}
+
+function logout() {
+  firebase.auth().signOut().then(() => {
+    window.location.href = "login.html";
+  });
+}
+
+firebase.auth().onAuthStateChanged(user => {
+  if (user) {
+    const emailEl = document.getElementById("userEmailDisplay");
+    if (emailEl) emailEl.textContent = `👋 ${user.email}`;
+  }
+});
 
 
