@@ -3409,5 +3409,96 @@ document.addEventListener('DOMContentLoaded', () => {
 // ─── Google button hookup ────────────────────────────────────────────────────
 document.getElementById('btn-google-special')?.addEventListener('click', googleLogin);
 
+// ─── Settings Panel Toggle ───
+document.getElementById('settingsBtn')
+  .addEventListener('click', () =>
+    document.getElementById('settingsPanel').classList.remove('hidden')
+  );
+document.getElementById('closeSettings')
+  .addEventListener('click', () =>
+    document.getElementById('settingsPanel').classList.add('hidden')
+  );
+
+// Tab navigation
+document.querySelectorAll('.settings-tabs button').forEach(btn => {
+  btn.addEventListener('click', e => {
+    // deactivate all tabs
+    document.querySelectorAll('.settings-tabs button')
+      .forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-pane')
+      .forEach(p => p.classList.remove('active'));
+    // activate clicked
+    const tab = btn.getAttribute('data-tab');
+    btn.classList.add('active');
+    document.getElementById(`tab-${tab}`).classList.add('active');
+  });
+});
+
+// Fake social‑connect stub
+function connectProvider(provider) {
+  alert(`🔗 Connecting ${provider}… (stub)`);
+  showToast(`${provider.charAt(0).toUpperCase()+provider.slice(1)} connected!`);
+}
+
+// Predictor stub using Chart.js
+document.getElementById('runPredictor')
+  .addEventListener('click', async () => {
+    const cols = document.getElementById('dreamColleges').value.split(',');
+    // fake percentages
+    const data = cols.map(c => ({
+      label: c.trim(),
+      pct: Math.random() * 100
+    }));
+    // Chart
+    const ctx = document.getElementById('predictorChart').getContext('2d');
+    new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: data.map(d=>d.label),
+        datasets: [{ label: 'Chance %', data: data.map(d=>d.pct) }]
+      }
+    });
+    // Results text
+    document.getElementById('predictorResults').innerHTML =
+      data.map(d => `<p>${d.label}: ${d.pct.toFixed(2)}%</p>`).join('');
+  });
+
+// Security stubs
+document.getElementById('sendEmailVerify').onclick = () => {
+  auth.currentUser.sendEmailVerification()
+    .then(()=> emailStatus.innerText = '✅ Email sent');
+};
+document.getElementById('sendPhoneVerify').onclick = () => {
+  showToast('📱 Phone verification stub');
+};
+document.getElementById('enablePasskey').onclick = () => {
+  showToast('🔐 Passkey enabled (stub)');
+};
+document.getElementById('resetPassword').onclick = () => {
+  auth.sendPasswordResetEmail(auth.currentUser.email)
+    .then(()=> showToast('✉️ Reset link sent'));
+};
+
+// Theme switcher
+function applyTheme(t) {
+  document.documentElement.setAttribute('data-theme', t);
+  localStorage.setItem('theme', t);
+}
+document.getElementById('themeSelect')
+  .addEventListener('change', e => applyTheme(e.target.value));
+// on load:
+const saved = localStorage.getItem('theme') || 'system';
+themeSelect.value = saved;
+applyTheme(saved);
+
+// Toast helper
+function showToast(msg) {
+  const t = document.createElement('div');
+  t.className = 'toast';
+  t.innerText = msg;
+  document.body.appendChild(t);
+  setTimeout(()=>t.remove(), 3000);
+}
+
 
 
