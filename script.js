@@ -3622,3 +3622,42 @@ document.getElementById("runPredictor").addEventListener("click", () => {
   `;
 });
 
+async function runAIPrediction() {
+  const grade = document.getElementById("userGrade").value;
+  const school = document.getElementById("dreamSchool").value;
+  const email = firebase.auth().currentUser?.email;
+
+  if (!school || !grade || !email) {
+    alert("Please fill out both fields while logged in.");
+    return;
+  }
+
+  // Save to Firestore
+  await firebase.firestore().collection("predictions").add({
+    email,
+    school,
+    grade,
+    timestamp: new Date()
+  });
+
+  // Send to server-side (Render proxy)
+  const response = await fetch("https://umbrixia-server.onrender.com/predict", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({ grade, school, email })
+  });
+
+  const data = await response.json();
+
+  // Show response
+  document.getElementById("aiPredictionResult").innerHTML = `
+    <h3>🎯 Prediction for ${school}</h3>
+    <p><strong>Estimated Chance:</strong> ${data.chance}</p>
+    <p><strong>Why:</strong> ${data.justification}</p>
+    <p><strong>Suggested Focus:</strong> ${data.suggestion}</p>
+  `;
+}
+
+
