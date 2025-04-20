@@ -7785,3 +7785,112 @@ html {
   color: #fff;
 }
 
+/* ✨ Apple-Style Dashboard */
+body.dashboard-body {
+  background-color: #0d0d0d;
+  color: #ffffff;
+  font-family: 'Inter', sans-serif;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+}
+
+.dashboard {
+  padding: 5rem 2rem;
+  max-width: 1200px;
+  margin: auto;
+  animation: fadeIn 0.6s ease-in-out;
+}
+
+.dashboard h1 {
+  font-size: 3rem;
+  font-weight: 800;
+  text-align: center;
+  background: linear-gradient(90deg, #ff4d4d, #ff7a18, #ff4d4d);
+  -webkit-background-clip: text;
+  color: transparent;
+  margin-bottom: 1rem;
+}
+
+.dashboard .sub {
+  font-size: 1.2rem;
+  color: #aaa;
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.test-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  margin-bottom: 2.5rem;
+}
+
+.test-buttons button {
+  background: linear-gradient(145deg, #1a1a1a, #121212);
+  border: 1px solid #333;
+  color: #fff;
+  padding: 0.85rem 2rem;
+  border-radius: 14px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.test-buttons button:hover {
+  background: #ff4d4d;
+  color: #000;
+  transform: translateY(-2px);
+  box-shadow: 0 0 12px #ff4d4d88;
+}
+
+.practice-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 2rem;
+  margin-top: 1rem;
+}
+
+.practice-card {
+  background: #181818;
+  border-radius: 14px;
+  padding: 1.75rem;
+  text-align: center;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+  border: 1px solid #222;
+  transition: all 0.3s ease;
+}
+
+.practice-card:hover {
+  box-shadow: 0 0 20px #ff4d4d;
+  transform: translateY(-5px);
+}
+
+.practice-card h3 {
+  color: #ff4d4d;
+  font-size: 1.4rem;
+  margin-bottom: 0.5rem;
+}
+
+.puzzle-section {
+  background: #121212;
+  padding: 1.5rem;
+  border-radius: 12px;
+  margin-top: 2rem;
+  border: 1px solid #1f1f1f;
+}
+
+.puzzle-section h4 {
+  font-size: 1.3rem;
+  color: #ff4d4d;
+  margin-bottom: 0.5rem;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(15px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+
