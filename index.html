@@ -613,54 +613,6 @@ tabs.forEach(tab => {
   });
 </script>
 
-  <!-- ─── Settings Panel ─── -->
-  <section id="settingsPanel" class="hidden">
-    <div class="settings-header">
-      <h2>Settings</h2>
-      <button id="closeSettings">✖️</button>
-    </div>
-    <nav class="settings-tabs">
-      <button data-tab="account"   class="active">Account</button>
-      <button data-tab="predictor">Predictor</button>
-      <button data-tab="security"  >Security</button>
-      <button data-tab="appearance">Appearance</button>
-    </nav>
-    <div class="settings-content">
-      <!-- Account Tab -->
-      <div id="tab-account" class="tab-pane active">
-        <h3>Connected Accounts</h3>
-        <button onclick="connectProvider('google')">Connect Google</button>
-        <button onclick="connectProvider('apple')">Connect Apple</button>
-        <button onclick="connectProvider('microsoft')">Connect Microsoft</button>
-      </div>
-      <!-- Predictor Tab -->
-      <div id="tab-predictor" class="tab-pane">
-        <h3>College Predictor</h3>
-        <input id="dreamColleges" placeholder="Dream colleges (comma‑sep)" />
-        <button id="runPredictor">Run Predictor</button>
-        <canvas id="predictorChart"></canvas>
-        <div id="predictorResults"></div>
-      </div>
-      <!-- Security Tab -->
-      <div id="tab-security" class="tab-pane">
-        <h3>Security & Verification</h3>
-        <button id="sendEmailVerify">Verify Email</button><span id="emailStatus"></span><br/>
-        <button id="sendPhoneVerify">Verify Phone</button><span id="phoneStatus"></span><br/>
-        <button id="enablePasskey">Enable Passkey</button><br/>
-        <button id="resetPassword">Reset Password</button>
-      </div>
-      <!-- Appearance Tab -->
-      <div id="tab-appearance" class="tab-pane">
-        <h3>Appearance</h3>
-        <select id="themeSelect">
-          <option value="system">System</option>
-          <option value="light">Light</option>
-          <option value="dark">Dark</option>
-        </select>
-      </div>
-    </div>
-  </section>
-
   
 
   
