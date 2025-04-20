@@ -7031,4 +7031,102 @@ html {
   line-height: 1.5;
 }
 
+/* Mastery Section (Apple-Inspired) */
+.mastery-section {
+  background: #0a0a0a;
+  padding: 6rem 2rem 4rem;
+  text-align: center;
+  color: white;
+}
+
+.mastery-grid {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  flex-wrap: wrap;
+  margin-top: 2rem;
+}
+
+.mastery-card {
+  background: #111;
+  border-radius: 1rem;
+  padding: 2rem;
+  width: 280px;
+  box-shadow: 0 0 20px rgba(255, 64, 64, 0.12);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.mastery-card:hover {
+  transform: scale(1.04);
+  box-shadow: 0 0 30px rgba(255, 64, 64, 0.25);
+}
+
+.mastery-card h3 {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-top: 1rem;
+  margin-bottom: 0.6rem;
+  color: white;
+}
+
+.mastery-card p {
+  font-size: 0.9rem;
+  color: #bbb;
+  line-height: 1.5;
+}
+
+.emoji-icon {
+  font-size: 2rem;
+}
+
+/* Section Title Glow */
+.section-title {
+  font-size: 2.4rem;
+  font-weight: 700;
+  color: white;
+  margin-bottom: 1rem;
+}
+
+.red-glow {
+  color: #ff3c3c;
+  text-shadow: 0 0 8px rgba(255, 64, 64, 0.5);
+}
+
+/* Powerful Section */
+.powerful-section {
+  text-align: center;
+  background: #000;
+  padding: 5rem 2rem 6rem;
+}
+
+.section-subtitle {
+  font-size: 1rem;
+  color: #bbb;
+  max-width: 700px;
+  margin: 1rem auto 2.5rem;
+  line-height: 1.6;
+}
+
+.cta-center {
+  display: flex;
+  justify-content: center;
+}
+
+.cta-button-red {
+  background: #ff3c3c;
+  color: white;
+  padding: 0.75rem 1.6rem;
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  box-shadow: 0 0 12px rgba(255, 64, 64, 0.3);
+  transition: background 0.3s ease, transform 0.2s ease;
+  text-decoration: none;
+}
+
+.cta-button-red:hover {
+  background: #ff1f1f;
+  transform: translateY(-2px);
+}
+
 
