@@ -7690,3 +7690,18 @@ html {
   box-shadow: 0 0 20px rgba(255, 0, 60, 0.2);
 }
 
+@media (max-width: 900px) {
+  .impact-content {
+    flex-direction: column;
+    align-items: center;
+  }
+  .impact-benefits, .impact-graph-card {
+    max-width: 100%;
+    text-align: center;
+  }
+  .impact-list {
+    text-align: left;
+    padding-left: 1rem;
+  }
+}
+
