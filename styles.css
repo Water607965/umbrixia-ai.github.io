@@ -8063,4 +8063,17 @@ body.dashboard-body {
   box-shadow: 0 0 12px #ff4d4d;
 }
 
+.test-section {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: all 0.5s ease;
+  display: none;
+}
+
+.test-section.active {
+  opacity: 1;
+  transform: translateY(0);
+  display: block;
+}
+
 
