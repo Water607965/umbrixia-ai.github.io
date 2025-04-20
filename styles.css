@@ -6595,4 +6595,61 @@ html {
   color: #444;
 }
 
+.section-impress {
+  background: #0d0d0d;
+  padding: 5rem 2rem 4rem;
+  text-align: center;
+}
+
+.impress-heading {
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: white;
+  margin-bottom: 3rem;
+  line-height: 1.3;
+}
+
+.highlight .glow-red {
+  color: #ff3b47;
+  font-weight: 800;
+}
+
+.impress-features {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.impress-feature {
+  background: linear-gradient(145deg, #0a0a0a, #111111);
+  padding: 2rem;
+  border-radius: 20px;
+  box-shadow: 0 0 20px rgba(255, 0, 43, 0.15);
+  width: 280px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.impress-feature:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 0 30px rgba(255, 0, 43, 0.25);
+}
+
+.emoji {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+.feature-title {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: 0.5rem;
+}
+
+.feature-desc {
+  font-size: 0.95rem;
+  color: #bbbbbb;
+  line-height: 1.6;
+}
 
