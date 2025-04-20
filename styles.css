@@ -7765,3 +7765,23 @@ html {
   color: #ccc;
   line-height: 1.6;
 }
+
+.footer-links {
+  padding: 60px 20px;
+  text-align: center;
+  background: #0a0a0a;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.footer-link {
+  color: #aaa;
+  text-decoration: none;
+  margin: 0 15px;
+  font-size: 0.95rem;
+  transition: color 0.3s;
+}
+
+.footer-link:hover {
+  color: #fff;
+}
+
