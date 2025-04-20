@@ -6214,4 +6214,10 @@ html {
   color: #d1d1d6;
 }
 
+.section-divider {
+  height: 2rem;
+  background: linear-gradient(to bottom, #f5f5f7, #000);
+}
+
+
 
