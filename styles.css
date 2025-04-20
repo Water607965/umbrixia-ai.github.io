@@ -6963,4 +6963,72 @@ html {
   margin-bottom: 0.5rem;
 }
 
+.empower-section {
+  background: #000; /* Apple-style true dark */
+  padding: 6rem 2rem 5rem;
+  text-align: center;
+  color: white;
+}
+
+.empower-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+  line-height: 1.4;
+  margin-bottom: 3rem;
+}
+
+.highlight {
+  display: block;
+  font-size: 1.8rem;
+  font-weight: 600;
+  margin-top: 0.5rem;
+}
+
+.ai-text {
+  color: #ff3c3c;
+  text-shadow: 0 0 10px rgba(255, 64, 64, 0.4);
+}
+
+.impress-text {
+  color: #ff3c3c;
+}
+
+.empower-cards {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.empower-card {
+  background: #111;
+  padding: 2rem;
+  border-radius: 1.2rem;
+  width: 280px;
+  box-shadow: 0 0 20px rgba(255, 64, 64, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.empower-card:hover {
+  transform: scale(1.04);
+  box-shadow: 0 0 30px rgba(255, 64, 64, 0.25);
+}
+
+.empower-card .icon {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+.empower-card h3 {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.empower-card p {
+  font-size: 0.9rem;
+  color: #bbb;
+  line-height: 1.5;
+}
+
 
