@@ -5962,3 +5962,83 @@ html {
   min-width: 180px;
   text-align: center;
 }
+
+/* Apple-Inspired Hero Section */
+.apple-hero-section {
+  background-color: #000;
+  color: #fff;
+  padding: 6rem 2rem;
+  text-align: center;
+}
+
+.apple-hero-content {
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+.apple-hero-title {
+  font-size: 3.5rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  letter-spacing: -1px;
+  background: linear-gradient(90deg, #ff5f6d, #ffc371);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.apple-hero-subtitle {
+  font-size: 1.2rem;
+  font-weight: 300;
+  color: #ccc;
+  margin-bottom: 2rem;
+}
+
+.apple-hero-cta {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 3rem;
+}
+
+.apple-btn {
+  padding: 0.75rem 2rem;
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  text-decoration: none;
+}
+
+.apple-btn.dark {
+  background-color: #fff;
+  color: #000;
+  box-shadow: 0 4px 12px rgba(255, 255, 255, 0.1);
+}
+
+.apple-btn.light {
+  background: transparent;
+  border: 1px solid #fff;
+  color: #fff;
+}
+
+.apple-btn.dark:hover {
+  background-color: #ddd;
+}
+
+.apple-btn.light:hover {
+  background-color: #fff;
+  color: #000;
+}
+
+.apple-hero-image-wrapper {
+  margin-top: 2rem;
+  display: flex;
+  justify-content: center;
+}
+
+.apple-hero-image {
+  width: 100%;
+  max-width: 680px;
+  border-radius: 20px;
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.3);
+}
