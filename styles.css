@@ -8170,3 +8170,96 @@ body.light-mode .practice-card:hover {
   100% { transform: rotate(360deg); }
 }
 
+.umbrixia-section {
+  padding: 120px 0;
+  background-color: #0a0a0a;
+  color: white;
+}
+
+.umbrixia-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 60px;
+  padding: 0 20px;
+}
+
+.umbrixia-left {
+  flex: 1;
+  min-width: 320px;
+}
+
+.umbrixia-right {
+  flex: 1;
+  min-width: 320px;
+  display: flex;
+  justify-content: center;
+}
+
+.apple-title {
+  font-size: 2.6rem;
+  background: linear-gradient(90deg, #ff4d4d, #ff9900);
+  -webkit-background-clip: text;
+  color: transparent;
+  font-weight: 800;
+  margin-bottom: 24px;
+}
+
+.umbrixia-checklist {
+  list-style: none;
+  padding-left: 0;
+  font-size: 1rem;
+  line-height: 1.8;
+  color: #ccc;
+}
+
+.umbrixia-button {
+  display: inline-block;
+  margin-top: 30px;
+  padding: 14px 34px;
+  font-size: 1rem;
+  color: white;
+  background: linear-gradient(90deg, #ff4d4d, #ff0080);
+  border: none;
+  border-radius: 999px;
+  box-shadow: 0 0 18px rgba(255, 77, 77, 0.4);
+  text-decoration: none;
+  transition: 0.3s ease;
+}
+.umbrixia-button:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 24px rgba(255, 77, 77, 0.6);
+}
+
+.graph-card {
+  background: rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(14px);
+  padding: 30px;
+  border-radius: 20px;
+  box-shadow: 0 0 30px rgba(255, 77, 77, 0.2);
+  max-width: 400px;
+  text-align: center;
+}
+
+.graph-card h3 {
+  font-size: 1.4rem;
+  color: #fff;
+  margin-bottom: 8px;
+}
+
+.graph-card p {
+  font-size: 0.95rem;
+  color: #aaa;
+  margin-bottom: 16px;
+}
+
+.graph-image {
+  width: 100%;
+  height: auto;
+  border-radius: 12px;
+  box-shadow: 0 0 20px rgba(255, 77, 77, 0.5);
+}
+
