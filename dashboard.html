@@ -253,6 +253,24 @@ h2.section-title {
   margin-bottom: 10px;
 }
 
+    .section-title::after {
+  content: '';
+  display: block;
+  width: 80px;
+  margin: 10px auto 0;
+  border-bottom: 3px solid #ff4d4d;
+  box-shadow: 0 0 12px #ff4d4d;
+}
+
+    .blinker {
+  animation: blink 1s steps(2, start) infinite;
+}
+@keyframes blink {
+  to { visibility: hidden; }
+}
+
+    
+
 
  
  </style>
@@ -297,6 +315,7 @@ h2.section-title {
    <div class="dashboard">
      <h1 class="gradient-heading">🧠 Umbrixia AI Dashboard</h1>
      <p class="sub">Choose your test, try in-development practice tests, or challenge your mind with puzzles.</p>
+    <p class="tagline"><span id="typed-text"></span><span class="blinker">|</span></p>
      <div id="current-time" style="text-align:center; font-size: 1.1rem; margin-top: -20px; color: #ccc;"></div>
  
      <section class="dashboard-analytics fade-in">
@@ -308,6 +327,7 @@ h2.section-title {
      <div class="chart-box">
        <canvas id="improvementChart"></canvas>
        <script>
+        
  firebase.auth().onAuthStateChanged(async (user) => {
    if (!user) return;
  
@@ -384,13 +404,18 @@ h2.section-title {
  
    // Pie chart
    const last = snapshot.docs[snapshot.docs.length - 1]?.data();
-   const topicData = last?.topics || {
-     Algebra: 20,
-     Reading: 20,
-     Vocabulary: 20,
-     Probability: 20,
-     Geometry: 20
-   };
+const topicData = last?.topics;
+
+if (!topicData || Object.keys(topicData).length === 0) {
+  document.getElementById("categoryPieChart").parentElement.innerHTML = `
+    <div style="text-align: center; padding: 40px; color: #ccc;">
+      <h2>📭 No topic breakdown available</h2>
+      <p>Please complete a test that includes topic-tagged results.</p>
+    </div>
+  `;
+  return;
+}
+
  
    new Chart(document.getElementById("categoryPieChart"), {
      type: "pie",
@@ -727,10 +752,6 @@ firebase.auth().onAuthStateChanged((user) => {
      appId: "1:532093768601:web:4e94149269d88213edb908"
    };
  
-   if (!firebase.apps.length) {
-     firebase.initializeApp(firebaseConfig);
-   }
- 
    const auth = firebase.auth();
    const db = firebase.firestore();
  </script>
@@ -836,6 +857,63 @@ firebase.auth().onAuthStateChanged((user) => {
   });
 });
     </script>
+
+    <canvas id="background-particles"></canvas>
+<script src="https://cdn.jsdelivr.net/npm/tsparticles@2/tsparticles.bundle.min.js"></script>
+<script>
+tsParticles.load("background-particles", {
+  fullScreen: { enable: true, zIndex: -1 },
+  background: { color: "#0d0d0d" },
+  particles: {
+    number: { value: 60 },
+    color: { value: "#ff4d4d" },
+    shape: { type: "circle" },
+    opacity: { value: 0.4 },
+    size: { value: 3 },
+    move: { enable: true, speed: 0.5 },
+  }
+});
+</script>
+
+    <script>
+const texts = [
+  "Achieve your dream score.",
+  "Get into your dream school.",
+  "Train smarter with AI.",
+];
+let i = 0, j = 0, current = "", isDeleting = false;
+
+function type() {
+  current = texts[i];
+  const display = document.getElementById("typed-text");
+  display.innerText = current.slice(0, j);
+  if (!isDeleting && j < current.length) {
+    j++;
+  } else if (isDeleting && j > 0) {
+    j--;
+  } else {
+    isDeleting = !isDeleting;
+    if (!isDeleting) i = (i + 1) % texts.length;
+  }
+  setTimeout(type, isDeleting ? 40 : 100);
+}
+type();
+
+     snapshot.forEach((doc, i) => {
+  const data = doc.data();
+
+  if (typeof data.math !== "number" || typeof data.ela !== "number") {
+    console.warn("Invalid score format:", data);
+  }
+
+  labels.push(`Test ${i + 1}`);
+  mathScores.push(typeof data.math === "number" ? data.math : 0);
+  elaScores.push(typeof data.ela === "number" ? data.ela : 0);
+});
+
+</script>
+
+
 
  </body>
  </html>
