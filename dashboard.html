@@ -9,7 +9,11 @@
   <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore-compat.js"></script>
 
-  
+  <div id="universal-loader">
+  <div class="spinner"></div>
+  <p style="color: white;">Loading Umbrixia...</p>
+</div>
+
 
   
   <style>
@@ -369,7 +373,6 @@ function showSection(testId) {
 }
 </script>
 
-  <script>
 <script>
 firebase.auth().onAuthStateChanged(user => {
   const loadingScreen = document.getElementById("loading-screen");
@@ -604,6 +607,13 @@ async function runPrediction() {
       `;
       document.body.insertBefore(greetingEl, document.querySelector(".dashboard"));
     }
+  });
+</script>
+
+<script>
+  window.addEventListener("load", () => {
+    const loader = document.getElementById("universal-loader");
+    if (loader) loader.style.display = "none";
   });
 </script>
 
