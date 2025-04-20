@@ -6281,4 +6281,68 @@ html {
   font-size: 1rem;
 }
 
+/* 🔥 Apple-like Empower Section */
+.empower-section {
+  background: #f6f6f6;
+  padding: 5rem 1rem;
+  text-align: center;
+}
+
+.empower-wrapper {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.empower-headline {
+  font-size: 2.2rem;
+  font-weight: 800;
+  margin-bottom: 3rem;
+  color: #1a1a1a;
+  line-height: 1.4;
+  font-family: 'Inter', sans-serif;
+}
+
+.empower-cards {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 2rem;
+}
+
+.empower-card {
+  background: white;
+  border-radius: 1.25rem;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+  padding: 2rem 1.5rem;
+  width: 250px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: transform 0.2s ease;
+}
+
+.empower-card:hover {
+  transform: translateY(-4px);
+}
+
+.empower-card .emoji {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+.empower-card .label {
+  font-weight: 600;
+  font-size: 1rem;
+  color: #1a1a1a;
+}
+
+/* ✨ Seamless transition into black section */
+.why-umbrixia {
+  padding-top: 5rem;
+  background: radial-gradient(ellipse at top, #111 10%, #000 100%);
+  text-align: center;
+  padding-bottom: 5rem;
+}
+
+
 
