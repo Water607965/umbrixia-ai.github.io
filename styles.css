@@ -7517,3 +7517,77 @@ html {
 
 
 
+/* 🌈 Apple-like Greeting */
+.greeting-banner {
+  font-size: 2.3rem;
+  font-weight: bold;
+  padding: 50px 0 20px;
+  text-align: center;
+  animation: fadeInUp 1.2s ease-out;
+  background: linear-gradient(90deg, #007aff, #5856d6, #af52de, #ff2d55, #ff9500);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* 🧠 Designed for Mastery Section: Apple-quality */
+.apple-mastery-section {
+  background: #0c0c0c;
+  padding: 80px 20px;
+  text-align: center;
+}
+
+.apple-mastery-title {
+  font-size: 2.6rem;
+  font-weight: 800;
+  margin-bottom: 2rem;
+  background: linear-gradient(to right, #007aff, #af52de, #ff2d55);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.apple-mastery-cards {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 2rem;
+}
+
+.apple-mastery-card {
+  background: #121212;
+  padding: 30px;
+  border-radius: 20px;
+  width: 280px;
+  transition: all 0.4s ease;
+  box-shadow: 0 0 16px rgba(255, 82, 82, 0.2);
+}
+
+.apple-mastery-card:hover {
+  transform: scale(1.04);
+  box-shadow: 0 0 35px rgba(255, 70, 70, 0.4);
+}
+
+.apple-mastery-card h3 {
+  color: #ffffff;
+  margin-top: 1rem;
+  font-weight: 600;
+}
+
+.apple-mastery-card p {
+  color: #bbbbbb;
+  font-size: 0.95rem;
+}
+
+.apple-mastery-card .emoji {
+  font-size: 2rem;
+}
