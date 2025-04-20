@@ -5807,4 +5807,59 @@ html {
   width: 100% !important; height: 240px !important;
 }
 
+<!-- Apple-Style Navbar -->
+<header class="umbrixia-header">
+  <div class="umbrixia-navbar">
+    <div class="logo-area"><a href="/">Umbrixia</a></div>
+    <nav class="nav-links">
+      <a href="#features">Features</a>
+      <a href="#chatbox">Demo</a>
+      <a href="#auth-section">Pricing</a>
+      <a href="#success">Success</a>
+    </nav>
+    <div class="nav-actions">
+      <a href="login.html" class="btn-link">Login</a>
+      <a href="signup.html" class="btn-solid">Get Started</a>
+    </div>
+  </div>
+</header>
+
+<!-- Hero: Umbrixia AI Tutor -->
+<section class="hero hero-light">
+  <div class="hero-content">
+    <h1>Meet Umbrixia AI Tutor</h1>
+    <p>AI prep for SHSAT, ISEE & SAT. Smart, personal, and built to elevate.</p>
+    <div class="hero-buttons">
+      <a href="signup.html" class="btn-solid">Start Free</a>
+      <a href="demo.html" class="btn-outline">Try Demo</a>
+    </div>
+    <img src="assets/hero‑tutor.png" alt="Umbrixia Tutor UI" class="hero-img" />
+  </div>
+</section>
+
+<!-- Hero: Dashboard -->
+<section class="hero hero-dark">
+  <div class="hero-content">
+    <h1>Dashboard That Thinks With You</h1>
+    <p>Visualize performance, track growth, and get better, faster.</p>
+    <div class="hero-buttons">
+      <a href="dashboard.html" class="btn-solid">See Dashboard</a>
+      <a href="signup.html" class="btn-outline">Join Now</a>
+    </div>
+    <img src="assets/hero‑dashboard.png" alt="Umbrixia Dashboard" class="hero-img" />
+  </div>
+</section>
+
+<!-- Rotating Statement -->
+<section class="statement-highlight">
+  <h2>Built to Empower. Backed by AI. Designed to Impress.</h2>
+</section>
+
+<!-- Quick Stats -->
+<section class="stats">
+  <div class="stat"><span>➤</span> Adaptive Learning</div>
+  <div class="stat"><span>✓</span> Real-Time Feedback</div>
+  <div class="stat"><span>⚡</span> Precision Accuracy</div>
+</section>
+
 
