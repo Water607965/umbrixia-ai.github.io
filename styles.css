@@ -6149,3 +6149,19 @@ html {
   to { opacity: 1; transform: translateY(0); }
 }
 
+.empowering-statement {
+  background-color: #f5f5f7;
+  padding: 6rem 2rem;
+  text-align: center;
+}
+
+.statement-content h2 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #1d1d1f;
+  max-width: 800px;
+  margin: 0 auto;
+  line-height: 1.4;
+}
+
+
