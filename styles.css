@@ -6093,3 +6093,59 @@ html {
   font-size: 1.75rem;
 }
 
+/* Settings Panel */
+.settings-panel {
+  background: #0a0a0a;
+  color: #f5f5f5;
+  padding: 4rem 2rem;
+  border-top: 1px solid #222;
+  display: none;
+}
+
+.settings-panel.visible {
+  display: block;
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+.settings-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
+  margin-top: 2rem;
+}
+
+.setting-card {
+  background: #111;
+  padding: 2rem;
+  border-radius: 1rem;
+  box-shadow: 0 0 16px rgba(255, 0, 64, 0.1);
+  border: 1px solid #222;
+  transition: all 0.3s ease;
+}
+
+.setting-card:hover {
+  box-shadow: 0 0 22px rgba(255, 64, 64, 0.25);
+}
+
+/* Fix glow effect to match Apple’s subtle hover */
+.btn-primary {
+  background: #ff3b30;
+  color: white;
+  padding: 0.8rem 1.5rem;
+  border: none;
+  border-radius: 0.75rem;
+  font-weight: bold;
+  box-shadow: 0 5px 15px rgba(255, 59, 48, 0.3);
+  transition: background 0.3s ease, box-shadow 0.3s ease;
+}
+
+.btn-primary:hover {
+  background: #ff1c0f;
+  box-shadow: 0 10px 24px rgba(255, 59, 48, 0.5);
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
