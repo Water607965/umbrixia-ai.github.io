@@ -324,5 +324,28 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 </script>
 
+<script>
+  async function runPrediction() {
+  const school = document.getElementById("dream-school").value;
+  const grade = document.getElementById("user-grade").value;
+  const email = localStorage.getItem("userEmail") || "unknown@example.com";
+
+  const res = await fetch("https://your-render-url.onrender.com/predict", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({ school, grade, email })
+  });
+
+  const data = await res.json();
+
+  document.getElementById("chance").innerText = `🎯 Acceptance Chance: ${data.chance}`;
+  document.getElementById("justification").innerText = `🧠 Why: ${data.justification}`;
+  document.getElementById("suggestion").innerText = `📈 Focus On: ${data.suggestion}`;
+}
+
+</script>
+
 </body>
 </html>
