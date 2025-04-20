@@ -69,6 +69,9 @@
   </div>
 </section>
 
+<div class="section-divider"></div>
+
+
 
   <div class="headline-stats-row">
     <div class="headline-stat-card">
@@ -85,6 +88,8 @@
     </div>
   </div>
 </section>
+
+<div class="section-divider"></div>
 
 
 
@@ -108,6 +113,9 @@
     </div>
   </div>
 </section>
+
+<div class="section-divider"></div>
+
 
 
   <section class="designed-for-mastery">
@@ -285,7 +293,8 @@
  </section>
 
 <!-- Settings Panel -->
-<section id="settings-panel" class="settings-panel hidden">
+<section id="settingsPanel" class="settings-panel hidden">
+
   <h2 class="section-title">🎛️ Your Settings</h2>
   <p>Customize your preferences, connect accounts, and get admissions predictions.</p>
 
@@ -567,6 +576,28 @@ firebase.auth().onAuthStateChanged(user => {
     menu.classList.toggle("hidden");
   }
 }
+
+ document.getElementById("settingsBtn").addEventListener("click", () => {
+  document.getElementById("settingsPanel").classList.remove("hidden");
+});
+
+document.getElementById("closeSettings").addEventListener("click", () => {
+  document.getElementById("settingsPanel").classList.add("hidden");
+});
+
+const tabs = document.querySelectorAll(".settings-tabs button");
+const panes = document.querySelectorAll(".tab-pane");
+
+tabs.forEach(tab => {
+  tab.addEventListener("click", () => {
+    tabs.forEach(btn => btn.classList.remove("active"));
+    tab.classList.add("active");
+
+    panes.forEach(pane => pane.classList.remove("active"));
+    document.getElementById(`tab-${tab.dataset.tab}`).classList.add("active");
+  });
+});
+
 
 
     
