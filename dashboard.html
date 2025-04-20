@@ -361,16 +361,16 @@ function showSection(testId) {
 }
 </script>
 
-
   <script>
-
-  firebase.auth().onAuthStateChanged(user => {
+<script>
+firebase.auth().onAuthStateChanged(user => {
   const loadingScreen = document.getElementById("loading-screen");
 
   if (!user) {
+    // Not logged in — redirect
     window.location.href = "login.html";
   } else {
-    // Hide the loading screen
+    // Logged in — remove loading screen
     if (loadingScreen) loadingScreen.style.display = "none";
 
     const name = user.displayName || user.email.split("@")[0];
@@ -384,13 +384,17 @@ function showSection(testId) {
     `;
     document.body.insertBefore(greetingEl, document.querySelector(".dashboard"));
 
-    // Display user email in profile menu
+    // Set email in profile menu
     const userEmailDisplay = document.getElementById("userEmailDisplay");
     if (userEmailDisplay) {
       userEmailDisplay.innerText = user.email;
     }
   }
 });
+</script>
+
+</script>
+
 
 
 </script>
@@ -559,8 +563,6 @@ async function runPrediction() {
 }
 
   </script>
-  <script src="script.js" defer></script>
-
   <script src="script.js" defer></script>
 <script>
   const firebaseConfig = {
