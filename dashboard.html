@@ -96,6 +96,28 @@
       from { opacity: 0; transform: translateY(10px); }
       to { opacity: 1; transform: translateY(0); }
     }
+    
+    h2.section-title {
+  font-size: 2rem;
+  text-align: center;
+  color: #fff;
+  text-shadow: 0 0 8px #ff4d4d;
+  margin-top: 40px;
+}
+
+.umbrixia-header {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  background: #0d0d0d;
+  z-index: 1000;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+}
+
+body {
+  padding-top: 80px; /* Add space to push content below navbar */
+}
+
   </style>
   <style>
   #loading-screen {
@@ -118,6 +140,17 @@
   color: transparent;
   font-weight: 800;
 }
+
+    .dashboard {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.dashboard.loaded {
+  opacity: 1;
+  transform: translateY(0);
+}
+
 
 </style>
 
@@ -147,6 +180,8 @@
   @keyframes spin {
     to { transform: rotate(360deg); }
   }
+
+    
 
     
 </style>
@@ -228,7 +263,6 @@ firebase.auth().onAuthStateChanged(async (user) => {
         <button onclick="showSection('shsat')" style="padding: 12px 24px; background-color: #ff4d4d; border: none; color: white; font-size: 1rem; border-radius: 10px; cursor: pointer;">📝 Start SHSAT Test</button>
         <button onclick="showSection('isee')" style="padding: 12px 24px; margin-left: 10px; background-color: #2196f3; border: none; color: white; font-size: 1rem; border-radius: 10px; cursor: pointer;">📘 Start ISEE Test</button>
         <button onclick="showSection('sat')" style="padding: 12px 24px; margin-left: 10px; background-color: #4caf50; border: none; color: white; font-size: 1rem; border-radius: 10px; cursor: pointer;">🎓 Start SAT Test</button>
-        target.classList.add("active");
       </div>
       
     </div>
@@ -666,6 +700,11 @@ async function runPrediction() {
     const now = new Date();
     document.getElementById("current-time").textContent = now.toLocaleString();
   }, 1000);
+
+    window.addEventListener("load", () => {
+  document.querySelector(".dashboard")?.classList.add("loaded");
+});
+
 </script>
 
 
