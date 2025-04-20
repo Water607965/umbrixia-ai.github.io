@@ -172,12 +172,20 @@ firebase.auth().onAuthStateChanged(async (user) => {
     elaScores.push(data.ela || 0);
   });
 
-  // fallback if no test
   if (labels.length === 0) {
-    labels.push("No data");
-    mathScores.push(0);
-    elaScores.push(0);
-  }
+  document.querySelector(".dashboard-analytics").innerHTML = `
+    <div style="text-align: center; padding: 40px; color: #ccc;">
+      <h2>📭 No test data found!</h2>
+      <p>Let’s get you started with your first practice test:</p>
+      <div style="margin-top: 20px;">
+        <button onclick="showSection('shsat')" style="padding: 12px 24px; background-color: #ff4d4d; border: none; color: white; font-size: 1rem; border-radius: 10px; cursor: pointer;">📝 Start SHSAT Test</button>
+        <button onclick="showSection('isee')" style="padding: 12px 24px; margin-left: 10px; background-color: #2196f3; border: none; color: white; font-size: 1rem; border-radius: 10px; cursor: pointer;">📘 Start ISEE Test</button>
+        <button onclick="showSection('sat')" style="padding: 12px 24px; margin-left: 10px; background-color: #4caf50; border: none; color: white; font-size: 1rem; border-radius: 10px; cursor: pointer;">🎓 Start SAT Test</button>
+      </div>
+    </div>
+  `;
+  return;
+}
 
   new Chart(document.getElementById("improvementChart"), {
     type: "line",
@@ -485,13 +493,12 @@ firebase.auth().onAuthStateChanged(async (user) => {
 
   // Pie Chart (use last test's topics as placeholder)
   const last = snapshot.docs[snapshot.docs.length - 1]?.data();
-  const topicData = last?.topics || {
-    Algebra: 20,
-    Reading: 20,
-    Vocabulary: 20,
-    Probability: 20,
-    Geometry: 20
-  };
+  const topicData = last?.topics;
+if (!topicData) {
+  console.warn("No topic data found. Skipping pie chart.");
+  return;
+}
+
 
   new Chart(document.getElementById("categoryPieChart"), {
     type: "pie",
