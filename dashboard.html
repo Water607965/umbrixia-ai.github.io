@@ -156,5 +156,35 @@
       document.getElementById(test).style.display = 'block';
     }
   </script>
+
+  <script>
+  // Initialize Firebase if not already initialized
+  if (!firebase.apps.length) {
+    const firebaseConfig = {
+      apiKey: "AIzaSyDDcAp59mkTutfXgnRIBWpVww3jFyzOtIc",
+      authDomain: "umbrixia-d804f.firebaseapp.com",
+      projectId: "umbrixia-d804f",
+      storageBucket: "umbrixia-d804f.firebasestorage.app",
+      messagingSenderId: "532093768601",
+      appId: "1:532093768601:web:4e94149269d88213edb908"
+    };
+    firebase.initializeApp(firebaseConfig);
+  }
+
+  firebase.auth().onAuthStateChanged(user => {
+    if (!user) {
+      // Not logged in — redirect to login
+      window.location.href = "login.html";
+    } else {
+      // Show greeting message
+      const name = user.displayName || user.email.split("@")[0];
+      const greetingEl = document.createElement("div");
+      greetingEl.className = "dashboard-greeting";
+      greetingEl.innerHTML = `🎉 <strong>Welcome back, <span style="background: linear-gradient(to right, #ff4d4d, #ff9900); -webkit-background-clip: text; color: transparent;">${name}</span>!</strong>`;
+      document.body.insertBefore(greetingEl, document.querySelector(".dashboard"));
+    }
+  });
+</script>
+
 </body>
 </html>
