@@ -502,7 +502,50 @@ firebase.auth().onAuthStateChanged(user => {
   }
 }
 
- document.getElementById("settingsBtn").addEventListener("click", () => {
+ // Settings toggle
+document.addEventListener("DOMContentLoaded", () => {
+  const settingsBtn = document.getElementById("settingsBtn");
+  const settingsPanel = document.getElementById("settingsPanel");
+
+  if (settingsBtn && settingsPanel) {
+    settingsBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+      settingsPanel.classList.toggle("hidden");
+    });
+  }
+
+  // Rainbow Welcome Animation
+  const userName = localStorage.getItem("displayName");
+  if (userName) {
+    const existingGreeting = document.getElementById("animatedGreeting");
+    if (!existingGreeting) {
+      const greeting = document.createElement("h2");
+      greeting.id = "animatedGreeting";
+      greeting.innerHTML = `👋 Welcome back, <span class="apple-gradient">${userName}</span>`;
+      greeting.style.fontSize = "2rem";
+      greeting.style.textAlign = "center";
+      greeting.style.marginTop = "50px";
+      greeting.style.animation = "fadeUp 1.2s ease-out";
+      document.body.insertBefore(greeting, document.body.firstChild);
+    }
+  }
+});
+
+// Optional: Add animation styling
+const styleTag = document.createElement("style");
+styleTag.innerHTML = `
+@keyframes fadeUp {
+  0% {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}`;
+document.head.appendChild(styleTag);
+
   document.getElementById("settingsPanel").classList.remove("hidden");
 });
 
