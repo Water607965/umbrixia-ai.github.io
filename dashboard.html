@@ -120,11 +120,109 @@
 
     <section class="dashboard-analytics">
   <h2 class="section-title">📊 Performance Trends</h2>
+      
 
   <div class="chart-row">
     <!-- Line Chart -->
     <div class="chart-box">
       <canvas id="improvementChart"></canvas>
+      <script>
+firebase.auth().onAuthStateChanged(async (user) => {
+  if (!user) return;
+
+  const scoresRef = db.collection("users").doc(user.uid).collection("scores");
+  const snapshot = await scoresRef.orderBy("timestamp", "asc").get();
+
+  const mathScores = [];
+  const elaScores = [];
+  const labels = [];
+
+  snapshot.forEach((doc, i) => {
+    const data = doc.data();
+    labels.push(`Test ${i + 1}`);
+    mathScores.push(data.math || 0);
+    elaScores.push(data.ela || 0);
+  });
+
+  // fallback if no test
+  if (labels.length === 0) {
+    labels.push("No data");
+    mathScores.push(0);
+    elaScores.push(0);
+  }
+
+  new Chart(document.getElementById("improvementChart"), {
+    type: "line",
+    data: {
+      labels,
+      datasets: [
+        {
+          label: "Math",
+          data: mathScores,
+          borderColor: "#ff4d4d",
+          backgroundColor: "rgba(255,77,77,0.2)",
+          tension: 0.4,
+          fill: true,
+          pointRadius: 4
+        },
+        {
+          label: "ELA",
+          data: elaScores,
+          borderColor: "#ffc107",
+          backgroundColor: "rgba(255,193,7,0.2)",
+          tension: 0.4,
+          fill: true,
+          pointRadius: 4
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { position: "top" },
+        title: {
+          display: true,
+          text: "📈 Real Score Improvement",
+          font: { size: 18 }
+        }
+      }
+    }
+  });
+
+  // Pie chart
+  const last = snapshot.docs[snapshot.docs.length - 1]?.data();
+  const topicData = last?.topics || {
+    Algebra: 20,
+    Reading: 20,
+    Vocabulary: 20,
+    Probability: 20,
+    Geometry: 20
+  };
+
+  new Chart(document.getElementById("categoryPieChart"), {
+    type: "pie",
+    data: {
+      labels: Object.keys(topicData),
+      datasets: [{
+        data: Object.values(topicData),
+        backgroundColor: ["#ff4d4d", "#ffc107", "#4caf50", "#2196f3", "#9c27b0"],
+        borderColor: "#111"
+      }]
+    },
+    options: {
+      plugins: {
+        title: {
+          display: true,
+          text: "🧠 Topic Strength Breakdown",
+          font: { size: 18 }
+        }
+      }
+    }
+  });
+
+});
+</script>
+
     </div>
 
     <!-- Pie Chart -->
@@ -281,30 +379,57 @@ const db = firebase.firestore();
 
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script>
-document.addEventListener("DOMContentLoaded", () => {
-  // 🔵 Improvement Line Chart
-  const improvementChart = new Chart(document.getElementById("improvementChart"), {
+  <script>
+firebase.auth().onAuthStateChanged(async (user) => {
+  if (!user) return;
+
+  const db = firebase.firestore();
+  const scoresRef = db.collection("users").doc(user.uid).collection("scores");
+  const snapshot = await scoresRef.orderBy("timestamp", "asc").get();
+
+  const mathScores = [];
+  const elaScores = [];
+  const labels = [];
+
+  snapshot.forEach((doc, i) => {
+    const data = doc.data();
+    labels.push(`Test ${i + 1}`);
+    mathScores.push(data.math || 0);
+    elaScores.push(data.ela || 0);
+  });
+
+  // Fallback if no tests taken
+  if (labels.length === 0) {
+    labels.push("No data");
+    mathScores.push(0);
+    elaScores.push(0);
+  }
+
+  // Draw Line Chart
+  new Chart(document.getElementById("improvementChart"), {
     type: "line",
     data: {
-      labels: ["Week 1", "Week 2", "Week 3", "Week 4", "Week 5"],
-      datasets: [{
-        label: "Math",
-        data: [62, 70, 74, 81, 88],
-        borderColor: "#ff4d4d",
-        backgroundColor: "rgba(255, 77, 77, 0.2)",
-        tension: 0.4,
-        fill: true,
-        pointRadius: 4
-      }, {
-        label: "ELA",
-        data: [58, 63, 69, 76, 85],
-        borderColor: "#ffc107",
-        backgroundColor: "rgba(255, 193, 7, 0.2)",
-        tension: 0.4,
-        fill: true,
-        pointRadius: 4
-      }]
+      labels,
+      datasets: [
+        {
+          label: "Math",
+          data: mathScores,
+          borderColor: "#ff4d4d",
+          backgroundColor: "rgba(255, 77, 77, 0.2)",
+          tension: 0.4,
+          fill: true,
+          pointRadius: 4
+        },
+        {
+          label: "ELA",
+          data: elaScores,
+          borderColor: "#ffc107",
+          backgroundColor: "rgba(255, 193, 7, 0.2)",
+          tension: 0.4,
+          fill: true,
+          pointRadius: 4
+        }
+      ]
     },
     options: {
       responsive: true,
@@ -319,13 +444,22 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  // 🟢 Category Pie Chart
-  const categoryPieChart = new Chart(document.getElementById("categoryPieChart"), {
+  // Pie Chart (use last test's topics as placeholder)
+  const last = snapshot.docs[snapshot.docs.length - 1]?.data();
+  const topicData = last?.topics || {
+    Algebra: 20,
+    Reading: 20,
+    Vocabulary: 20,
+    Probability: 20,
+    Geometry: 20
+  };
+
+  new Chart(document.getElementById("categoryPieChart"), {
     type: "pie",
     data: {
-      labels: ["Algebra", "Reading", "Vocabulary", "Probability", "Geometry"],
+      labels: Object.keys(topicData),
       datasets: [{
-        data: [22, 26, 18, 14, 20],
+        data: Object.values(topicData),
         backgroundColor: ["#ff4d4d", "#ffc107", "#4caf50", "#2196f3", "#9c27b0"],
         borderColor: "#111"
       }]
@@ -341,18 +475,10 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  // 🧠 Predict Admission Likelihood (placeholder logic)
-  const avgScore = (88 + 85) / 2;
-  let chance;
-  if (avgScore >= 90) chance = 96;
-  else if (avgScore >= 80) chance = 82;
-  else if (avgScore >= 70) chance = 66;
-  else if (avgScore >= 60) chance = 49;
-  else chance = 25;
-
-  document.getElementById("admissionScore").innerHTML = `${chance.toFixed(2)}%`;
 });
 </script>
+
+
 <script>
 async function runPrediction() {
   const school = document.getElementById("dream-school").value;
@@ -397,23 +523,7 @@ async function runPrediction() {
   }, { merge: true });
 }
 
-    <script>
-  firebase.auth().onAuthStateChanged(user => {
-    if (user) {
-      const name = user.displayName || user.email?.split("@")[0];
-      const greetingEl = document.createElement("div");
-      greetingEl.className = "dashboard-greeting";
-      greetingEl.innerHTML = `
-        <h1 style="text-align:center; font-size: 2.5rem; background: linear-gradient(to right, #ff4d4d, #ff9900, #00c853);
-                   -webkit-background-clip: text; color: transparent; font-weight: 800;">
-          👋 Welcome back, ${name}!
-        </h1>
-      `;
-      document.body.insertBefore(greetingEl, document.querySelector(".dashboard"));
-    }
-  });
-</script>
-
-</script>
+  </script>
+  <script src="script.js" defer></script>
 </body>
 </html>
