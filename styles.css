@@ -8263,3 +8263,96 @@ body.light-mode .practice-card:hover {
   box-shadow: 0 0 20px rgba(255, 77, 77, 0.5);
 }
 
+.why-umbrixia-section {
+  background-color: #0a0a0a;
+  padding: 120px 30px;
+}
+
+.why-umbrixia-content {
+  max-width: 1300px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  gap: 60px;
+  align-items: center;
+}
+
+.feature-card {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(18px);
+  padding: 40px;
+  border-radius: 22px;
+  box-shadow: 0 0 20px rgba(255, 77, 77, 0.15);
+  transition: 0.3s ease;
+}
+
+.glow-heading {
+  font-size: 2.5rem;
+  background: linear-gradient(90deg, #ff4d4d, #ff9900, #2196f3);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-weight: 800;
+  margin-bottom: 25px;
+}
+
+.checklist {
+  list-style: none;
+  padding: 0;
+  margin-bottom: 30px;
+  font-size: 1.1rem;
+  line-height: 1.8;
+  color: #ccc;
+}
+.checklist li span {
+  margin-right: 8px;
+  color: #4caf50;
+}
+
+.cta-button {
+  display: inline-block;
+  padding: 12px 32px;
+  border-radius: 999px;
+  font-weight: 600;
+  font-size: 1rem;
+  color: white;
+  text-decoration: none;
+  background: linear-gradient(to right, #ff4d4d, #ff0080);
+  box-shadow: 0 0 16px rgba(255, 77, 77, 0.5);
+  transition: all 0.3s ease-in-out;
+}
+.cta-button:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 24px rgba(255, 77, 77, 0.7);
+}
+
+.chart-card {
+  text-align: center;
+}
+
+.chart-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #f2f2f2;
+  margin-bottom: 6px;
+}
+
+.chart-sub {
+  color: #aaa;
+  margin-bottom: 20px;
+  font-size: 0.95rem;
+}
+
+.glass-frame {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border-radius: 18px;
+  padding: 20px;
+  box-shadow: 0 0 30px rgba(255, 77, 77, 0.3);
+}
+.glass-frame img {
+  width: 100%;
+  border-radius: 12px;
+  box-shadow: 0 0 20px rgba(255, 77, 77, 0.2);
+}
+
