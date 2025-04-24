@@ -3751,3 +3751,66 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     }
   });
 });
+
+// === Typewriter Effect for Hero Text ===
+const slogans = [
+  "Train smarter with AI.",
+  "Achieve your dream score.",
+  "Get into your dream school."
+];
+let typeIndex = 0, letterIndex = 0, deleting = false;
+function typeSlogan() {
+  const el = document.getElementById("typed-text");
+  if (!el) return;
+
+  el.innerText = slogans[typeIndex].slice(0, letterIndex);
+  if (!deleting && letterIndex < slogans[typeIndex].length) {
+    letterIndex++;
+  } else if (deleting && letterIndex > 0) {
+    letterIndex--;
+  } else {
+    deleting = !deleting;
+    if (!deleting) typeIndex = (typeIndex + 1) % slogans.length;
+  }
+  setTimeout(typeSlogan, deleting ? 40 : 100);
+}
+typeSlogan();
+
+// === Fade-In Observer ===
+const fadeSections = document.querySelectorAll('.fade-in-section');
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) entry.target.classList.add('visible');
+  });
+});
+fadeSections.forEach(section => observer.observe(section));
+
+// === Scroll Progress Bar ===
+const progressBar = document.createElement('div');
+progressBar.id = 'scroll-progress';
+document.body.appendChild(progressBar);
+
+window.addEventListener('scroll', () => {
+  const scrolled = window.scrollY;
+  const maxScroll = document.body.scrollHeight - window.innerHeight;
+  progressBar.style.width = `${(scrolled / maxScroll) * 100}%`;
+
+  document.body.classList.toggle('scrolled', scrolled > 20);
+});
+
+// === Welcome Toast (Once Per Session) ===
+if (!sessionStorage.getItem("welcomeShown")) {
+  sessionStorage.setItem("welcomeShown", "true");
+  setTimeout(() => {
+    const toast = document.createElement("div");
+    toast.innerText = "🚀 Welcome to Umbrixia!";
+    Object.assign(toast.style, {
+      position: "fixed", bottom: "30px", right: "30px",
+      background: "#111", color: "#fff", padding: "15px 25px",
+      borderRadius: "10px", boxShadow: "0 0 12px #ff4d4d", zIndex: 9999
+    });
+    document.body.appendChild(toast);
+    setTimeout(() => toast.remove(), 4000);
+  }, 1000);
+}
+
