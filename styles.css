@@ -8499,3 +8499,86 @@ body.scrolled {
   transition: width 0.25s ease;
 }
 
+/* === Apple-Style Gloss and Structure === */
+.container {
+  backdrop-filter: blur(18px);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 18px;
+  background: rgba(0, 0, 0, 0.45);
+  box-shadow: 0 12px 32px rgba(255, 77, 77, 0.2);
+  padding: 30px;
+  transition: all 0.3s ease;
+}
+
+/* === Glass Button (glow-enhanced) === */
+.glass-btn {
+  background: linear-gradient(90deg, #ff4d4d, #ff0080);
+  padding: 14px 30px;
+  border-radius: 999px;
+  font-size: 1rem;
+  font-weight: bold;
+  color: white;
+  border: none;
+  box-shadow: 0 0 20px rgba(255, 77, 77, 0.5);
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.glass-btn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 25px rgba(255, 77, 77, 0.9);
+}
+
+/* === Responsive Typography Enhancer === */
+h1, h2, h3, p {
+  letter-spacing: 0.02em;
+  line-height: 1.5;
+}
+
+input, select {
+  border: none;
+  outline: none;
+  padding: 12px;
+  border-radius: 12px;
+  background: #1a1a1a;
+  color: white;
+  font-size: 1rem;
+  width: 100%;
+}
+
+/* === Gradient Animations === */
+@keyframes pulseGlow {
+  0% { box-shadow: 0 0 10px #ff4d4d; }
+  50% { box-shadow: 0 0 20px #ff4d4d; }
+  100% { box-shadow: 0 0 10px #ff4d4d; }
+}
+
+.glow-box {
+  animation: pulseGlow 2.5s infinite ease-in-out;
+}
+
+/* === Refined Toggle Buttons === */
+.toggle-button {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid #ff4d4d;
+  padding: 10px 20px;
+  border-radius: 14px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+.toggle-button:hover {
+  background: #ff4d4d;
+  color: #0d0d0d;
+}
+
+/* === Apple Background Stars === */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: radial-gradient(#ff4d4d 0.5px, transparent 0.5px);
+  background-size: 20px 20px;
+  opacity: 0.03;
+  z-index: -1;
+}
+
