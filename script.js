@@ -3979,3 +3979,29 @@ document.querySelectorAll("input, select").forEach(el => {
 
 // === Scroll Smooth Behavior Everywhere ===
 document.documentElement.style.scrollBehavior = "smooth";
+
+// ───── Apple-Style Entry Animation on Scroll ─────
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('fade-in');
+      observer.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.1 });
+
+document.querySelectorAll('.dashboard-card-container').forEach(el => {
+  observer.observe(el);
+});
+
+// ───── Auto Welcome Message with User Progress ─────
+document.addEventListener("DOMContentLoaded", () => {
+  const user = firebase.auth().currentUser;
+  if (user) {
+    const name = user.displayName || user.email?.split("@")[0];
+    const greeting = document.createElement("div");
+    greeting.className = "dashboard-greeting";
+    greeting.innerHTML = `👋 Welcome back, <b>${name}</b>! You're crushing it 🚀`;
+    document.querySelector(".dashboard")?.prepend(greeting);
+  }
+});
