@@ -8396,3 +8396,58 @@ body.light-mode .practice-card:hover {
   }
 }
 
+/* === Umbrixia Apple-Inspired Enhancements (styles.css additions) === */
+
+/* Glassmorphism Button */
+.button-glass {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  backdrop-filter: blur(10px);
+  color: white;
+  padding: 12px 28px;
+  border-radius: 30px;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 20px rgba(255, 255, 255, 0.1);
+}
+.button-glass:hover {
+  background-color: rgba(255, 255, 255, 0.15);
+  transform: translateY(-2px);
+}
+
+/* Apple-style subtle pulse hover for cards */
+.card-animated {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.card-animated:hover {
+  transform: scale(1.03);
+  box-shadow: 0 8px 24px rgba(255, 77, 77, 0.4);
+}
+
+/* Section shadow-glow divider */
+.section-divider {
+  border-bottom: 2px solid rgba(255, 255, 255, 0.1);
+  margin: 40px auto;
+  width: 90%;
+  box-shadow: 0 4px 20px rgba(255, 77, 77, 0.25);
+}
+
+/* Floating chat icon */
+.floating-chat {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: linear-gradient(135deg, #ff4d4d, #ff6a6a);
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 8px 24px rgba(255, 77, 77, 0.4);
+  color: white;
+  font-size: 24px;
+  cursor: pointer;
+  z-index: 10000;
+}
+
