@@ -3700,3 +3700,21 @@ window.addEventListener("DOMContentLoaded", () => {
   }
 });
 
+/* ─── 📈 APPLE-LIKE GRAPH REVEAL ────────────────────────────── */
+document.addEventListener('DOMContentLoaded', () => {
+  const graphs = document.querySelectorAll(
+    '.chart-box, .graph-box, .graph-container'
+  );
+
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('in-view');
+        io.unobserve(entry.target);          // reveal only once
+      }
+    });
+  }, { threshold: 0.35 });
+
+  graphs.forEach((g) => io.observe(g));
+});
+
