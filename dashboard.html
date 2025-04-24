@@ -323,6 +323,19 @@ h2.section-title {
  
  
    <div class="chart-row">
+    <section class="dashboard-analytics fade-in">
+  <h2 class="section-title gradient-heading">📊 Performance Trends</h2>
+  <p class="sub">Track your real-time improvement powered by Umbrixia AI.</p>
+
+  <div class="chart-container">
+    <div class="glass-chart-box">
+      <canvas id="improvementChart"></canvas>
+    </div>
+    <div class="glass-chart-box">
+      <canvas id="categoryPieChart"></canvas>
+    </div>
+  </div>
+</section>
      <!-- Line Chart -->
      <div class="chart-box">
        <canvas id="improvementChart"></canvas>
@@ -480,6 +493,22 @@ if (!topicData || Object.keys(topicData).length === 0) {
      <div id="admissionScore" class="gradient-score">Calculating...</div>
    </div>
  </section>
+
+    <div class="dashboard-card-container">
+  <div class="dashboard-card">
+    <h3>🔎 Deep Insight</h3>
+    <p>Get laser-focused feedback after every attempt with real-time AI-powered analysis.</p>
+  </div>
+  <div class="dashboard-card">
+    <h3>💡 Smart Goals</h3>
+    <p>We track your mastery curve and adjust targets to boost long-term retention.</p>
+  </div>
+  <div class="dashboard-card">
+    <h3>🔥 Instant Motivation</h3>
+    <p>Progress bars, badges, and gamified levels keep your journey exciting and focused.</p>
+  </div>
+</div>
+
  
  
      <div class="test-buttons">
