@@ -8854,4 +8854,46 @@ body::after {
   box-shadow: 0 0 12px #ff4d4d;
 }
 
+.hero-glass {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(16px);
+  border-radius: 20px;
+  padding: 50px 30px;
+  margin: 40px auto;
+  max-width: 980px;
+  text-align: center;
+  box-shadow: 0 8px 30px rgba(255, 255, 255, 0.06);
+}
+
+.hero-subtext {
+  font-size: 1.25rem;
+  color: #ccc;
+  margin-top: 10px;
+  margin-bottom: 20px;
+}
+
+.neon-text {
+  background: linear-gradient(to right, #ff4d4d, #ff9900, #00ffcc);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-weight: 800;
+  font-size: 3rem;
+  animation: glowPulse 4s ease-in-out infinite;
+}
+
+@keyframes glowPulse {
+  0%, 100% { text-shadow: 0 0 4px rgba(255,77,77,0.7); }
+  50% { text-shadow: 0 0 20px rgba(255,77,77,1); }
+}
+
+.glow-line {
+  height: 4px;
+  width: 80px;
+  background: linear-gradient(to right, #ff4d4d, #ff9900, #00ffcc);
+  margin: 25px auto 0;
+  border-radius: 2px;
+  box-shadow: 0 0 8px #ff4d4d;
+}
+
 
