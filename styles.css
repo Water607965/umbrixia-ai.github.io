@@ -8896,4 +8896,48 @@ body::after {
   box-shadow: 0 0 8px #ff4d4d;
 }
 
+.analytics-section {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 30px;
+  margin-top: 40px;
+  animation: fadeInUp 1s ease;
+}
+
+.stat-card {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 18px;
+  padding: 30px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+  text-align: center;
+  backdrop-filter: blur(14px);
+  transition: all 0.3s ease-in-out;
+}
+.stat-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 36px rgba(255, 77, 77, 0.3);
+}
+
+.stat-card h3 {
+  font-size: 1.6rem;
+  color: white;
+  margin-bottom: 10px;
+}
+
+.stat-card p {
+  font-size: 1.1rem;
+  color: #bbb;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
 
