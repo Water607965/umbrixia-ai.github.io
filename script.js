@@ -3914,3 +3914,68 @@ document.querySelectorAll("input, select").forEach(el => {
 
 // === Scroll Smooth Behavior Everywhere ===
 document.documentElement.style.scrollBehavior = "smooth";
+
+// === Hero Floating Particles ===
+for (let i = 0; i < 40; i++) {
+  const dot = document.createElement('div');
+  dot.classList.add('floating-dot');
+  dot.style.left = `${Math.random() * 100}%`;
+  dot.style.top = `${Math.random() * 100}%`;
+  dot.style.animationDuration = `${3 + Math.random() * 3}s`;
+  document.body.appendChild(dot);
+}
+
+// === Hero Welcome Typing Line ===
+const heroSentences = [
+  "Welcome to Umbrixia.",
+  "AI-Powered. Student-Centered.",
+  "Where Smarter Prep Meets Success.",
+  "Built to Elevate. Designed to Win."
+];
+let sentenceIndex = 0;
+let charIndex = 0;
+let direction = 1;
+
+const heroText = document.getElementById("typed-text");
+if (heroText) {
+  setInterval(() => {
+    if (direction === 1) {
+      if (charIndex < heroSentences[sentenceIndex].length) {
+        heroText.innerText = heroSentences[sentenceIndex].slice(0, ++charIndex);
+      } else {
+        direction = -1;
+        setTimeout(() => {}, 1500);
+      }
+    } else {
+      if (charIndex > 0) {
+        heroText.innerText = heroSentences[sentenceIndex].slice(0, --charIndex);
+      } else {
+        direction = 1;
+        sentenceIndex = (sentenceIndex + 1) % heroSentences.length;
+      }
+    }
+  }, 80);
+}
+
+// === Real-time Auto Save Feedback ===
+function showAutoSaveMessage() {
+  const saveBadge = document.createElement("div");
+  saveBadge.className = "badge-floating";
+  saveBadge.innerText = "Saved";
+  document.body.appendChild(saveBadge);
+  saveBadge.style.top = "40px";
+  saveBadge.style.right = "40px";
+
+  setTimeout(() => {
+    saveBadge.style.opacity = "0";
+    setTimeout(() => saveBadge.remove(), 500);
+  }, 3000);
+}
+
+// Hook into form interactions for autosave feel
+document.querySelectorAll("input, select").forEach(el => {
+  el.addEventListener("change", showAutoSaveMessage);
+});
+
+// === Scroll Smooth Behavior Everywhere ===
+document.documentElement.style.scrollBehavior = "smooth";
