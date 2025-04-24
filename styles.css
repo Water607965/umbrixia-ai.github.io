@@ -8803,3 +8803,55 @@ body::after {
   box-shadow: 0 14px 60px rgba(255, 77, 77, 0.3);
 }
 
+/* 🌟 APPLE-LIKE HERO SECTION */
+.hero-apple {
+  width: 100%;
+  padding: 100px 20px 60px;
+  background: linear-gradient(to bottom right, #0d0d0d, #1a1a1a);
+  text-align: center;
+  position: relative;
+  z-index: 2;
+}
+
+.hero-inner {
+  max-width: 1000px;
+  margin: auto;
+  padding: 0 20px;
+}
+
+.apple-gradient-title {
+  font-size: 3.5rem;
+  background: linear-gradient(90deg, #ff4d4d, #ff9900, #4caf50, #2196f3, #9c27b0);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-weight: 800;
+  margin-bottom: 10px;
+  animation: rainbowShift 10s linear infinite;
+}
+
+.hero-tagline {
+  font-size: 1.5rem;
+  color: #fff;
+  opacity: 0.9;
+  margin-bottom: 10px;
+  font-weight: 500;
+}
+
+.hero-subline {
+  font-size: 1.1rem;
+  color: #bbb;
+  font-weight: 400;
+}
+
+/* Glow underline for elegance */
+.apple-gradient-title::after {
+  content: '';
+  display: block;
+  width: 60px;
+  height: 3px;
+  margin: 16px auto 0;
+  background: #ff4d4d;
+  box-shadow: 0 0 12px #ff4d4d;
+}
+
+
