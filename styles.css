@@ -8941,3 +8941,59 @@ body::after {
   }
 }
 
+.hero-container {
+  text-align: center;
+  padding: 60px 20px;
+  border-radius: 16px;
+  max-width: 960px;
+  margin: auto;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(16px);
+  box-shadow: 0 12px 40px rgba(0,0,0,0.3);
+  transition: all 0.4s ease-in-out;
+}
+
+.hero-heading {
+  font-size: 3.2rem;
+  background: linear-gradient(90deg, #ff4d4d, #ff9900, #4caf50, #2196f3, #9c27b0);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: rainbowShift 6s linear infinite;
+  font-weight: 900;
+}
+
+.hero-subtext {
+  font-size: 1.25rem;
+  color: #ddd;
+  margin-top: 12px;
+  margin-bottom: 30px;
+}
+
+.hero-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+}
+
+.hero-buttons .btn-glow.alt {
+  background: linear-gradient(90deg, #2196f3, #00e5ff);
+}
+
+.glassmorph {
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(18px);
+}
+
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.fade-up {
+  animation: fade-up 0.6s ease forwards;
+  opacity: 0;
+}
+
