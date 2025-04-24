@@ -8356,3 +8356,43 @@ body.light-mode .practice-card:hover {
   box-shadow: 0 0 20px rgba(255, 77, 77, 0.2);
 }
 
+/* ─── 📊 GRAPH “APPLE STYLE” TRANSFORM ───────────────────────── */
+.chart-box,         /* your <canvas> wrapper                     */
+.graph-box,         /* img-based growth curve wrapper            */
+.graph-container {  /* fallback selector for other graph cards   */
+  perspective: 1600px;               /* soften 3-D curvature   */
+  transform-style: preserve-3d;
+  transition: transform 0.8s cubic-bezier(.25,.8,.25,1),
+              filter    0.8s cubic-bezier(.25,.8,.25,1),
+              opacity   0.8s ease-out;
+  opacity: 0;                        /* fade-in on scroll      */
+  will-change: transform;            /* hint for smoothness    */
+}
+
+/* initial “floating” angle (à la Apple TV hero cards) */
+.chart-box:not(.in-view),
+.graph-box:not(.in-view),
+.graph-container:not(.in-view) {
+  transform: rotateX(18deg) translateY(40px) scale(.92);
+  filter: blur(4px) brightness(.85);
+}
+
+/* when scrolled into view → buttery landing */
+.chart-box.in-view,
+.graph-box.in-view,
+.graph-container.in-view {
+  transform: rotateX(0deg) translateY(0) scale(1);
+  filter: blur(0) brightness(1);
+  opacity: 1;
+}
+
+/* optional micro-hover nudge (desktop only) */
+@media (hover:hover) {
+  .chart-box.in-view:hover,
+  .graph-box.in-view:hover,
+  .graph-container.in-view:hover {
+    transform: rotateX(0deg) translateY(-2px) scale(1.015);
+    box-shadow: 0 20px 50px rgba(0,0,0,.45);
+  }
+}
+
