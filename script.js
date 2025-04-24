@@ -3718,3 +3718,36 @@ document.addEventListener('DOMContentLoaded', () => {
   graphs.forEach((g) => io.observe(g));
 });
 
+// === Umbrixia Apple-Inspired Enhancements (script.js additions) ===
+
+// Add glow effect to headings on scroll
+document.addEventListener("DOMContentLoaded", () => {
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add("visible");
+      }
+    });
+  });
+
+  document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+});
+
+// Floating Chat Toggle (future AI support)
+const chatIcon = document.createElement('div');
+chatIcon.classList.add('floating-chat');
+chatIcon.innerHTML = '💬';
+chatIcon.onclick = () => alert("AI Chat coming soon 🚀");
+document.body.appendChild(chatIcon);
+
+// Smooth scroll to sections
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+  anchor.addEventListener("click", function (e) {
+    e.preventDefault();
+    const targetID = this.getAttribute("href").substring(1);
+    const target = document.getElementById(targetID);
+    if (target) {
+      target.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+  });
+});
