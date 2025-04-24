@@ -3814,3 +3814,39 @@ if (!sessionStorage.getItem("welcomeShown")) {
   }, 1000);
 }
 
+// === Toggle Prediction Panels ===
+document.querySelectorAll('.toggle-button').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const target = document.getElementById(btn.dataset.target);
+    document.querySelectorAll('.test-section').forEach(sec => sec.style.display = 'none');
+    if (target) target.style.display = 'block';
+  });
+});
+
+// === Animated Gradient Loader ===
+const loaderText = document.getElementById("admissionScore");
+if (loaderText) {
+  const loaderGradient = ["Calculating.", "Calculating..", "Calculating..."];
+  let step = 0;
+  setInterval(() => {
+    loaderText.textContent = loaderGradient[step % loaderGradient.length];
+    step++;
+  }, 500);
+}
+
+// === Universal Welcome Time ===
+const currentTime = document.getElementById("current-time");
+if (currentTime) {
+  setInterval(() => {
+    const now = new Date();
+    currentTime.textContent = now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit', second:'2-digit'});
+  }, 1000);
+}
+
+// === Light Vibration on Button Tap ===
+document.querySelectorAll('button').forEach(btn => {
+  btn.addEventListener('click', () => {
+    if (navigator.vibrate) navigator.vibrate(15);
+  });
+});
+
