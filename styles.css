@@ -8997,3 +8997,44 @@ body::after {
   opacity: 0;
 }
 
+.featured-modules {
+  margin: 60px 0;
+  text-align: center;
+}
+
+.module-carousel {
+  display: flex;
+  gap: 20px;
+  overflow-x: auto;
+  padding: 20px 10px;
+  scroll-snap-type: x mandatory;
+}
+
+.module-card {
+  flex: 0 0 280px;
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 20px;
+  padding: 24px;
+  scroll-snap-align: center;
+  box-shadow: 0 8px 20px rgba(255, 77, 77, 0.25);
+  transition: transform 0.3s ease;
+}
+
+.module-card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 12px 30px rgba(255, 77, 77, 0.4);
+}
+
+.module-card h3 {
+  font-size: 1.3rem;
+  color: #ff4d4d;
+}
+
+.module-card p {
+  color: #ccc;
+  font-size: 0.95rem;
+  margin-top: 8px;
+}
+
