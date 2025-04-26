@@ -320,20 +320,20 @@ h2.section-title {
     <div class="glow-line"></div>
    <section class="featured-modules fade-in">
   <h2 class="section-title gradient-heading">🧩 Explore Learning Modules</h2>
-  <div class="module-carousel">
-    <div class="module-card">
-      <h3>📘 SHSAT Mastery</h3>
-      <p>Targeted SHSAT drills with real-time feedback and AI tips.</p>
-    </div>
-    <div class="module-card">
-      <h3>📗 ISEE Explorer</h3>
-      <p>Level-based question pools across Verbal, Quant, and Logic.</p>
-    </div>
-    <div class="module-card">
-      <h3>📙 SAT Sprint</h3>
-      <p>Timed SAT sections with scoring analytics after each run.</p>
-    </div>
+  <div class="learning-modules">
+  <div class="module-card">
+    <h3>🧠 SHSAT Mastery</h3>
+    <p>Targeted SHSAT drills with AI feedback.</p>
   </div>
+  <div class="module-card">
+    <h3>📘 ISEE Explorer</h3>
+    <p>Level-based question pools across Verbal, Quant, and Logic.</p>
+  </div>
+  <div class="module-card">
+    <h3>🎓 SAT Ace</h3>
+    <p>Timed SAT sections with real-time performance analytics.</p>
+  </div>
+</div>
 </section>
 
   </section>
@@ -362,14 +362,15 @@ h2.section-title {
   <h2 class="section-title gradient-heading">📊 Performance Trends</h2>
   <p class="sub">Track your real-time improvement powered by Umbrixia AI.</p>
 
-  <div class="chart-container">
-    <div class="glass-chart-box">
-      <canvas id="improvementChart"></canvas>
-    </div>
-    <div class="glass-chart-box">
-      <canvas id="categoryPieChart"></canvas>
-    </div>
+  <div class="performance-container">
+  <div class="chart-box">
+    <canvas id="improvementChart"></canvas>
   </div>
+  <div class="chart-box">
+    <canvas id="categoryPieChart"></canvas>
+  </div>
+</div>
+
 </section>
      <!-- Line Chart -->
      <div class="chart-box">
@@ -499,27 +500,46 @@ if (!topicData || Object.keys(topicData).length === 0) {
      </div>
    </div>
  
-       <div class="glass-card">
-   <h2>🎓 AI Admissions Predictor</h2>
-   <input id="dream-school" placeholder="Dream School (e.g. Harvard)" />
-   <select id="user-grade">
-     <option value="6">6th Grade</option>
-     <option value="7">7th Grade</option>
-     <option value="8">8th Grade</option>
-     <option value="9">9th Grade</option>
-     <option value="10">10th Grade</option>
-     <option value="11">11th Grade</option>
-     <option value="12">12th Grade</option>
-   </select>
-   <button class="btn-glow">🔮 Predict</button>
+       <div class="predictor-and-features">
+  <div class="predictor-box">
+    <h2>🎯 AI Admissions Predictor</h2>
+    <input id="dream-school" placeholder="Dream School (e.g. Harvard)" />
+    <select id="user-grade">
+      <option value="6">6th Grade</option>
+      <option value="7">7th Grade</option>
+      <option value="8">8th Grade</option>
+      <option value="9">9th Grade</option>
+      <option value="10">10th Grade</option>
+      <option value="11">11th Grade</option>
+      <option value="12">12th Grade</option>
+    </select>
+    <button class="btn-glow">🔮 Predict</button>
+    <div id="prediction-output" style="margin-top: 1em;">
+      <p id="chance"></p>
+      <p id="justification"></p>
+      <p id="suggestion"></p>
+    </div>
+  </div>
 
- 
-   <div id="prediction-output" style="margin-top: 1em;">
-     <p id="chance"></p>
-     <p id="justification"></p>
-     <p id="suggestion"></p>
-   </div>
- </div>
+  <div class="features-box">
+    <h2>🚀 Why Umbrixia Stands Out</h2>
+    <div class="features-grid">
+      <div class="dashboard-card">
+        <h3>🔎 Deep Insight</h3>
+        <p>Get laser-focused feedback after every attempt with real-time AI-powered analysis.</p>
+      </div>
+      <div class="dashboard-card">
+        <h3>💡 Smart Goals</h3>
+        <p>We track your mastery curve and adjust targets to boost long-term retention.</p>
+      </div>
+      <div class="dashboard-card">
+        <h3>🔥 Instant Motivation</h3>
+        <p>Progress bars, badges, and gamified levels keep your journey exciting and focused.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
  
  
    <div class="predictor-estimate">
@@ -547,10 +567,11 @@ if (!topicData || Object.keys(topicData).length === 0) {
  
  
      <div class="test-buttons">
-       <button onclick="showSection('shsat')">SHSAT</button>
-       <button onclick="showSection('isee')">ISEE</button>
-       <button onclick="showSection('sat')">SAT</button>
-     </div>
+  <button>SHSAT</button>
+  <button>ISEE</button>
+  <button>SAT</button>
+</div>
+
  
      <!-- SHSAT Section -->
      <div id="shsat" class="test-section">
