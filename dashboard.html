@@ -367,19 +367,27 @@ h2.section-title {
  
  
    <div class="chart-row">
-    <section class="dashboard-analytics fade-in">
-  <h2 class="section-title gradient-heading">📊 Performance Trends</h2>
-  <p class="sub">Track your real-time improvement powered by Umbrixia AI.</p>
-
-  <div class="performance-trends">
-    <div class="chart-container">
-      <canvas id="improvementChart"></canvas>
+    <section class="performance-glass-panel fade-in">
+  <div class="performance-content-wrapper">
+    <div class="performance-left">
+      <h2 class="section-title gradient-heading">📊 Performance Trends</h2>
+      <p class="hero-subtext">Track your real-time improvement powered by Umbrixia AI.</p>
+      <div class="glow-line"></div>
     </div>
-    <div class="chart-container">
-      <canvas id="categoryPieChart"></canvas>
+
+    <div class="performance-right">
+      <div class="chart-container">
+        <div class="glass-chart-box">
+          <canvas id="improvementChart"></canvas>
+        </div>
+        <div class="glass-chart-box">
+          <canvas id="categoryPieChart"></canvas>
+        </div>
+      </div>
     </div>
   </div>
 </section>
+
 
      <!-- Line Chart -->
      <div class="chart-box">
