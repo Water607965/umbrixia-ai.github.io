@@ -500,8 +500,8 @@ if (!topicData || Object.keys(topicData).length === 0) {
      </div>
    </div>
  
-       <div class="predictor-and-features">
-  <div class="predictor-box">
+       <section class="predictor-features-wrap">
+  <div class="predictor-box glass-card">
     <h2>🎯 AI Admissions Predictor</h2>
     <input id="dream-school" placeholder="Dream School (e.g. Harvard)" />
     <select id="user-grade">
@@ -513,7 +513,8 @@ if (!topicData || Object.keys(topicData).length === 0) {
       <option value="11">11th Grade</option>
       <option value="12">12th Grade</option>
     </select>
-    <button class="btn-glow">🔮 Predict</button>
+    <button class="btn-glow" onclick="runPrediction()">🔮 Predict</button>
+
     <div id="prediction-output" style="margin-top: 1em;">
       <p id="chance"></p>
       <p id="justification"></p>
@@ -521,24 +522,25 @@ if (!topicData || Object.keys(topicData).length === 0) {
     </div>
   </div>
 
-  <div class="features-box">
+  <div class="features-box glass-card">
     <h2>🚀 Why Umbrixia Stands Out</h2>
-    <div class="features-grid">
-      <div class="dashboard-card">
+    <div class="features-row">
+      <div class="feature-card">
         <h3>🔎 Deep Insight</h3>
-        <p>Get laser-focused feedback after every attempt with real-time AI-powered analysis.</p>
+        <p>Laser-focused feedback after every test attempt.</p>
       </div>
-      <div class="dashboard-card">
+      <div class="feature-card">
         <h3>💡 Smart Goals</h3>
-        <p>We track your mastery curve and adjust targets to boost long-term retention.</p>
+        <p>Dynamic goal setting for mastery improvement.</p>
       </div>
-      <div class="dashboard-card">
+      <div class="feature-card">
         <h3>🔥 Instant Motivation</h3>
-        <p>Progress bars, badges, and gamified levels keep your journey exciting and focused.</p>
+        <p>Badges, gamified levels, and achievement rewards.</p>
       </div>
     </div>
   </div>
-</div>
+</section>
+
 
  
  
