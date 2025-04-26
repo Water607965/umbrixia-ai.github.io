@@ -9038,3 +9038,44 @@ body::after {
   margin-top: 8px;
 }
 
+.intro-section {
+  margin-top: 40px;
+  text-align: center;
+}
+
+.subtext {
+  font-size: 1.2rem;
+  color: #bbb;
+  margin-bottom: 20px;
+}
+
+.typing-box {
+  font-size: 1.8rem;
+  font-weight: 600;
+  color: white;
+  margin-bottom: 10px;
+  display: inline-block;
+  background: linear-gradient(90deg, #ff4d4d, #ff9900, #4caf50, #2196f3, #9c27b0);
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  animation: rainbowShift 8s linear infinite;
+}
+
+.cursor {
+  font-weight: bold;
+  font-size: 1.8rem;
+  color: #ff4d4d;
+  animation: blink 1s step-start infinite;
+}
+
+.current-time {
+  font-size: 1rem;
+  color: #888;
+  margin-top: 10px;
+}
+
+@keyframes blink {
+  50% { opacity: 0; }
+}
+
