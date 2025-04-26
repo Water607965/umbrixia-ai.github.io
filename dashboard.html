@@ -19,11 +19,19 @@
        background-color: #0d0d0d;
        color: white;
      }
-     .dashboard {
-       padding: 60px 20px;
-       max-width: 1200px;
-       margin: auto;
-     }
+
+    .dashboard {
+  width: 100%;
+  padding: 60px 40px;
+  margin: 0;
+  display: flex;
+  flex-direction: row; /* ← Important change */
+  flex-wrap: wrap;
+  gap: 40px;
+  box-sizing: border-box;
+}
+
+
      h1 {
        font-size: 2.8rem;
        text-align: center;
@@ -293,6 +301,8 @@ h2.section-title {
        <a href="signup.html" class="btn-solid">Get Started</a>
        <button onclick="toggleTheme()" class="theme-toggle">🌙</button>
      </div>
+    </div>
+    
      <div class="profile-icon" onclick="toggleProfileMenu()">👤</div>
  <div id="profileMenu" class="profile-menu">
    <p id="userEmailDisplay">Loading...</p>
@@ -311,22 +321,26 @@ h2.section-title {
  
  
  <section class="intro-section-horizontal fade-in">
+  <div class="dashboard-main-content">
   <div class="intro-left">
     <p class="subtext">Choose your test, challenge your mind, and unlock new possibilities.</p>
     <div class="typing-box">
       <span id="typed-text" class="typed-text"></span><span class="cursor">|</span>
     </div>
   </div>
-
+  </div>
+<div class="dashboard-main-content">
   <div class="intro-right">
     <div id="current-time" class="current-time"></div>
   </div>
+</div>
 </section>
- 
+
+    
    <div class="dashboard">
-  <div class="dashboard">
   <section class="dashboard-hero-glass fade-in">
   <div class="hero-content-wrapper">
+   <div class="dashboard-main-content">
     <div class="hero-left">
       <h1 class="gradient-heading neon-text">🚀 Umbrixia AI Dashboard</h1>
       <p class="hero-subtext">
@@ -334,23 +348,32 @@ h2.section-title {
       </p>
       <div class="glow-line"></div>
     </div>
+   </div>
 
+    
     <div class="hero-right">
       <h2 class="section-title">🔎 Explore Learning Modules</h2>
       <div class="learning-modules-horizontal">
+        <div class="dashboard-main-content">
         <div class="module-card">
           <h3>📄 SHSAT Mastery</h3>
           <p>Targeted SHSAT drills with real-time feedback and AI tips.</p>
         </div>
+        </div>
 
+ 
         <div class="module-card">
+         <div class="dashboard-main-content">
           <h3>🧩 ISEE Explorer</h3>
           <p>Level-based question pools across Verbal, Quant, and Logic.</p>
+         </div>
         </div>
 
         <div class="module-card">
+         <div class="dashboard-main-content">
           <h3>🧠 SAT Accelerator</h3>
           <p>Timed SAT sections with deep performance analysis.</p>
+         </div>
         </div>
       </div>
     </div>
@@ -364,17 +387,20 @@ h2.section-title {
  
      <section class="dashboard-analytics fade-in">
    <h2 class="section-title">📊 Performance Trends</h2>
- 
+
+    
  
    <div class="chart-row">
     <section class="performance-glass-panel fade-in">
   <div class="performance-content-wrapper">
     <div class="performance-left">
+     <div class="dashboard-main-content">
       <h2 class="section-title gradient-heading">📊 Performance Trends</h2>
       <p class="hero-subtext">Track your real-time improvement powered by Umbrixia AI.</p>
       <div class="glow-line"></div>
+     </div>
     </div>
-
+  
     <div class="performance-right">
       <div class="chart-container">
         <div class="glass-chart-box">
