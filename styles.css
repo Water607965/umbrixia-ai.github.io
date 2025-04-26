@@ -8778,13 +8778,6 @@ body::after {
   line-height: 1.6;
 }
 
-.chart-container {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 30px;
-  justify-content: center;
-  margin-bottom: 60px;
-}
 
 .glass-chart-box {
   flex: 1;
