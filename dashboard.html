@@ -907,14 +907,16 @@ firebase.auth().onAuthStateChanged((user) => {
  
 <script>
   const fadeIns = document.querySelectorAll('.fade-in');
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('visible');
-      }
-    });
+const observer = new IntersectionObserver((entries, observer) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+      observer.unobserve(entry.target); // ✅ Once visible, stop observing
+    }
   });
-  fadeIns.forEach(el => observer.observe(el));
+});
+fadeIns.forEach(el => observer.observe(el));
+
 
  options: {
   responsive: true,
