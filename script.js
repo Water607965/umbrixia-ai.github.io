@@ -204,13 +204,6 @@ if (rotatingText) {
   }, 3500);
 }
 
-// ✨ Fade-in on Scroll
-const revealObserver = new IntersectionObserver((entries) => {
-  entries.forEach(entry => {
-    if (entry.isIntersecting) entry.target.classList.add("visible");
-  });
-});
-document.querySelectorAll(".fade-in, .feature-card, .stat-box").forEach(el => revealObserver.observe(el));
 
 
 // ⬆️ Scroll To Top Button
@@ -587,19 +580,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
   typeEffect();
 
-  // 🔽 003 - Fade-in on scroll
-  const fadeInElements = document.querySelectorAll(".fade-in");
-  const observer = new IntersectionObserver(
-    entries => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add("visible");
-        }
-      });
-    },
-    { threshold: 0.2 }
-  );
-  fadeInElements.forEach(el => observer.observe(el));
+ 
 
   // 🔽 004 - Glow on CTA hover
   ctaButtons.forEach(button => {
@@ -1042,20 +1023,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }, 4000);
   }
 
-  // 4) FADE‑IN + SLIDE‑UP ON SCROLL
-  const io = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add("in-view");
-        io.unobserve(entry.target);
-      }
-    });
-  }, { threshold: 0.15 });
 
-  document.querySelectorAll(".fade-in, .slide-up, .zoom-in").forEach(el => {
-    el.classList.add("preload");
-    io.observe(el);
-  });
 
   // 5) BUTTON RIPPLE EFFECT
   document.querySelectorAll(".btn, button").forEach(btn => {
@@ -1081,89 +1049,13 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 });
 
-document.addEventListener("DOMContentLoaded", () => {
-  const fadeEls = document.querySelectorAll(".fade-in");
 
-  const observer = new IntersectionObserver(
-    entries => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add("visible");
-        }
-      });
-    },
-    { threshold: 0.1 }
-  );
 
-  fadeEls.forEach(el => observer.observe(el));
-});
 
-document.addEventListener("DOMContentLoaded", () => {
-  const fadeElems = document.querySelectorAll(".fade-in");
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add("visible");
-      }
-    });
-  }, { threshold: 0.1 });
 
-  fadeElems.forEach(elem => observer.observe(elem));
-});
 
-// Fade in on scroll animation
-const fadeElements = document.querySelectorAll('.fade-in');
 
-const observer = new IntersectionObserver(entries => {
-  entries.forEach(entry => {
-    if (entry.isIntersecting) {
-      entry.target.classList.add('visible');
-    }
-  });
-}, {
-  threshold: 0.1
-});
 
-fadeElements.forEach(el => observer.observe(el));
-
-document.addEventListener("DOMContentLoaded", () => {
-  const faders = document.querySelectorAll(".fade-in");
-
-  const appearOptions = {
-    threshold: 0.1,
-    rootMargin: "0px 0px -50px 0px"
-  };
-
-  const appearOnScroll = new IntersectionObserver(function(entries, observer) {
-    entries.forEach(entry => {
-      if (!entry.isIntersecting) return;
-      entry.target.classList.add("visible");
-      observer.unobserve(entry.target);
-    });
-  }, appearOptions);
-
-  faders.forEach(fader => {
-    appearOnScroll.observe(fader);
-  });
-});
-
-// Animate .fade-in elements when they scroll into view
-document.addEventListener("DOMContentLoaded", () => {
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add("show");
-        observer.unobserve(entry.target); // Trigger once
-      }
-    });
-  }, {
-    threshold: 0.2,
-  });
-
-  document.querySelectorAll('.fade-in').forEach(el => {
-    observer.observe(el);
-  });
-});
 
 // ───────────────────────────────────────────────────────────────────────────────
 // Umbrixia Enhanced UI & Architecture Module
@@ -3730,8 +3622,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
-});
+  
 
 // Floating Chat Toggle (future AI support)
 const chatIcon = document.createElement('div');
@@ -3776,14 +3667,7 @@ function typeSlogan() {
 }
 typeSlogan();
 
-// === Fade-In Observer ===
-const fadeSections = document.querySelectorAll('.fade-in-section');
-const observer = new IntersectionObserver(entries => {
-  entries.forEach(entry => {
-    if (entry.isIntersecting) entry.target.classList.add('visible');
-  });
-});
-fadeSections.forEach(section => observer.observe(section));
+
 
 // === Scroll Progress Bar ===
 const progressBar = document.createElement('div');
