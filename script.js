@@ -1174,8 +1174,13 @@ document.addEventListener("DOMContentLoaded", () => {
     });
     State.currentExam = val;
   }
-  qs('#exam-select')?.addEventListener('change', switchExamSection);
+  // only wire up the exam selector if it actually exists
+const examSelect = document.getElementById('exam-select');
+if (examSelect) {
+  examSelect.addEventListener('change', switchExamSection);
   switchExamSection();
+}
+
 
   // ─── Confetti on Subscription CTA ─────────────────────────────────────────────
   function launchConfetti() {
@@ -3598,17 +3603,6 @@ document.addEventListener('DOMContentLoaded', () => {
     '.chart-box, .graph-box, .graph-container'
   );
 
-  const io = new IntersectionObserver((entries) => {
-    entries.forEach((entry) => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('in-view');
-        io.unobserve(entry.target);          // reveal only once
-      }
-    });
-  }, { threshold: 0.35 });
-
-  graphs.forEach((g) => io.observe(g));
-});
 
 // === Umbrixia Apple-Inspired Enhancements (script.js additions) ===
 
