@@ -867,9 +867,13 @@ firebase.auth().onAuthStateChanged((user) => {
      const loginScreen = document.getElementById("loading-screen");
  
      auth.onAuthStateChanged((user) => {
-       if (!user) {
-         window.location.href = "login.html";
-       } else {
+  if (!user) {
+    // show a friendly popup, then redirect
+    alert("❌ You must be logged in to access Umbrixia AI. Redirecting now...");
+    window.location.href = "login.html";
+    return;
+  } else {
+
          if (universalLoader) universalLoader.style.display = "none";
          if (loginScreen) loginScreen.style.display = "none";
  
@@ -997,6 +1001,19 @@ type();
   mathScores.push(typeof data.math === "number" ? data.math : 0);
   elaScores.push(typeof data.ela === "number" ? data.ela : 0);
 });
+
+     // ───────────────────────────────────────────────
+// Keep these AI & Trends panels permanently visible
+[
+  ".dashboard-analytics",
+  ".performance-glass-panel",
+  ".glass-card.fade-in"
+].forEach(selector => {
+  document.querySelectorAll(selector).forEach(el => {
+    el.classList.add("visible");
+  });
+});
+// ───────────────────────────────────────────────
 
 </script>
 
