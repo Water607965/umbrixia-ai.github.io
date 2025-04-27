@@ -9509,3 +9509,17 @@ body::after {
   opacity: 1 !important;
   transform: none !important;
 }
+
+/* ── Admissions Predictor styling ── */
+.prediction-result {
+  margin-top: 1rem;
+  text-align: center;
+}
+.gradient-score {
+  font-size: 1.8rem;
+  font-weight: 700;
+  background: linear-gradient(90deg, #ff4d4d, #ffc107);
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
