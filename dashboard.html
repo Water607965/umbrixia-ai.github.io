@@ -641,22 +641,7 @@ if (!topicData || Object.keys(topicData).length === 0) {
  
  
  
-   <section class="ai-predictor-box">
-   <h2 class="section-title gradient">🎯 College or School Predictor</h2>
-   <label>Grade Level:</label>
-   <select id="userGrade">
-     <option value="8">8th</option>
-     <option value="9">9th</option>
-     <option value="12">12th</option>
-   </select>
  
-   <label>Your Dream School:</label>
-   <input type="text" id="dreamSchool" placeholder="e.g., Stuyvesant, Harvard, etc." />
- 
-   <button class="btn-primary" onclick="runAIPrediction()">Generate Prediction</button>
- 
-   <div id="aiPredictionResult" class="ai-output"></div>
- </section>
  
  
    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -802,11 +787,6 @@ try {
 }
 
  
-   const res = await fetch("https://your-render-url.onrender.com/predict", {
-     method: "POST",
-     headers: { "Content-Type": "application/json" },
-     body: JSON.stringify({ school, grade, email })
-   });
  
    const data = await res.json();
  
