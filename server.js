@@ -76,6 +76,44 @@ Respond in strict JSON:
   }
 });
 
+// ─── Demographic Trends Stub ───
+app.get('/api/demographic-trends', (req, res) => {
+  // TODO: Replace with real data from AI or analytics service
+  const labels = ["All Students", "STEM Majors", "Humanities", "URM", "Intl"];
+  const values = [65, 58, 72, 50, 61];  // percentages
+  res.json({ labels, values });
+});
+
+// ─── Demographic Trends via OpenAI ───
+app.get('/api/demographic-trends', async (req, res) => {
+  try {
+    const prompt = `
+You are a data analytics assistant. Produce JSON showing demographic acceptance rates (%) for a university application pool.
+Include these groups as labels: All Students, STEM Majors, Humanities, Underrepresented Minorities, International Students.
+Respond _only_ with valid JSON in this exact shape:
+{
+  "labels": ["All Students", "STEM Majors", "Humanities", "Underrepresented Minorities", "International Students"],
+  "values": [ /* five numeric percentages between 0 and 100, no % sign */ ]
+}`;
+    const completion = await client.chat.completions.create({
+      model: 'gpt-4',
+      messages: [{ role: 'user', content: prompt }]
+    });
+
+    // Extract the JSON substring
+    const raw = completion.choices[0].message.content.trim();
+    const match = raw.match(/\{[\s\S]*\}/);
+    if (!match) throw new Error('AI did not return valid JSON.');
+
+    const data = JSON.parse(match[0]);
+    return res.json(data);
+  } catch (err) {
+    console.error('Error in /api/demographic-trends:', err);
+    return res.status(500).json({ error: 'Failed to generate demographics.' });
+  }
+});
+
+
 // Start the server
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`🌐 Server running on port ${PORT}`));
