@@ -3883,3 +3883,27 @@ document.addEventListener("DOMContentLoaded", () => {
     document.querySelector(".dashboard")?.prepend(greeting);
   }
 });
+
+// — Real-Time Clock (updates your #current-time) —
+function updateClock() {
+  const now = new Date();
+  document.getElementById("current-time").textContent =
+    now.toLocaleDateString() + " • " + now.toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'});
+}
+setInterval(updateClock, 1000);
+updateClock();
+
+// — Firebase + Chart.js + AI Predictor + Section Toggler —
+// (Paste here the same <script> contents you added to dashboard.html)
+auth.onAuthStateChanged(user => {
+  if (!user) {
+    alert("❌ You must log in. Redirecting…");
+    return window.location.href = 'login.html';
+  }
+  document.getElementById('universal-loader').style.display = 'none';
+});
+
+function showSection(id) { /* …as above… */ }
+auth.onAuthStateChanged(async user => { /* …Chart.js code… */ });
+async function runPrediction()   { /* …AI Predictor code… */ }
+
