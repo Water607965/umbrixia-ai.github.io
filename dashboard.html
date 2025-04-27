@@ -870,11 +870,7 @@ firebase.auth().onAuthStateChanged((user) => {
   if (universalLoader) universalLoader.style.display = "none";
   if (loginScreen)    loginScreen.style.display    = "none";
 
-  // ── Force these key panels visible so they never fade out ──
-  document.querySelectorAll(
-    ".dashboard-analytics, .performance-glass-panel, .glass-card.fade-in"
-  ).forEach(el => el.classList.add("visible"));
-}
+
 
 
          if (universalLoader) universalLoader.style.display = "none";
@@ -976,18 +972,7 @@ type();
   elaScores.push(typeof data.ela === "number" ? data.ela : 0);
 });
 
-     // ───────────────────────────────────────────────
-// Keep these AI & Trends panels permanently visible
-[
-  ".dashboard-analytics",
-  ".performance-glass-panel",
-  ".glass-card.fade-in"
-].forEach(selector => {
-  document.querySelectorAll(selector).forEach(el => {
-    el.classList.add("visible");
-  });
-});
-// ───────────────────────────────────────────────
+
 
 </script>
 
