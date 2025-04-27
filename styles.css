@@ -9502,3 +9502,10 @@ body::after {
 .test-buttons button:hover {
   background:#ff4d4d; color:#0d0d0d;
 }
+
+/* ── FORCE DASHBOARD VISIBLE (OVERRIDE FADE-IN) ── */
+.dashboard, 
+.dashboard * {
+  opacity: 1 !important;
+  transform: none !important;
+}
