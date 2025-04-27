@@ -265,19 +265,7 @@ document.addEventListener("keydown", e => {
   }
 });
 
-// 🌟 Dashboard Reveal Animation
-function revealDashboard() {
-  const dash = document.querySelector(".dashboard");
-  if (!dash) return;
-  dash.classList.add("revealed");
-  dash.style.opacity = 0;
-  let opacity = 0;
-  const interval = setInterval(() => {
-    opacity += 0.02;
-    dash.style.opacity = opacity;
-    if (opacity >= 1) clearInterval(interval);
-  }, 10);
-}
+
 
 // 🧪 Subscription Plan Reminder if trial is ending
 function displayTrialCountdown() {
