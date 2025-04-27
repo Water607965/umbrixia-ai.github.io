@@ -9445,3 +9445,60 @@ body::after {
   box-shadow: 0 0 25px rgba(255, 77, 77, 0.5);
 }
 
+/* — Sticky Apple Navbar — */
+.sticky-nav {
+  position: sticky; top:0; z-index:999;
+  display:flex; justify-content:space-between; align-items:center;
+  padding:16px 32px;
+  background: rgba(13,13,13,0.95);
+  backdrop-filter: blur(12px);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.5);
+}
+
+/* — Hero Section — */
+.hero-section {
+  text-align: center;
+  padding: 80px 20px;
+  background: linear-gradient(145deg, #0d0d0d, #1a1a1a);
+}
+.hero-title    { font-size: 3rem; color: #fff; margin-bottom:16px; }
+.hero-subtitle { font-size: 1.2rem; color: #ccc; }
+
+/* — Performance Graph Container — */
+.success-graph {
+  max-width: 900px; margin: 40px auto; padding: 40px;
+  background: radial-gradient(circle at top, #111, #0d0d0d);
+  border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.7);
+}
+
+/* — AI Predictor Card — */
+.glowing-section {
+  max-width: 600px; margin: 40px auto; padding: 30px;
+  background: rgba(255,255,255,0.05);
+  border-radius: 18px; backdrop-filter: blur(12px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+  text-align: center;
+}
+.glowing-section input,
+.glowing-section select,
+.glowing-section button {
+  margin: 12px 0; width: 80%; max-width:320px;
+  padding:12px; border:none; border-radius:8px;
+}
+.glowing-section button {
+  background: linear-gradient(90deg,#ff4d4d,#ff0080);
+  color:#fff; cursor:pointer;
+}
+
+/* — Test-Section Layout — */
+.test-buttons {
+  text-align:center; margin:40px 0;
+}
+.test-buttons button {
+  margin:0 8px; padding:12px 24px;
+  background:#222; color:#fff; border:none; border-radius:10px;
+  transition:0.3s ease;
+}
+.test-buttons button:hover {
+  background:#ff4d4d; color:#0d0d0d;
+}
