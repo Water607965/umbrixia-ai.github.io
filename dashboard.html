@@ -973,6 +973,73 @@ type();
   elaScores.push(typeof data.ela === "number" ? data.ela : 0);
 });
 
+<script>
+// — SECTION TOGGLE —
+function showSection(id) {
+  document.querySelectorAll('.test-section').forEach(s => s.style.display = 'none');
+  document.getElementById(id).style.display = 'block';
+}
+
+// — CHART.JS PERFORMANCE TRENDS —
+auth.onAuthStateChanged(async user => {
+  if (!user) return;
+  const snap = await db.collection('users')
+    .doc(user.uid).collection('scores')
+    .orderBy('timestamp','asc').get();
+  const labels = [], math = [], ela = [];
+  snap.forEach((doc,i) => {
+    labels.push(`Test ${i+1}`);
+    math.push(doc.data().math || 0);
+    ela.push(doc.data().ela || 0);
+  });
+  new Chart(document.getElementById('improvementChart'), {
+    type: 'line',
+    data: { labels, datasets: [
+      { label: 'Math', data: math },
+      { label: 'ELA',  data: ela  }
+    ] }
+  });
+});
+
+// — AI ADMISSIONS PREDICTOR —
+async function runPrediction() {
+  const school = document.getElementById('dream-school').value;
+  const grade  = document.getElementById('user-grade').value;
+  const user   = auth.currentUser;
+  if (!user) return alert('🚪 Please log in first.');
+
+  const userDoc = await db.collection('users').doc(user.uid).get();
+  if (!userDoc.exists || !userDoc.data().hasTakenTest) {
+    document.getElementById('chance').innerText = '❌ Take a practice test first.';
+    document.getElementById('justification').innerText = '📘 AI needs test results.';
+    document.getElementById('suggestion').innerText    = '📝 Start SHSAT, ISEE or SAT.';
+    return;
+  }
+
+  try {
+    const resp = await fetch('/api/predict', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        school,
+        grade,
+        essays:          userDoc.data().essays || [],
+        recommendations: userDoc.data().recommendations || [],
+        transcripts:     userDoc.data().transcripts || [],
+        extracurriculars:userDoc.data().extracurriculars || []
+      })
+    });
+    if (!resp.ok) throw new Error(await resp.text());
+    const { chance, justification, suggestion } = await resp.json();
+    document.getElementById('chance').innerText        = `🔮 ${chance}% chance`;
+    document.getElementById('justification').innerText = justification;
+    document.getElementById('suggestion').innerText    = suggestion;
+  } catch (e) {
+    console.error(e);
+    alert('⚠️ AI predictor failed—try again later.');
+  }
+}
+</script>
 
 
 </script>
