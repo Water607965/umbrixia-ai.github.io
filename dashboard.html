@@ -9,7 +9,17 @@
    <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-auth-compat.js"></script>
    <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore-compat.js"></script>
    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
- 
+
+  <script>
+  // Redirect to login.html if not authenticated
+  firebase.auth().onAuthStateChanged(user => {
+    if (!user) {
+      alert("❌ You must be logged in to access Umbrixia AI.");
+      window.location.href = "login.html";
+    }
+  });
+</script>
+
  
  
  
@@ -401,6 +411,15 @@ h2.section-title {
   </div>
 </section>
 
+    <section class="dashboard-demographics glass-card fade-in">
+  <h2 class="section-title">👥 Demographic Trends</h2>
+  <p class="hero-subtext">See how acceptance rates vary by demographic group.</p>
+  <div class="chart-container">
+    <canvas id="demographicChart"></canvas>
+  </div>
+</section>
+
+
 
      <!-- Line Chart -->
      <div class="chart-box">
@@ -538,6 +557,42 @@ if (!topicData || Object.keys(topicData).length === 0) {
     <option value="11">11th Grade</option>
     <option value="12">12th Grade</option>
   </select>
+          <div class="upload-section">
+    <h3>📂 Upload Your Materials</h3>
+    <label>Essays (PDF or TXT):</label>
+    <input type="file" id="upload-essays" multiple accept=".pdf,.txt" />
+    <label>Recommendation Letters:</label>
+    <input type="file" id="upload-recs" multiple accept=".pdf,.txt" />
+    <label>Transcripts:</label>
+    <input type="file" id="upload-transcripts" multiple accept=".pdf,.txt" />
+    <label>Extracurriculars (images or PDF):</label>
+    <input type="file" id="upload-extras" multiple accept=".pdf,.jpg,.png" />
+  </div>
+<script>
+  // Upload handlers
+  async function uploadFiles(field, files) {
+    const uid = firebase.auth().currentUser.uid;
+    const data = await Promise.all(Array.from(files).map(async file => {
+      const text = await file.text();           // for PDFs you’d convert to text server-side
+      return text;
+    }));
+    return firebase.firestore()
+      .collection("users")
+      .doc(uid)
+      .set({ [field]: data }, { merge: true });
+  }
+
+  // Wire up the inputs
+  document.getElementById("upload-essays")
+    .addEventListener("change", e => uploadFiles("essays", e.target.files));
+  document.getElementById("upload-recs")
+    .addEventListener("change", e => uploadFiles("recommendations", e.target.files));
+  document.getElementById("upload-transcripts")
+    .addEventListener("change", e => uploadFiles("transcripts", e.target.files));
+  document.getElementById("upload-extras")
+    .addEventListener("change", e => uploadFiles("extracurriculars", e.target.files));
+</script>
+
   <button class="btn-glow" onclick="runPrediction()">Predict</button>
 
   <div id="prediction-output" class="prediction-result">
@@ -1139,6 +1194,40 @@ async function runPrediction() {
     suggestionEl.textContent    = "";
   }
 }
+</script>
+
+      <script>
+  async function drawDemographics() {
+    const resp = await fetch(
+      "https://umbrixia-ai-github-io.onrender.com/api/demographic-trends"
+    );
+    if (!resp.ok) return console.error("Demo trends failed");
+
+    const data = await resp.json();
+    // data format: { labels: [...], values: [...] }
+    new Chart(document.getElementById("demographicChart"), {
+      type: "bar",
+      data: {
+        labels: data.labels,
+        datasets: [{
+          label: "Acceptance Rate (%)",
+          data: data.values,
+          backgroundColor: "#4caf50"
+        }]
+      },
+      options: {
+        responsive: true,
+        scales: {
+          y: { beginAtZero: true, max: 100 }
+        }
+      }
+    });
+  }
+
+  // Run on page load once logged in
+  firebase.auth().onAuthStateChanged(user => {
+    if (user) drawDemographics();
+  });
 </script>
 
 
