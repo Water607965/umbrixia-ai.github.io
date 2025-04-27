@@ -547,6 +547,40 @@ if (!topicData || Object.keys(topicData).length === 0) {
   </div>
 </section>
 
+    <script>
+async function runPrediction() {
+  const school = document.getElementById("dream-school").value.trim();
+  const grade  = document.getElementById("user-grade").value;
+  const chanceEl       = document.getElementById("chance");
+  const justificationEl = document.getElementById("justification");
+  const suggestionEl   = document.getElementById("suggestion");
+
+  // Show a loading message
+  chanceEl.textContent        = "🔄 Predicting your chance…";
+  justificationEl.textContent = "";
+  suggestionEl.textContent    = "";
+
+  try {
+    const resp = await fetch("/api/admissions-predict", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ school, grade })
+    });
+    if (!resp.ok) throw new Error(await resp.text());
+
+    const { chance, justification, suggestion } = await resp.json();
+    chanceEl.textContent        = `🎯 ${chance}% chance`;
+    justificationEl.textContent = `🧠 ${justification}`;
+    suggestionEl.textContent    = `📈 ${suggestion}`;
+  } catch (err) {
+    chanceEl.textContent        = "❌ Prediction failed.";
+    justificationEl.textContent = err.message;
+    suggestionEl.textContent    = "";
+  }
+}
+</script>
+
+
 
  
  
