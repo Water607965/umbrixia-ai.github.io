@@ -561,7 +561,14 @@ async function runPrediction() {
   suggestionEl.textContent    = "";
 
   try {
-    const resp = await fetch("/api/admissions-predict", {
+    const resp = await fetch(
+  "https://umbrixia-ai-github-io.onrender.com/api/admissions-predict",
+  {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ school, grade, essays, recommendations, transcripts, extracurriculars })
+  }
+);
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ school, grade })
@@ -1071,6 +1078,68 @@ async function runPrediction() {
 
 </script>
 
+<script>
+async function runPrediction() {
+  const school = document.getElementById("dream-school").value.trim();
+  const grade  = document.getElementById("user-grade").value;
+  const essays = userDoc.data()?.essays  || [];
+  const recs   = userDoc.data()?.recommendations || [];
+  const trans  = userDoc.data()?.transcripts || [];
+  const extras = userDoc.data()?.extracurriculars || [];
+
+  // ── AUTO-KILL IF NO DATA ──
+  if (
+    essays.length === 0 &&
+    recs.length   === 0 &&
+    trans.length  === 0 &&
+    extras.length === 0
+  ) {
+    // You can replace this alert with a custom modal if you have one
+    alert(
+      "⚠️ You haven’t taken any tests or uploaded your essays/recs/transcripts yet.\n" +
+      "Please complete a practice test and upload your documents before predicting."
+    );
+    return;  // stop here
+  }
+
+  const chanceEl        = document.getElementById("chance");
+  const justificationEl = document.getElementById("justification");
+  const suggestionEl    = document.getElementById("suggestion");
+
+  // show loading
+  chanceEl.textContent        = "🔄 Predicting your chance…";
+  justificationEl.textContent = "";
+  suggestionEl.textContent    = "";
+
+  try {
+    const resp = await fetch(
+      "https://umbrixia-ai-github-io.onrender.com/api/admissions-predict",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          school,
+          grade,
+          essays,
+          recommendations: recs,
+          transcripts:     trans,
+          extracurriculars: extras
+        })
+      }
+    );
+    if (!resp.ok) throw new Error(await resp.text());
+
+    const { chance, justification, suggestion } = await resp.json();
+    chanceEl.textContent        = `🎯 ${chance}`;
+    justificationEl.textContent = `🧠 ${justification}`;
+    suggestionEl.textContent    = `📈 ${suggestion}`;
+  } catch (err) {
+    chanceEl.textContent        = "❌ Prediction failed.";
+    justificationEl.textContent = err.message;
+    suggestionEl.textContent    = "";
+  }
+}
+</script>
 
 
  </body>
