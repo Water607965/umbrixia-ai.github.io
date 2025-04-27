@@ -776,6 +776,31 @@ if (!topicData || Object.keys(topicData).length === 0) {
      document.getElementById("suggestion").innerText = "📝 Please take a SHSAT, ISEE, or SAT test first.";
      return;
    }
+
+  // ── Real AI Predictor Call ──
+try {
+  const resp = await fetch("/api/predict", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      school,
+      grade,
+      essays:           userDoc.data().essays,
+      recommendations:  userDoc.data().recommendations,
+      transcripts:      userDoc.data().transcripts,
+      extracurriculars: userDoc.data().extracurriculars
+    })
+  });
+  if (!resp.ok) throw new Error(await resp.text());
+  const data = await resp.json();
+  document.getElementById("chance").innerText        = `🔮 ${data.chance}% chance`;
+  document.getElementById("justification").innerText = data.justification;
+  document.getElementById("suggestion").innerText    = data.suggestion;
+} catch (err) {
+  console.error("Prediction error:", err);
+  alert("⚠️ Could not reach the AI predictor. Try again later.");
+}
+
  
    const res = await fetch("https://your-render-url.onrender.com/predict", {
      method: "POST",
@@ -868,11 +893,20 @@ firebase.auth().onAuthStateChanged((user) => {
  
      auth.onAuthStateChanged((user) => {
   if (!user) {
-    // show a friendly popup, then redirect
-    alert("❌ You must be logged in to access Umbrixia AI. Redirecting now...");
-    window.location.href = "login.html";
-    return;
-  } else {
+  // Show a warning, then send them to login
+  alert("❌ You must be logged in to access Umbrixia AI. Redirecting now…");
+  window.location.href = "login.html";
+  return;
+} else {
+  if (universalLoader) universalLoader.style.display = "none";
+  if (loginScreen)    loginScreen.style.display    = "none";
+
+  // ── Force these key panels visible so they never fade out ──
+  document.querySelectorAll(
+    ".dashboard-analytics, .performance-glass-panel, .glass-card.fade-in"
+  ).forEach(el => el.classList.add("visible"));
+}
+
 
          if (universalLoader) universalLoader.style.display = "none";
          if (loginScreen) loginScreen.style.display = "none";
