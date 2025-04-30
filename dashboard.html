@@ -500,6 +500,73 @@ h2.section-title {
   <canvas id="byTestChart"></canvas>
 </section>
 
+    <section class="glass-card fade-in">
+  <h2 class="section-title">🎯 Your Percentile Rank</h2>
+  <p id="percentile-text">Calculating…</p>
+</section>
+
+<script>
+  async function calculatePercentile() {
+    const uid = firebase.auth().currentUser.uid;
+    // Fetch all users' latest scores
+    const allSnap = await firebase.firestore().collectionGroup("scores").get();
+    const allScores = allSnap.docs.map(d => d.data().score);
+
+    // Fetch your latest combined score (average of last SHSAT/ISEE/SAT)
+    const userSnap = await firebase.firestore()
+      .collection("users").doc(uid).collection("scores")
+      .orderBy("timestamp","desc").limit(3).get(); // last one of each type
+    const yourScores = userSnap.docs.map(d => d.data().score);
+    if (yourScores.length===0) {
+      return document.getElementById("percentile-text")
+        .innerText = "No scores yet. Take a test first!";
+    }
+    const yourAvg = yourScores.reduce((a,b)=>a+b,0)/yourScores.length;
+
+    // Compute percentile
+    const better = allScores.filter(s => s < yourAvg).length;
+    const percentile = Math.round((better / allScores.length) * 100);
+
+    document.getElementById("percentile-text")
+      .innerText = `You are in the top ${percentile}th percentile among all Umbrixia users!`;
+  }
+  firebase.auth().onAuthStateChanged(u => u && calculatePercentile());
+</script>
+
+    <section class="glass-card fade-in">
+  <h2 class="section-title">🔍 AI Test Focus</h2>
+  <p id="focus-recommendation">Generating recommendation…</p>
+</section>
+
+<script>
+  async function recommendFocus() {
+    const uid = firebase.auth().currentUser.uid;
+    const snap = await firebase.firestore()
+      .collection("users").doc(uid).collection("scores")
+      .orderBy("timestamp","asc").get();
+    const last = snap.docs[snap.docs.length-1]?.data();
+    if (!last) {
+      return document.getElementById("focus-recommendation")
+        .innerText = "No recent test data.";
+    }
+    const prompt = `
+Given this student’s last test result:
+Type: ${last.type.toUpperCase()}, Score: ${last.score}
+What single area should they focus on next (e.g. math, reading, time management) and why?
+Respond in one sentence.
+`;
+    const comp = await openai.createChatCompletion({
+      model: "gpt-4",
+      messages:[{role:"user",content:prompt}]
+    });
+    document.getElementById("focus-recommendation").innerText =
+      comp.data.choices[0].message.content.trim();
+  }
+  firebase.auth().onAuthStateChanged(u => u && recommendFocus());
+</script>
+
+
+
 <script>
   async function drawByTestChart() {
     const uid = firebase.auth().currentUser.uid;
