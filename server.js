@@ -1,3 +1,13 @@
+// Firestore setup
+const admin = require('firebase-admin');
+
+admin.initializeApp({
+  credential: admin.credential.cert(require('./serviceAccountKey.json'))
+});
+
+const db = admin.firestore();
+
+
 // ——————————————
 // 0️⃣ Firestore setup using your service account
 const { initializeApp, cert } = require('firebase-admin/app');
