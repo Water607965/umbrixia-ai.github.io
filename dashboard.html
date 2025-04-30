@@ -829,6 +829,41 @@ Respond in one sentence.
   <div id="flashcard-container"></div>
 </section>
 
+    <section class="glass-card fade-in">
+  <h2 class="section-title">📧 Draft Admissions Email</h2>
+  <input type="email" id="email-to" placeholder="Recipient email" />
+  <input type="text" id="email-subject" placeholder="Subject" />
+  <textarea id="email-points" rows="4"
+    placeholder="Key points, one per line"></textarea>
+  <button id="draft-email" class="btn-glow">Draft Email</button>
+  <div id="email-result" class="plan-result"></div>
+</section>
+
+<script>
+  document.getElementById('draft-email').onclick = async () => {
+    const to = document.getElementById('email-to').value.trim();
+    const subj = document.getElementById('email-subject').value.trim();
+    const pts = document.getElementById('email-points').value
+                .split('\n').map(l=>l.trim()).filter(l=>l);
+    if(!to||!subj||!pts.length) return alert('Fill all fields.');
+    const res = await fetch(
+      'https://umbrixia-ai-github-io.onrender.com/api/email-draft',
+      {
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({recipient:to,subject:subj,points:pts})
+      }
+    );
+    if(!res.ok) {
+      const err = await res.json();
+      return alert('Error: '+err.error);
+    }
+    const { body } = await res.json();
+    document.getElementById('email-result').innerText = body;
+  };
+</script>
+
+
 <script>
   document.getElementById("gen-flashcards").onclick = async () => {
     const text = document.getElementById("flashcard-source").value.trim();
