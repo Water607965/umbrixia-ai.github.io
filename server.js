@@ -311,3 +311,27 @@ Text:
   }
 });
 
+// ── Generate Google Calendar Event Link ──
+app.post("/api/calendar-event", (req, res) => {
+  const { title, date, duration } = req.body;
+  if (!title || !date || !duration) {
+    return res.status(400).json({ error: "Missing title, date or duration" });
+  }
+  // Build ICS parameters
+  const start = new Date(date).toISOString().replace(/[-:]/g, "").split(".")[0] + "Z";
+  const endDate = new Date(new Date(date).getTime() + duration*60000);
+  const end = endDate.toISOString().replace(/[-:]/g, "").split(".")[0] + "Z";
+  const ics = [
+    "BEGIN:VCALENDAR",
+    "VERSION:2.0",
+    "BEGIN:VEVENT",
+    `DTSTART:${start}`,
+    `DTEND:${end}`,
+    `SUMMARY:${title}`,
+    "END:VEVENT",
+    "END:VCALENDAR"
+  ].join("\n");
+  // Return data URI for download/link
+  const href = "data:text/calendar;charset=utf-8," + encodeURIComponent(ics);
+  res.json({ href });
+});
