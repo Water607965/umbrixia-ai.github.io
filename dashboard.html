@@ -89,6 +89,21 @@
 </script>
 
 
+  <script>
+  if ("webkitSpeechRecognition" in window) {
+    const recog = new webkitSpeechRecognition();
+    recog.continuous = false;
+    recog.onresult = e => {
+      const text = e.results[0][0].transcript;
+      document.getElementById("chat-input").value = text;
+      document.getElementById("send-chat").click();
+    };
+    document.addEventListener("keydown", e => {
+      if (e.key==="v" && e.altKey) recog.start();
+    });
+  }
+</script>
+
  
  
    <style>
@@ -1068,6 +1083,32 @@ document.getElementById("prediction-output").appendChild(shareBtn);
   <h2 class="section-title">🏆 Leaderboard</h2>
   <ol id="leaderboard"></ol>
 </section>
+
+        <section class="glass-card fade-in">
+  <h2 class="section-title">🏅 Your Badges</h2>
+  <div id="badge-container"></div>
+</section>
+
+<script>
+  async function loadBadges() {
+    const uid = firebase.auth().currentUser.uid;
+    const snap = await firebase.firestore()
+      .collection("users").doc(uid).collection("badges").get();
+    const cont = document.getElementById("badge-container");
+    cont.innerHTML = "";
+    snap.forEach(doc => {
+      const b = doc.data();
+      const img = document.createElement("img");
+      img.src = b.iconURL;
+      img.alt = b.name;
+      img.title = `${b.name}: ${b.description}`;
+      img.className = "badge-icon";
+      cont.appendChild(img);
+    });
+  }
+  firebase.auth().onAuthStateChanged(u => u && loadBadges());
+</script>
+
 
         <!-- Focus Sessions -->
 <section class="glass-card fade-in">
