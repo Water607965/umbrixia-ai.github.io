@@ -887,6 +887,63 @@ document.getElementById("prediction-output").appendChild(shareBtn);
   <canvas id="focusChart"></canvas>
 </section>
 
+        <section class="glass-card fade-in">
+  <h2 class="section-title">🗒️ Weekly Summary</h2>
+  <button id="generate-summary" class="btn-glow">Generate Weekly Summary</button>
+  <div id="weekly-summary-result" class="plan-result"></div>
+</section>
+
+<script>
+  document.getElementById("generate-summary").onclick = async () => {
+    const uid = firebase.auth().currentUser.uid;
+    // Fetch the last 7 scores from Firestore
+    const snap = await firebase
+      .firestore()
+      .collection("users")
+      .doc(uid)
+      .collection("scores")
+      .orderBy("timestamp", "desc")
+      .limit(7)
+      .get();
+
+    const scores = snap.docs.map(doc => {
+      const d = doc.data();
+      return { math: d.math || 0, ela: d.ela || 0, when: d.timestamp?.toDate()?.toLocaleDateString() };
+    }).reverse(); // chronological
+
+    if (scores.length === 0) {
+      return alert("⚠️ No test data found. Complete a test first.");
+    }
+
+    // Show loading
+    const resultEl = document.getElementById("weekly-summary-result");
+    resultEl.textContent = "🔄 Generating summary…";
+
+    try {
+      const resp = await fetch(
+        "https://umbrixia-ai-github-io.onrender.com/api/weekly-summary",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ scores })
+        }
+      );
+      if (!resp.ok) throw new Error(await resp.text());
+      const { summary, recommendations, motivation } = await resp.json();
+      resultEl.innerHTML = `
+        <h4>Summary:</h4><p>${summary}</p>
+        <h4>Recommendations:</h4>
+        <ul>${recommendations.map(r => `<li>${r}</li>`).join("")}</ul>
+        <h4>Motivation:</h4><p>${motivation}</p>
+      `;
+    } catch (e) {
+      resultEl.textContent = "❌ Failed to generate summary.";
+      console.error(e);
+    }
+  };
+</script>
+
+
 <script>
   let focusStart = null;
   // Track when user toggles Focus Mode (F key)
