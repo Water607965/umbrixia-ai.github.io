@@ -787,6 +787,30 @@ async function runPrediction() {
       timestamp: firebase.firestore.FieldValue.serverTimestamp()
     });
 
+   // After displaying the AI result:
+const shareBtn = document.createElement("button");
+shareBtn.className = "btn-glow";
+shareBtn.textContent = "Share to Discord";
+shareBtn.onclick = async () => {
+  const school = document.getElementById("dream-school").value;
+  const chance = document.getElementById("chance").innerText;
+  const just   = document.getElementById("justification").innerText;
+  const sug    = document.getElementById("suggestion").innerText;
+  try {
+    await fetch("YOUR_DISCORD_WEBHOOK_URL", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        content: `**Umbrixia Prediction**\nSchool: ${school}\n${chance}\n${just}\n${sug}`
+      })
+    });
+    alert("✅ Shared to Discord!");
+  } catch (e) {
+    alert("⚠️ Failed to share: " + e.message);
+  }
+};
+document.getElementById("prediction-output").appendChild(shareBtn);
+
   }
 }
 </script>
