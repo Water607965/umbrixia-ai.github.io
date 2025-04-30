@@ -484,6 +484,38 @@ h2.section-title {
   </div>
 </section>
 
+    <section class="glass-card fade-in">
+  <h2 class="section-title">📝 Essay Feedback</h2>
+  <textarea id="essay-input" rows="8" placeholder="Paste your essay here..."></textarea>
+  <button id="essay-feedback-btn" class="btn-glow">Get Feedback</button>
+  <div id="essay-feedback-result" class="feedback-result"></div>
+</section>
+
+<script>
+  document.getElementById("essay-feedback-btn").onclick = async () => {
+    const essay = document.getElementById("essay-input").value.trim();
+    if (!essay) return alert("Please paste your essay.");
+    const res = await fetch(
+      "https://umbrixia-ai-github-io.onrender.com/api/essay-feedback",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ essay })
+      }
+    );
+    if (!res.ok) {
+      const err = await res.json();
+      return alert("Error: " + err.error);
+    }
+    const { feedback, suggestions } = await res.json();
+    document.getElementById("essay-feedback-result").innerHTML = `
+      <h4>Feedback:</h4><p>${feedback}</p>
+      <h4>Suggestions:</h4><p>${suggestions}</p>
+    `;
+  };
+</script>
+
+
 <script>
   document.getElementById("send-chat").onclick = async () => {
     const input = document.getElementById("chat-input");
