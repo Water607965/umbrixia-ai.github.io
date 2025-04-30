@@ -615,6 +615,40 @@ h2.section-title {
 </section>
 
     <section class="glass-card fade-in">
+  <h2 class="section-title">🕸️ Topic Radar</h2>
+  <canvas id="topicRadar"></canvas>
+</section>
+
+<script>
+  async function drawTopicRadar() {
+    const uid = firebase.auth().currentUser.uid;
+    // get last test's topic breakdown
+    const snap = await firebase.firestore()
+      .collection('users').doc(uid).collection('scores')
+      .orderBy('timestamp','desc').limit(1).get();
+    const data = snap.docs[0]?.data()?.topics || {};
+    const labels = Object.keys(data);
+    const values = Object.values(data);
+
+    new Chart(document.getElementById('topicRadar'), {
+      type: 'radar',
+      data: {
+        labels,
+        datasets: [{
+          label: 'Topic Mastery',
+          data: values,
+          borderColor: '#ff9900',
+          backgroundColor: 'rgba(255,153,0,0.2)'
+        }]
+      },
+      options: { responsive: true, scales: { r: { beginAtZero:true } } }
+    });
+  }
+  firebase.auth().onAuthStateChanged(u => u && drawTopicRadar());
+</script>
+
+
+    <section class="glass-card fade-in">
   <h2 class="section-title">🎯 Your Percentile Rank</h2>
   <p id="percentile-text">Calculating…</p>
 </section>
