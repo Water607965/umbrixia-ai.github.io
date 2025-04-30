@@ -1,3 +1,35 @@
+// ——————————————
+// 0️⃣ Firestore setup (if not already)
+const { initializeApp, applicationDefault } = require('firebase-admin/app');
+const { getFirestore }            = require('firebase-admin/firestore');
+
+initializeApp({
+  credential: applicationDefault()
+});
+const db = getFirestore();
+
+// ——————————————
+// 1️⃣ Kill-trigger middleware
+app.use('/api', async (req, res, next) => {
+  // You must be sending a userId in headers or body:
+  const userId = req.headers['x-user-id'] || req.body.userId;
+  if (!userId) {
+    return res.status(401).json({ error: 'Missing userId' });
+  }
+  // Fetch user doc
+  const userDoc = await db.collection('users').doc(userId).get();
+  const data    = userDoc.data() || {};
+  if (!data.hasTakenTest) {
+    // Kill the request if they've never done a practice test.
+    return res.status(403).json({
+      error: 'You must complete at least one practice test before using the API.'
+    });
+  }
+  // OK, let it continue to the real handler
+  next();
+});
+
+
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
