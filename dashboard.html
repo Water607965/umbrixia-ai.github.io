@@ -601,6 +601,14 @@ if (!topicData || Object.keys(topicData).length === 0) {
     .addEventListener("change", e => uploadFiles("extracurriculars", e.target.files));
 </script>
 
+        <div class="upload-section">
+  <h3>📂 Upload Your Materials</h3>
+  <input type="file" id="upload-essays" multiple accept=".pdf,.txt" />
+  <input type="file" id="upload-recs" multiple accept=".pdf,.txt" />
+  <input type="file" id="upload-transcripts" multiple accept=".pdf,.txt" />
+  <input type="file" id="upload-extras" multiple accept=".pdf,.jpg,.png" />
+</div>
+
   <button class="btn-glow" onclick="runPrediction()">Predict</button>
 
   <div id="prediction-output" class="prediction-result">
