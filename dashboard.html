@@ -675,6 +675,46 @@ async function runPrediction() {
 }
 </script>
 
+        <section class="glass-card fade-in">
+  <h2 class="section-title">🕑 Prediction History</h2>
+  <table id="prediction-history">
+    <thead>
+      <tr><th>Date</th><th>School</th><th>Chance</th></tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+</section>
+
+<script>
+async function loadPredictionHistory() {
+  const uid = firebase.auth().currentUser.uid;
+  const snapshot = await firebase.firestore()
+    .collection("users")
+    .doc(uid)
+    .collection("predictions")
+    .orderBy("timestamp", "desc")
+    .get();
+
+  const tbody = document.querySelector("#prediction-history tbody");
+  tbody.innerHTML = "";
+  snapshot.forEach(doc => {
+    const { timestamp, school, chance } = doc.data();
+    const date = timestamp
+      ? new Date(timestamp.seconds * 1000).toLocaleString()
+      : "–";
+    const tr = document.createElement("tr");
+    tr.innerHTML = `<td>${date}</td><td>${school}</td><td>${chance}</td>`;
+    tbody.appendChild(tr);
+  });
+}
+
+// Load history once the user is authenticated
+firebase.auth().onAuthStateChanged(u => {
+  if (u) loadPredictionHistory();
+});
+</script>
+
+
 
   <button class="btn-glow" onclick="runPrediction()">Predict</button>
 
