@@ -775,6 +775,71 @@ async function runPrediction() {
   <ol id="leaderboard"></ol>
 </section>
 
+        <!-- Focus Sessions -->
+<section class="glass-card fade-in">
+  <h2 class="section-title">⏳ Focus Sessions</h2>
+  <canvas id="focusChart"></canvas>
+</section>
+
+<script>
+  let focusStart = null;
+  // Track when user toggles Focus Mode (F key)
+  document.addEventListener("keydown", (e) => {
+    if (e.key.toLowerCase() === "f") {
+      if (!document.body.classList.contains("focus-mode")) {
+        focusStart = new Date();
+      } else {
+        const duration = (new Date() - focusStart) / 1000; // seconds
+        firebase
+          .firestore()
+          .collection("users")
+          .doc(firebase.auth().currentUser.uid)
+          .collection("focusSessions")
+          .add({
+            start: firebase.firestore.Timestamp.fromDate(focusStart),
+            duration,
+          });
+      }
+    }
+  });
+
+  // Draw the focus chart
+  async function drawFocusChart() {
+    const snap = await firebase
+      .firestore()
+      .collection("users")
+      .doc(firebase.auth().currentUser.uid)
+      .collection("focusSessions")
+      .orderBy("start", "asc")
+      .get();
+    const labels = [];
+    const data = [];
+    snap.forEach((doc) => {
+      const { start, duration } = doc.data();
+      labels.push(new Date(start.seconds * 1000).toLocaleDateString());
+      data.push(duration / 60); // minutes
+    });
+    new Chart(document.getElementById("focusChart"), {
+      type: "line",
+      data: {
+        labels,
+        datasets: [
+          {
+            label: "Focus Time (min)",
+            data,
+            borderColor: "#2196f3",
+            fill: false,
+            tension: 0.2,
+          },
+        ],
+      },
+      options: { responsive: true },
+    });
+  }
+  firebase.auth().onAuthStateChanged((u) => u && drawFocusChart());
+</script>
+
+
 <script>
   // Award 10 points for every prediction (append inside your runPrediction() after saving)
   // await firebase.firestore().collection('users').doc(uid)
