@@ -475,6 +475,42 @@ h2.section-title {
   </div>
 </section>
 
+    <section class="glass-card fade-in">
+  <h2 class="section-title">💬 AI Study Chat</h2>
+  <div id="chat-window" class="chat-window"></div>
+  <div class="chat-input-wrapper">
+    <input type="text" id="chat-input" placeholder="Ask your study question..." />
+    <button id="send-chat" class="btn-glow">Send</button>
+  </div>
+</section>
+
+<script>
+  document.getElementById("send-chat").onclick = async () => {
+    const input = document.getElementById("chat-input");
+    const chatWindow = document.getElementById("chat-window");
+    const msg = input.value.trim();
+    if (!msg) return;
+    chatWindow.innerHTML += `<p class="message user">${msg}</p>`;
+    input.value = "";
+    try {
+      const res = await fetch(
+        "https://umbrixia-ai-github-io.onrender.com/chat",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ message: msg }),
+        }
+      );
+      const { response } = await res.json();
+      chatWindow.innerHTML += `<p class="message bot">${response}</p>`;
+      chatWindow.scrollTop = chatWindow.scrollHeight;
+    } catch (e) {
+      chatWindow.innerHTML += `<p class="message bot">Error: ${e.message}</p>`;
+    }
+  };
+</script>
+
+
 
 
      <!-- Line Chart -->
@@ -732,6 +768,38 @@ async function runPrediction() {
     <tbody></tbody>
   </table>
 </section>
+
+        <!-- Leaderboard -->
+<section class="glass-card fade-in">
+  <h2 class="section-title">🏆 Leaderboard</h2>
+  <ol id="leaderboard"></ol>
+</section>
+
+<script>
+  // Award 10 points for every prediction (append inside your runPrediction() after saving)
+  // await firebase.firestore().collection('users').doc(uid)
+  //   .set({ points: firebase.firestore.FieldValue.increment(10) }, { merge: true });
+
+  // Load top 5 users by points
+  async function loadLeaderboard() {
+    const snap = await firebase
+      .firestore()
+      .collection("users")
+      .orderBy("points", "desc")
+      .limit(5)
+      .get();
+    const ol = document.getElementById("leaderboard");
+    ol.innerHTML = "";
+    snap.forEach((doc) => {
+      const d = doc.data();
+      const li = document.createElement("li");
+      li.textContent = `${d.displayName || doc.id}: ${d.points || 0} pts`;
+      ol.appendChild(li);
+    });
+  }
+  firebase.auth().onAuthStateChanged((u) => u && loadLeaderboard());
+</script>
+
 
         <section class="glass-card fade-in">
   <h2 class="section-title">⏰ Study Reminders</h2>
