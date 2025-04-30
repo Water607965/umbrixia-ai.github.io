@@ -383,3 +383,41 @@ Return only the email body.
     return res.status(500).json({ error:'Email draft failed' });
   }
 });
+
+// ── AI Document Search ──
+app.post("/api/search-docs", async (req, res) => {
+  const { uid, query } = req.body;
+  if (!uid || !query) return res.status(400).json({ error: "Missing uid or query." });
+
+  // Fetch all user-uploaded text fields
+  const userSnap = await db.collection("users").doc(uid).get();
+  const data = userSnap.data() || {};
+  const docs = [
+    ...(data.essays || []),
+    ...(data.recommendations || []),
+    ...(data.transcripts || []),
+    ...(data.extracurriculars || [])
+  ].join("\n\n---\n\n");
+
+  const prompt = `
+You are a document search assistant.
+Search through the following USER CONTENT and return the most relevant excerpts for: "${query}"
+USER CONTENT:
+${docs}
+Return a JSON array of up to 3 objects: [{ excerpt: "...", source: "essay/recommendation/transcript/extracurricular" }, ...]
+`;
+  try {
+    const ai = await client.chat.completions.create({
+      model: "gpt-4",
+      messages: [{ role: "user", content: prompt }]
+    });
+    const raw = ai.choices[0].message.content;
+    const m = raw.match(/\[.*\]/s);
+    const results = m ? JSON.parse(m[0]) : [];
+    res.json({ results });
+  } catch (e) {
+    console.error("Search Docs Error:", e);
+    res.status(500).json({ error: "Search failed." });
+  }
+});
+
