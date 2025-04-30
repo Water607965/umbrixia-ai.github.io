@@ -113,6 +113,71 @@ Respond _only_ with valid JSON in this exact shape:
   }
 });
 
+// ── Admissions Predictor (AI-generated) ──
+app.post("/api/admissions-predict", async (req, res) => {
+  const {
+    school,
+    grade,
+    essays,
+    recommendations,
+    transcripts,
+    extracurriculars
+  } = req.body;
+
+  // Build GPT-4 prompt
+  const prompt = `
+A student in grade ${grade} is applying to ${school}.
+We have their essays, recommendation letters, transcripts, and extracurriculars.
+1. What is their predicted chance (%) of acceptance?
+2. Why?
+3. What should they focus on to improve their chances?
+
+Respond with ONLY valid JSON:
+{
+  "chance": "XX%",
+  "justification": "...",
+  "suggestion": "..."
+}
+`;
+
+  try {
+    const completion = await openai.createChatCompletion({
+      model: "gpt-4",
+      messages: [{ role: "user", content: prompt }]
+    });
+    const raw = completion.data.choices[0].message.content;
+    const match = raw.match(/{[\s\S]*}/);
+    if (!match) throw new Error("AI returned no JSON");
+    return res.json(JSON.parse(match[0]));
+  } catch (err) {
+    console.error("Admissions Error:", err);
+    return res.status(500).json({ error: "Prediction failed." });
+  }
+});
+
+// ── Demographic Trends (AI-generated) ──
+app.get("/api/demographic-trends", async (req, res) => {
+  const prompt = `
+Provide acceptance-rate data by demographic groups:
+All Students, STEM Majors, Humanities, URM, International.
+Respond in JSON:
+{ "labels": [...], "values": [...] }
+`;
+  try {
+    const completion = await openai.createChatCompletion({
+      model: "gpt-4",
+      messages: [{ role: "user", content: prompt }]
+    });
+    const raw = completion.data.choices[0].message.content;
+    const match = raw.match(/{[\s\S]*}/);
+    if (!match) throw new Error("AI returned no JSON");
+    return res.json(JSON.parse(match[0]));
+  } catch (err) {
+    console.error("Demographics Error:", err);
+    return res.status(500).json({ error: "Failed to fetch demographics." });
+  }
+});
+
 
 // Start the server
 const PORT = process.env.PORT || 5000;
