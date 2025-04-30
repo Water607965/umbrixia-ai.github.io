@@ -243,3 +243,41 @@ Generate a 7-day study plan as valid JSON:
   }
 });
 
+// ── Weekly Performance Summary ──
+app.post("/api/weekly-summary", async (req, res) => {
+  const { scores } = req.body;
+  if (!Array.isArray(scores) || scores.length === 0) {
+    return res.status(400).json({ error: "No scores provided." });
+  }
+
+  // Build a prompt summarizing last 7 scores
+  const prompt = `
+Here are the student's last test results (Math vs. ELA) in chronological order:
+${JSON.stringify(scores, null, 2)}
+
+1. Provide a concise summary of their strengths and weaknesses this week.
+2. Recommend 3 actionable steps for next week.
+3. Encourage them with a motivational closing remark.
+
+Respond with ONLY valid JSON:
+{
+  "summary": "...",
+  "recommendations": ["...", "...", "..."],
+  "motivation": "..."
+}
+`;
+
+  try {
+    const completion = await openai.createChatCompletion({
+      model: "gpt-4",
+      messages: [{ role: "user", content: prompt }]
+    });
+    const raw = completion.data.choices[0].message.content;
+    const match = raw.match(/{[\s\S]*}/);
+    if (!match) throw new Error("No JSON in AI response");
+    return res.json(JSON.parse(match[0]));
+  } catch (err) {
+    console.error("Weekly Summary Error:", err);
+    return res.status(500).json({ error: "Weekly summary generation failed." });
+  }
+});
