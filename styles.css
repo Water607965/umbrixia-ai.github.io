@@ -9698,3 +9698,20 @@ body.light-mode .module-card {
   touch-action: none;
 }
 
+/* Grammar Checker */
+#grammar-input {
+  width:100%;
+  background:#121212;
+  border:1px solid #333;
+  padding:0.75rem;
+  border-radius:6px;
+  color:white;
+  margin-bottom:0.5rem;
+}
+.proof-result {
+  background:#111;
+  border:1px solid #333;
+  padding:1rem;
+  border-radius:6px;
+  margin-top:0.5rem;
+}
