@@ -281,3 +281,33 @@ Respond with ONLY valid JSON:
     return res.status(500).json({ error: "Weekly summary generation failed." });
   }
 });
+
+// ── Grammar Check Endpoint ──
+app.post("/api/grammar-check", async (req, res) => {
+  const { text } = req.body;
+  if (!text) return res.status(400).json({ error: "No text provided." });
+
+  const prompt = `
+You are a world-class proofreader.
+Correct grammar, punctuation, and style in this text.
+Return ONLY JSON:
+{ "corrected": "…", "explanation": "…" }
+Text:
+"""${text}"""
+`;
+
+  try {
+    const completion = await openai.createChatCompletion({
+      model: "gpt-4",
+      messages: [{ role: "user", content: prompt }]
+    });
+    const raw = completion.data.choices[0].message.content;
+    const match = raw.match(/{[\s\S]*}/);
+    if (!match) throw new Error("No JSON returned");
+    return res.json(JSON.parse(match[0]));
+  } catch (err) {
+    console.error("Grammar Check Error:", err);
+    return res.status(500).json({ error: "Grammar check failed." });
+  }
+});
+
