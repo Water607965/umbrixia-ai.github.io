@@ -687,6 +687,20 @@ Respond in one sentence.
   firebase.auth().onAuthStateChanged(u => u && drawByTestChart());
 </script>
 
+    <button id="export-pdf" class="btn-glow">Export Dashboard as PDF</button>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script>
+  document.getElementById("export-pdf").onclick = async () => {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF({ unit:"px", format:"a4" });
+    await doc.html(document.body, {
+      callback: () => doc.save("Umbrixia_Dashboard.pdf"),
+      x:10, y:10, width: 800
+    });
+  };
+</script>
+
+
 
     <section class="glass-card fade-in">
   <h2 class="section-title">💬 AI Study Chat</h2>
@@ -753,6 +767,34 @@ Format:
   <button id="generate-plan" class="btn-glow">Generate Plan</button>
   <pre id="study-plan-result" class="plan-result"></pre>
 </section>
+
+    <section class="glass-card fade-in">
+  <h2 class="section-title">🚀 Multi-Week Path</h2>
+  <input type="text" id="lp-goal" placeholder="Your goal (e.g. 700 SAT)" />
+  <input type="number" id="lp-weeks" placeholder="Weeks" min="1" />
+  <button id="gen-path" class="btn-glow">Generate Path</button>
+  <pre id="lp-result" class="plan-result"></pre>
+</section>
+
+<script>
+  document.getElementById("gen-path").onclick = async () => {
+    const goal  = document.getElementById("lp-goal").value.trim();
+    const weeks = parseInt(document.getElementById("lp-weeks").value,10);
+    if (!goal||!weeks) return alert("Enter goal and weeks.");
+    const res = await fetch(
+      "https://umbrixia-ai-github-io.onrender.com/api/learning-path",
+      {
+        method:"POST",
+        headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({goal,weeks})
+      }
+    );
+    const { path } = await res.json();
+    document.getElementById("lp-result").textContent =
+      JSON.stringify(path,null,2);
+  };
+</script>
+
 
     <section class="glass-card fade-in">
   <h2 class="section-title">✍️ Grammar Checker</h2>
@@ -2152,6 +2194,7 @@ firebase.auth().onAuthStateChanged(u => u && drawDemographics());
   });
 </script>
 
+      
 
  </body>
  </html>
