@@ -9734,3 +9734,9 @@ body.light-mode .module-card {
   color:#fff;
   cursor:move;
 }
+
+/* PDF Export */
+#export-pdf {
+  margin-top:1rem;
+}
+
