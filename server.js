@@ -88,11 +88,13 @@ require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const { OpenAI } = require('openai');
+const admin = require('firebase-admin');const serviceAccount = require('./serviceAccountKey.json');admin.initializeApp({  credential: admin.credential.cert(serviceAccount)});const db = admin.firestore();
 
 // Initialize Express app
 const app = express();
 app.use(express.json());              // Parse incoming JSON
 app.use(cors());                      // Enable CORS for all routes
+/* ── Kill-trigger middleware: block all /api routes until user hasTakenTest ── */app.use('/api', async (req, res, next) => {  const userId = req.headers['x-user-id'] || req.body.userId;  const userDoc = await db.collection('users').doc(userId).get();  const data = userDoc.data() || {};    return res.status(403).json({ error: 'You must complete at least one practice test before using the API.' });  }  next();});
 
 // Initialize OpenAI client
 const openai = new OpenAI({
