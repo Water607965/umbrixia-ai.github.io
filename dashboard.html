@@ -681,6 +681,26 @@ h2.section-title {
   firebase.auth().onAuthStateChanged(u => u && calculatePercentile());
 </script>
 
+    <button id="share-slack" class="btn-glow">Share Summary to Slack</button>
+
+<script>
+  document.getElementById('share-slack').onclick = async () => {
+    const resultEl = document.getElementById('weekly-summary-result');
+    const text = resultEl.textContent || resultEl.innerText;
+    if (!text) return alert('Generate summary first.');
+    try {
+      await fetch('YOUR_SLACK_WEBHOOK_URL', {
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({ text: `*Weekly Summary*\n${text}` })
+      });
+      alert('✅ Shared to Slack!');
+    } catch (e) {
+      alert('⚠️ Slack share failed: ' + e.message);
+    }
+  };
+</script>
+    
     <section class="glass-card fade-in">
   <h2 class="section-title">🔍 AI Test Focus</h2>
   <p id="focus-recommendation">Generating recommendation…</p>
@@ -751,6 +771,34 @@ Respond in one sentence.
 </script>
 
     <button id="export-pdf" class="btn-glow">Export Dashboard as PDF</button>
+    <button id="export-csv" class="btn-glow">Export Scores as CSV</button>
+
+<script>
+  document.getElementById('export-csv').onclick = async () => {
+    const uid = firebase.auth().currentUser.uid;
+    const snap = await firebase.firestore()
+      .collection('users').doc(uid).collection('scores')
+      .orderBy('timestamp','asc').get();
+
+    const rows = [['Date','Type','Math','ELA','Score']];
+    snap.docs.forEach(doc => {
+      const d = doc.data();
+      const date = d.timestamp?.toDate().toISOString().slice(0,10) || '';
+      const type = d.type || '';
+      const math = d.math||'';
+      const ela  = d.ela||'';
+      const score= d.score||'';
+      rows.push([date,type,math,ela,score]);
+    });
+    const csv = rows.map(r=>r.join(',')).join('\n');
+    const blob = new Blob([csv],{type:'text/csv'});
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = 'scores.csv';
+    link.click();
+  };
+</script>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 <script>
   document.getElementById("export-pdf").onclick = async () => {
