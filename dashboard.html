@@ -20,6 +20,26 @@
   });
 </script>
 
+  <script>
+  firebase.auth().onAuthStateChanged(async user => {
+    if (!user) return;
+    const doc = await firebase.firestore().collection("users").doc(user.uid).get();
+    const data = doc.data() || {};
+    // If no practice test taken AND no uploads, kick them out
+    if (
+      !data.hasTakenTest &&
+      (!Array.isArray(data.essays)           || data.essays.length === 0) &&
+      (!Array.isArray(data.recommendations)  || data.recommendations.length === 0) &&
+      (!Array.isArray(data.transcripts)      || data.transcripts.length === 0) &&
+      (!Array.isArray(data.extracurriculars) || data.extracurriculars.length === 0)
+    ) {
+      alert("⚠️ You must complete a practice test or upload materials before using Umbrixia.");
+      window.location.href = "practice.html";  // or whichever page lets them start tests
+    }
+  });
+</script>
+
+
  <script>
   firebase.auth().onAuthStateChanged(u => {
     if (!u) {
