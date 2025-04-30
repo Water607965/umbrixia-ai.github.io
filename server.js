@@ -360,3 +360,26 @@ Return ONLY JSON: { "path": [ { "week":1, "activities":[{"name":"...","dailyMin"
     res.status(500).json({ error:"Path generation failed" });
   }
 });
+
+// ── Email Draft Endpoint ──
+app.post('/api/email-draft', async (req,res) => {
+  const { recipient, subject, points } = req.body;
+  if (!recipient||!subject||!points) return res.status(400).json({ error:'Missing fields' });
+
+  const prompt = `
+Write a polite email to ${recipient} with subject "${subject}".
+Include these bullet points:
+${points.map(p=>`- ${p}`).join('\n')}
+Return only the email body.
+`;
+  try {
+    const c = await openai.createChatCompletion({
+      model:'gpt-4',
+      messages:[{role:'user',content:prompt}]
+    });
+    return res.json({ body: c.data.choices[0].message.content.trim() });
+  } catch(e) {
+    console.error(e);
+    return res.status(500).json({ error:'Email draft failed' });
+  }
+});
