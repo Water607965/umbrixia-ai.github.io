@@ -317,6 +317,28 @@ h2.section-title {
    <a href="settings.html">⚙️ Settings</a>
    <button onclick="logout()">🚪 Logout</button>
  </div>
+
+  <section id="settings" class="glass-card fade-in">
+  <h2 class="section-title">⚙️ Your Settings</h2>
+  <label>Display Name:</label>
+  <input type="text" id="settings-name" />
+  <button id="save-settings" class="btn-glow">Save</button>
+</section>
+
+<script>
+  firebase.auth().onAuthStateChanged(async u => {
+    if (!u) return;
+    const nameInput = document.getElementById("settings-name");
+    nameInput.value = u.displayName || "";
+    document.getElementById("save-settings").onclick = async () => {
+      const newName = nameInput.value.trim();
+      if (!newName) return alert("Name cannot be empty.");
+      await u.updateProfile({ displayName: newName });
+      alert("✅ Display name updated.");
+    };
+  });
+</script>
+
  
    </div>
  </header>
@@ -366,6 +388,32 @@ h2.section-title {
         <div class="module-card">
           <h3>📄 SHSAT Mastery</h3>
           <p>Targeted SHSAT drills with real-time feedback and AI tips.</p>
+         <script>
+  async function loadModules() {
+    const uid = firebase.auth().currentUser.uid;
+    const snap = await firebase
+      .firestore()
+      .collection("modules")
+      .orderBy("order")
+      .get();
+    const container = document.querySelector(
+      ".learning-modules-horizontal .dashboard-main-content"
+    );
+    container.innerHTML = "";
+    snap.forEach(doc => {
+      const { icon, title, description } = doc.data();
+      const card = document.createElement("div");
+      card.className = "module-card";
+      card.innerHTML = `
+        <h3>${icon} ${title}</h3>
+        <p>${description}</p>
+      `;
+      container.appendChild(card);
+    });
+  }
+  firebase.auth().onAuthStateChanged(u => u && loadModules());
+</script>
+
         </div>
         </div>
 
@@ -685,6 +733,27 @@ async function runPrediction() {
   </table>
 </section>
 
+        <section class="glass-card fade-in">
+  <h2 class="section-title">⏰ Study Reminders</h2>
+  <label>Next Practice Date:</label>
+  <input type="date" id="reminder-date" />
+  <button id="set-reminder" class="btn-glow">Set Reminder</button>
+</section>
+
+<script>
+  document.getElementById("set-reminder").onclick = async () => {
+    const date = document.getElementById("reminder-date").value;
+    if (!date) return alert("Please pick a date.");
+    const uid = firebase.auth().currentUser.uid;
+    await firebase.firestore()
+      .collection("users")
+      .doc(uid)
+      .set({ nextPractice: date }, { merge: true });
+    alert("✅ Reminder saved for " + date);
+  };
+</script>
+
+
 <script>
 async function loadPredictionHistory() {
   const uid = firebase.auth().currentUser.uid;
@@ -788,8 +857,8 @@ async function runPrediction() {
        </div>
        <div class="puzzle-section">
          <h4>🧩 SHSAT Puzzle of the Day</h4>
-         <p>“You measure my life in hours and I serve you by expiring. I’m quick when I’m thin and slow when I’m fat. The wind is my enemy.”</p>
-         <small>Answer tomorrow.</small>
+         <p id="puzzle-clue">Loading puzzle…</p>
+<small id="puzzle-date"></small>
        </div>
      </div>
  
@@ -1369,6 +1438,29 @@ async function drawDemographics() {
   } catch(e){ console.error(e); }
 }
 firebase.auth().onAuthStateChanged(u => u && drawDemographics());
+</script>
+
+      <script>
+  async function loadPuzzle(testId) {
+    const doc = await firebase
+      .firestore()
+      .collection("puzzles")
+      .doc(testId)
+      .get();
+    const data = doc.data() || {};
+    document.getElementById("puzzle-clue").innerText =
+      data.clue || "No puzzle available.";
+    document.getElementById("puzzle-date").innerText =
+      data.answerDate
+        ? `Answer on ${new Date(data.answerDate.seconds * 1000).toLocaleDateString()}`
+        : "";
+  }
+  // Load the puzzle for the currently visible test section
+  document.querySelectorAll(".test-buttons button").forEach(btn =>
+    btn.addEventListener("click", () => loadPuzzle(btn.textContent.toLowerCase()))
+  );
+  // On page load, default to SHSAT
+  firebase.auth().onAuthStateChanged(u => u && loadPuzzle("shsat"));
 </script>
 
 
