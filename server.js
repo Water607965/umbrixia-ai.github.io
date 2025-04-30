@@ -1,12 +1,15 @@
 // ——————————————
-// 0️⃣ Firestore setup (if not already)
-const { initializeApp, applicationDefault } = require('firebase-admin/app');
-const { getFirestore }            = require('firebase-admin/firestore');
+// 0️⃣ Firestore setup using your service account
+const { initializeApp, cert } = require('firebase-admin/app');
+const { getFirestore }       = require('firebase-admin/firestore');
+const serviceAccount         = require('./serviceAccountKey.json');
 
 initializeApp({
-  credential: applicationDefault()
+  credential: cert(serviceAccount)
 });
 const db = getFirestore();
+// ——————————————
+
 
 // ——————————————
 // 1️⃣ Kill-trigger middleware
