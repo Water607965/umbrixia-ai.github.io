@@ -653,6 +653,46 @@ Respond in one sentence.
 </section>
 
     <section class="glass-card fade-in">
+  <h2 class="section-title">🃏 Generate Flashcards</h2>
+  <textarea id="flashcard-source" rows="4" placeholder="Paste a paragraph or topic..."></textarea>
+  <button id="gen-flashcards" class="btn-glow">Generate Flashcards</button>
+  <div id="flashcard-container"></div>
+</section>
+
+<script>
+  document.getElementById("gen-flashcards").onclick = async () => {
+    const text = document.getElementById("flashcard-source").value.trim();
+    if (!text) return alert("Enter source text for flashcards.");
+    const prompt = `
+Given the following text, generate 5 Q&A flashcards in JSON:
+"${text}"
+Format:
+[{ "question": "...", "answer": "..." }, ...]
+`;
+    const resp = await fetch(
+      "https://umbrixia-ai-github-io.onrender.com/chat",
+      {
+        method:"POST", headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({message: prompt})
+      }
+    );
+    const {response} = await resp.json();
+    let cards;
+    try { cards = JSON.parse(response); }
+    catch { return alert("Failed to parse flashcards."); }
+    const container = document.getElementById("flashcard-container");
+    container.innerHTML = "";
+    cards.forEach(c => {
+      const div = document.createElement("div");
+      div.className = "flashcard";
+      div.innerHTML = `<strong>Q:</strong> ${c.question}<br><em>A:</em> ${c.answer}`;
+      container.appendChild(div);
+    });
+  };
+</script>
+
+
+    <section class="glass-card fade-in">
   <h2 class="section-title">📝 Essay Feedback</h2>
   <textarea id="essay-input" rows="8" placeholder="Paste your essay here..."></textarea>
   <button id="essay-feedback-btn" class="btn-glow">Get Feedback</button>
