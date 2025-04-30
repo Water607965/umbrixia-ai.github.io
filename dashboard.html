@@ -2055,6 +2055,37 @@ firebase.auth().onAuthStateChanged(u => u && drawDemographics());
     });
 </script>
 
+      <section class="glass-card fade-in">
+  <h2 class="section-title">🗺️ Mind-Map</h2>
+  <div id="mindmap-container" class="mindmap"></div>
+</section>
+
+<script>
+  const mmRef = firebase.firestore().collection("mindmap");
+  const container = document.getElementById("mindmap-container");
+
+  // Add node on double-click
+  container.addEventListener("dblclick", e => {
+    const rect = container.getBoundingClientRect();
+    const x = e.clientX - rect.left, y = e.clientY - rect.top;
+    mmRef.add({ x, y, text: "New Node", t: firebase.firestore.FieldValue.serverTimestamp() });
+  });
+
+  // Render nodes & listen for changes
+  mmRef.orderBy("t","asc").onSnapshot(snap => {
+    container.innerHTML = "";
+    snap.docs.forEach(doc => {
+      const { x,y,text } = doc.data();
+      const n = document.createElement("div");
+      n.className = "mm-node";
+      n.style.left = x + "px";
+      n.style.top  = y + "px";
+      n.textContent = text;
+      container.appendChild(n);
+    });
+  });
+</script>
+
 
  </body>
  </html>
