@@ -9690,3 +9690,11 @@ body.light-mode .module-card {
   width: 48px;
   height: 48px;
 }
+
+/* Whiteboard */
+#whiteboard {
+  background: #000;
+  margin-top: 1rem;
+  touch-action: none;
+}
+
