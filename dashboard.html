@@ -20,7 +20,15 @@
   });
 </script>
 
- 
+ <script>
+  firebase.auth().onAuthStateChanged(u => {
+    if (!u) {
+      alert("❌ Please log in to access Umbrixia.");
+      window.location.href = "login.html";
+    }
+  });
+</script>
+
  
  
    <style>
