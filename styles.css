@@ -9740,3 +9740,22 @@ body.light-mode .module-card {
   margin-top:1rem;
 }
 
+<button id="share-slack" class="btn-glow">Share Summary to Slack</button>
+
+<script>
+  document.getElementById('share-slack').onclick = async () => {
+    const resultEl = document.getElementById('weekly-summary-result');
+    const text = resultEl.textContent || resultEl.innerText;
+    if (!text) return alert('Generate summary first.');
+    try {
+      await fetch('YOUR_SLACK_WEBHOOK_URL', {
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({ text: `*Weekly Summary*\n${text}` })
+      });
+      alert('✅ Shared to Slack!');
+    } catch (e) {
+      alert('⚠️ Slack share failed: ' + e.message);
+    }
+  };
+</script>
