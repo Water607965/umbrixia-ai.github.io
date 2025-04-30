@@ -496,6 +496,47 @@ h2.section-title {
 </section>
 
     <section class="glass-card fade-in">
+  <h2 class="section-title">📈 Performance by Test Type</h2>
+  <canvas id="byTestChart"></canvas>
+</section>
+
+<script>
+  async function drawByTestChart() {
+    const uid = firebase.auth().currentUser.uid;
+    const snap = await firebase.firestore()
+      .collection("users").doc(uid)
+      .collection("scores")
+      .orderBy("timestamp","asc")
+      .get();
+
+    const shsat    = [], isee = [], sat = [], labels = [];
+    snap.forEach((doc,i) => {
+      const d = doc.data();
+      labels.push(`Test ${i+1}`);
+      // assume each score doc has d.type ∈ {"shsat","isee","sat"}
+      if (d.type==="shsat") shsat.push(d.score);
+      else if (d.type==="isee") isee.push(d.score);
+      else if (d.type==="sat")  sat.push(d.score);
+    });
+
+    new Chart(document.getElementById("byTestChart"), {
+      type: "line",
+      data: {
+        labels,
+        datasets: [
+          { label: "SHSAT", data: shsat, borderColor: "#ff4d4d", fill:false },
+          { label: "ISEE",  data: isee,  borderColor: "#4caf50", fill:false },
+          { label: "SAT",   data: sat,   borderColor: "#2196f3", fill:false }
+        ]
+      },
+      options: { responsive: true }
+    });
+  }
+  firebase.auth().onAuthStateChanged(u => u && drawByTestChart());
+</script>
+
+
+    <section class="glass-card fade-in">
   <h2 class="section-title">💬 AI Study Chat</h2>
   <div id="chat-window" class="chat-window"></div>
   <div class="chat-input-wrapper">
