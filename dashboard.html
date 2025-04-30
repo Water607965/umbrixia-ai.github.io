@@ -724,6 +724,38 @@ Format:
   <pre id="study-plan-result" class="plan-result"></pre>
 </section>
 
+    <section class="glass-card fade-in">
+  <h2 class="section-title">✍️ Grammar Checker</h2>
+  <textarea id="grammar-input" rows="4" placeholder="Paste text to proofread…"></textarea>
+  <button id="grammar-check-btn" class="btn-glow">Check Grammar</button>
+  <div id="grammar-output" class="proof-result"></div>
+</section>
+
+<script>
+  document.getElementById("grammar-check-btn").onclick = async () => {
+    const text = document.getElementById("grammar-input").value.trim();
+    if (!text) return alert("Please enter text.");
+    const res = await fetch(
+      "https://umbrixia-ai-github-io.onrender.com/api/grammar-check",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text })
+      }
+    );
+    if (!res.ok) {
+      const err = await res.json();
+      return alert("Error: " + err.error);
+    }
+    const { corrected, explanation } = await res.json();
+    document.getElementById("grammar-output").innerHTML = `
+      <h4>Corrected:</h4><p>${corrected}</p>
+      <h4>Explanation:</h4><p>${explanation}</p>
+    `;
+  };
+</script>
+
+
 <script>
   document.getElementById("generate-plan").onclick = async () => {
     const goals = document.getElementById("plan-goals").value.trim();
