@@ -949,6 +949,32 @@ Format:
   <div id="grammar-output" class="proof-result"></div>
 </section>
 
+    <section class="glass-card fade-in">
+  <h2 class="section-title">🔍 AI Document Search</h2>
+  <input type="text" id="doc-search-input" placeholder="Search your uploads…" />
+  <button id="doc-search-btn" class="btn-glow">Search</button>
+  <ul id="doc-search-results"></ul>
+</section>
+
+<script>
+  document.getElementById("doc-search-btn").onclick = async () => {
+    const q = document.getElementById("doc-search-input").value.trim();
+    if (!q) return alert("Enter a search term.");
+    const uid = firebase.auth().currentUser.uid;
+    const res = await fetch("https://umbrixia-ai-github-io.onrender.com/api/search-docs", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ uid, query: q })
+    });
+    const { results } = await res.json();
+    const ul = document.getElementById("doc-search-results");
+    ul.innerHTML = results.map(r => 
+      `<li><strong>[${r.source}]</strong> ${r.excerpt}</li>`
+    ).join("");
+  };
+</script>
+
+
 <script>
   document.getElementById("grammar-check-btn").onclick = async () => {
     const text = document.getElementById("grammar-input").value.trim();
