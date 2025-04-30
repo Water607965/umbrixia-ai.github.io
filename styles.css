@@ -9535,3 +9535,20 @@ body::after {
   padding: 0.5rem;
   border-radius: 6px;
 }
+
+/* Prediction History Table */
+#prediction-history {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+}
+#prediction-history th,
+#prediction-history td {
+  padding: 12px;
+  border-bottom: 1px solid #333;
+  text-align: left;
+}
+#prediction-history thead {
+  background: rgba(255, 77, 77, 0.1);
+}
+
