@@ -1,30 +1,66 @@
+// server.js
 require('dotenv').config();
 const express = require('express');
-const cors = require('cors');
+const cors    = require('cors');
 const { OpenAI } = require('openai');
 
-// Firestore setup
-const admin = require('firebase-admin');
-
-admin.initializeApp({
-  credential: admin.credential.cert(require('./serviceAccountKey.json'))
-});
-
-const db = admin.firestore();
-
-
-// ——————————————
-// 0️⃣ Firestore setup using your service account
+// -- Firestore (admin SDK) setup, single initializeApp call --
 const { initializeApp, cert } = require('firebase-admin/app');
-const { getFirestore }       = require('firebase-admin/firestore');
-const serviceAccount         = require('./serviceAccountKey.json');
+const { getFirestore }        = require('firebase-admin/firestore');
+
+// load but never commit this file
+const serviceAccount = require('./umbrixia-firebase.json');
 
 initializeApp({
   credential: cert(serviceAccount)
 });
 const db = getFirestore();
-// ——————————————
 
+
+// -- OpenAI client --
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY
+});
+
+// -- Express setup --
+const app = express();
+app.use(express.json());
+app.use(cors());
+
+// Health check
+app.get('/', (req, res) => res.send('✅ Umbrixia AI backend is running.'));
+
+// Your kill-trigger middleware (example)
+app.use('/api', async (req, res, next) => {
+  const userId = req.headers['x-user-id'] || req.body.userId;
+  if (!userId) return res.status(401).json({ error: 'Missing userId' });
+  const doc = await db.collection('users').doc(userId).get();
+  if (!doc.exists || !doc.data().hasTakenTest) {
+    return res.status(403).json({
+      error: 'You must complete at least one practice test before using the API.'
+    });
+  }
+  next();
+});
+
+// Example chat endpoint
+app.post('/chat', async (req, res) => {
+  try {
+    const completion = await openai.chat.completions.create({
+      model: 'gpt-3.5-turbo',
+      messages: [{ role: 'user', content: req.body.message }]
+    });
+    res.json({ response: completion.choices[0].message.content });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'OpenAI error' });
+  }
+});
+
+// …add your other /api routes here…
+
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => console.log(`🚀 Server listening on ${PORT}`));
 
 // ——————————————
 // 1️⃣ Kill-trigger middleware
