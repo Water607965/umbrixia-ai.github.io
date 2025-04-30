@@ -9670,3 +9670,13 @@ body.light-mode .module-card {
   margin: 1rem 0;
   color: #ff4d4d;
 }
+
+/* Flashcards */
+.flashcard {
+  background: #121212;
+  border: 1px solid #333;
+  padding: 0.75rem;
+  margin: 0.5rem 0;
+  border-radius: 6px;
+}
+
