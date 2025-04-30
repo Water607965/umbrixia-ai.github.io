@@ -9552,3 +9552,13 @@ body::after {
   background: rgba(255, 77, 77, 0.1);
 }
 
+/* Light‐mode overrides */
+body.light-mode {
+  background: #f2f2f7;
+  color: #1c1c1e;
+}
+body.light-mode .glass-card,
+body.light-mode .module-card {
+  background: rgba(255,255,255,0.8);
+  color: #1c1c1e;
+}
