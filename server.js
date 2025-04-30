@@ -182,3 +182,36 @@ Respond in JSON:
 // Start the server
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`🌐 Server running on port ${PORT}`));
+
+// ── Essay Feedback Endpoint ──
+app.post("/api/essay-feedback", async (req, res) => {
+  const { essay } = req.body;
+  if (!essay) return res.status(400).json({ error: "No essay provided." });
+
+  const prompt = `
+You are an expert college admissions coach.
+Provide detailed feedback on this essay, focusing on clarity, grammar, structure, and emotional impact.
+Return ONLY this JSON:
+{
+  "feedback": "...",
+  "suggestions": "..."
+}
+Essay:
+"""${essay}"""
+`;
+
+  try {
+    const completion = await openai.createChatCompletion({
+      model: "gpt-4",
+      messages: [{ role: "user", content: prompt }]
+    });
+    const raw = completion.data.choices[0].message.content;
+    const match = raw.match(/{[\s\S]*}/);
+    if (!match) throw new Error("AI returned no JSON");
+    return res.json(JSON.parse(match[0]));
+  } catch (err) {
+    console.error("Essay Feedback Error:", err);
+    return res.status(500).json({ error: "Feedback generation failed." });
+  }
+});
+
