@@ -9643,3 +9643,23 @@ body.light-mode .module-card {
   border-radius: 6px;
   color: white;
 }
+
+/* Weekly Summary Styles */
+#generate-summary {
+  margin-bottom: 0.75rem;
+}
+#weekly-summary-result {
+  background: #111;
+  border: 1px solid #333;
+  padding: 1rem;
+  border-radius: 6px;
+  white-space: pre-wrap;
+  color: #eee;
+  margin-top: 0.5rem;
+}
+#weekly-summary-result h4 {
+  margin-top: 0.75rem;
+  margin-bottom: 0.25rem;
+  color: #ff4d4d;
+}
+
