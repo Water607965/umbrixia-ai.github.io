@@ -658,6 +658,19 @@ async function runPrediction() {
     chanceEl.textContent        = "❌ Prediction failed.";
     justificationEl.textContent = err.message;
     suggestionEl.textContent    = "";
+
+     // ── After displaying the AI result, save it to Firestore ──
+  const uid = firebase.auth().currentUser.uid;
+  await firebase.firestore()
+    .collection("users")
+    .doc(uid)
+    .collection("predictions")
+    .add({
+      school,
+      chance, // the string like "72%"
+      timestamp: firebase.firestore.FieldValue.serverTimestamp()
+    });
+
   }
 }
 </script>
