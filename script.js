@@ -3895,3 +3895,16 @@ function showSection(id) { /* …as above… */ }
 auth.onAuthStateChanged(async user => { /* …Chart.js code… */ });
 async function runPrediction()   { /* …AI Predictor code… */ }
 
+// Apply saved theme on load
+document.addEventListener("DOMContentLoaded", () => {
+  if (localStorage.getItem("theme") === "light") {
+    document.body.classList.add("light-mode");
+  }
+});
+// Override toggleTheme to persist
+const originalToggle = window.toggleTheme;
+window.toggleTheme = () => {
+  originalToggle();
+  const isLight = document.body.classList.toggle("light-mode");
+  localStorage.setItem("theme", isLight ? "light" : "dark");
+};
