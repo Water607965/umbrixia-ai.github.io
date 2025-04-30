@@ -9715,3 +9715,22 @@ body.light-mode .module-card {
   border-radius:6px;
   margin-top:0.5rem;
 }
+
+/* Mind-Map */
+.mindmap {
+  position:relative;
+  width:100%;
+  height:300px;
+  background:#0d0d0d;
+  border:1px solid #333;
+  margin-top:1rem;
+}
+.mm-node {
+  position:absolute;
+  background:rgba(255,77,77,0.1);
+  border:1px solid #ff4d4d;
+  padding:0.5rem;
+  border-radius:4px;
+  color:#fff;
+  cursor:move;
+}
