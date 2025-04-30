@@ -609,6 +609,60 @@ if (!topicData || Object.keys(topicData).length === 0) {
   <input type="file" id="upload-extras" multiple accept=".pdf,.jpg,.png" />
 </div>
 
+        <script>
+async function runPrediction() {
+  const school = document.getElementById("dream-school").value.trim();
+  const grade  = document.getElementById("user-grade").value;
+  const uid    = firebase.auth().currentUser.uid;
+  const doc    = await firebase.firestore().collection("users").doc(uid).get();
+  const data   = doc.data() || {};
+  const essays           = data.essays           || [];
+  const recommendations  = data.recommendations  || [];
+  const transcripts      = data.transcripts      || [];
+  const extracurriculars = data.extracurriculars || [];
+
+  if (
+    essays.length===0 && recommendations.length===0 &&
+    transcripts.length===0 && extracurriculars.length===0
+  ) {
+    alert("⚠️ Please upload at least one material before predicting.");
+    return;
+  }
+
+  const chanceEl        = document.getElementById("chance");
+  const justificationEl = document.getElementById("justification");
+  const suggestionEl    = document.getElementById("suggestion");
+  chanceEl.textContent        = "🔄 Predicting…";
+  justificationEl.textContent = "";
+  suggestionEl.textContent    = "";
+
+  try {
+    const resp = await fetch(
+      "https://umbrixia-ai-github-io.onrender.com/api/admissions-predict",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          school, grade,
+          essays, recommendations,
+          transcripts, extracurriculars
+        })
+      }
+    );
+    if (!resp.ok) throw new Error(await resp.text());
+    const { chance, justification, suggestion } = await resp.json();
+    chanceEl.textContent        = `🎯 ${chance}`;
+    justificationEl.textContent = `🧠 ${justification}`;
+    suggestionEl.textContent    = `📈 ${suggestion}`;
+  } catch (err) {
+    chanceEl.textContent        = "❌ Prediction failed.";
+    justificationEl.textContent = err.message;
+    suggestionEl.textContent    = "";
+  }
+}
+</script>
+
+
   <button class="btn-glow" onclick="runPrediction()">Predict</button>
 
   <div id="prediction-output" class="prediction-result">
@@ -1244,6 +1298,24 @@ async function runPrediction() {
   firebase.auth().onAuthStateChanged(user => {
     if (user) drawDemographics();
   });
+</script>
+
+      <script>
+async function drawDemographics() {
+  try {
+    const resp = await fetch(
+      "https://umbrixia-ai-github-io.onrender.com/api/demographic-trends"
+    );
+    if (!resp.ok) throw new Error("Demographics fetch failed");
+    const { labels, values } = await resp.json();
+    new Chart(document.getElementById("demographicChart"), {
+      type: "bar",
+      data: { labels, datasets:[{ label:"Acceptance Rate (%)", data:values, backgroundColor:"#4caf50" }] },
+      options:{ responsive:true }
+    });
+  } catch(e){ console.error(e); }
+}
+firebase.auth().onAuthStateChanged(u => u && drawDemographics());
 </script>
 
 
