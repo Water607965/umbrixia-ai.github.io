@@ -49,6 +49,46 @@
   });
 </script>
 
+  <section class="glass-card fade-in">
+  <h2 class="section-title">⏱️ Pomodoro Timer</h2>
+  <div id="pomodoro-display">25:00</div>
+  <button id="pomodoro-start" class="btn-glow">Start</button>
+  <button id="pomodoro-reset" class="btn-glow">Reset</button>
+</section>
+
+<script>
+  let pomodoroTime = 25 * 60, pomodoroInterval;
+  const display = document.getElementById("pomodoro-display");
+  function updateDisplay() {
+    const m = String(Math.floor(pomodoroTime/60)).padStart(2,'0');
+    const s = String(pomodoroTime%60).padStart(2,'0');
+    display.textContent = `${m}:${s}`;
+  }
+  document.getElementById("pomodoro-start").onclick = () => {
+    if (pomodoroInterval) return;
+    pomodoroInterval = setInterval(() => {
+      pomodoroTime--;
+      updateDisplay();
+      if (pomodoroTime <= 0) {
+        clearInterval(pomodoroInterval);
+        pomodoroInterval = null;
+        new Notification("Pomodoro complete! Time for a 5-minute break.");
+        pomodoroTime = 5*60; // short break
+      }
+    }, 1000);
+  };
+  document.getElementById("pomodoro-reset").onclick = () => {
+    clearInterval(pomodoroInterval);
+    pomodoroInterval = null;
+    pomodoroTime = 25*60;
+    updateDisplay();
+  };
+  updateDisplay();
+  // Request permission for notifications
+  if (Notification.permission !== "granted") Notification.requestPermission();
+</script>
+
+
  
  
    <style>
