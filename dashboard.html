@@ -9,6 +9,35 @@
    <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-auth-compat.js"></script>
    <script src="https://www.gstatic.com/firebasejs/10.7.0/firebase-firestore-compat.js"></script>
    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+<script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+
+  <section class="glass-card fade-in">
+  <h2 class="section-title">✏️ Collaborative Notes</h2>
+  <div id="collab-toolbar"></div>
+  <div id="collab-editor" style="height:200px;"></div>
+</section>
+
+<script>
+  // Init Quill
+  const quill = new Quill('#collab-editor', {
+    modules: { toolbar: '#collab-toolbar' },
+    theme: 'snow'
+  });
+  const notesRef = firebase.firestore().collection('notes').doc('shared');
+  
+  // Load existing and listen
+  notesRef.onSnapshot(snap => {
+    const data = snap.data() || {};
+    quill.setContents(data.delta || {});
+  });
+
+  // Save on text-change
+  quill.on('text-change', delta => {
+    notesRef.set({ delta: quill.getContents() });
+  });
+</script>
+
 
   <script>
   // Redirect to login.html if not authenticated
