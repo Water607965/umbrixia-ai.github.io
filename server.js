@@ -335,3 +335,28 @@ app.post("/api/calendar-event", (req, res) => {
   const href = "data:text/calendar;charset=utf-8," + encodeURIComponent(ics);
   res.json({ href });
 });
+
+// ── AI Learning Path Generator ──
+app.post("/api/learning-path", async (req, res) => {
+  const { goal, weeks } = req.body;
+  if (!goal || !weeks) return res.status(400).json({ error:"Missing goal or weeks" });
+
+  const prompt = `
+Create a ${weeks}-week adaptive learning path to achieve: ${goal}.
+For each week, list 3 focused activities with estimated daily time.
+Return ONLY JSON: { "path": [ { "week":1, "activities":[{"name":"...","dailyMin":...},...] }, ... ] }
+`;
+  try {
+    const c = await openai.createChatCompletion({
+      model:"gpt-4",
+      messages:[{role:"user",content:prompt}]
+    });
+    const raw = c.data.choices[0].message.content;
+    const m = raw.match(/{[\s\S]*}/);
+    if (!m) throw new Error("No JSON");
+    res.json(JSON.parse(m[0]));
+  } catch(e) {
+    console.error(e);
+    res.status(500).json({ error:"Path generation failed" });
+  }
+});
