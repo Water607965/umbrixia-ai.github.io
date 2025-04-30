@@ -9621,3 +9621,25 @@ body.light-mode .module-card {
 #prediction-output button {
   margin-top: 0.75rem;
 }
+
+/* Auto-Kill redirect uses default alert styles */
+
+/* Study Plan Styles */
+.plan-result {
+  background: #111;
+  border: 1px solid #333;
+  padding: 1rem;
+  margin-top: 0.5rem;
+  white-space: pre-wrap;
+  border-radius: 6px;
+}
+#plan-goals,
+#plan-hours {
+  width: 100%;
+  padding: 0.5rem;
+  margin-bottom: 0.5rem;
+  background: #121212;
+  border: 1px solid #333;
+  border-radius: 6px;
+  color: white;
+}
