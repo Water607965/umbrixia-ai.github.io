@@ -9523,3 +9523,15 @@ body::after {
   color: transparent;
 }
 
+/* ── Upload Section ── */
+.upload-section {
+  margin: 1rem 0;
+  display: grid;
+  gap: 0.5rem;
+}
+.upload-section input {
+  background: #111;
+  border: 1px solid #333;
+  padding: 0.5rem;
+  border-radius: 6px;
+}
