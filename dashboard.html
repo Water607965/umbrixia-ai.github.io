@@ -511,6 +511,36 @@ h2.section-title {
   <div id="essay-feedback-result" class="feedback-result"></div>
 </section>
 
+    <section class="glass-card fade-in">
+  <h2 class="section-title">📚 AI Study Plan</h2>
+  <label>Goals (comma-separated):</label>
+  <input type="text" id="plan-goals" placeholder="e.g. improve math, refine essays" />
+  <label>Hours per week:</label>
+  <input type="number" id="plan-hours" min="1" max="40" />
+  <button id="generate-plan" class="btn-glow">Generate Plan</button>
+  <pre id="study-plan-result" class="plan-result"></pre>
+</section>
+
+<script>
+  document.getElementById("generate-plan").onclick = async () => {
+    const goals = document.getElementById("plan-goals").value.trim();
+    const hours = document.getElementById("plan-hours").value;
+    if (!goals || !hours) return alert("Please enter goals and hours.");
+    const res = await fetch("https://umbrixia-ai-github-io.onrender.com/api/study-plan", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ goals, availableHoursPerWeek: hours })
+    });
+    if (!res.ok) {
+      const err = await res.json();
+      return alert("Error: " + err.error);
+    }
+    const { plan } = await res.json();
+    document.getElementById("study-plan-result").textContent = JSON.stringify(plan, null, 2);
+  };
+</script>
+
+
 <script>
   document.getElementById("essay-feedback-btn").onclick = async () => {
     const essay = document.getElementById("essay-input").value.trim();
