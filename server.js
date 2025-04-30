@@ -215,3 +215,31 @@ Essay:
   }
 });
 
+// ── AI Study Plan Generator ──
+app.post("/api/study-plan", async (req, res) => {
+  const { goals, availableHoursPerWeek } = req.body;
+  if (!goals || !availableHoursPerWeek) {
+    return res.status(400).json({ error: "Missing goals or hours" });
+  }
+  const prompt = `
+You are an expert academic coach.
+A student has these goals: ${goals}
+They have ${availableHoursPerWeek} hours per week to study.
+Generate a 7-day study plan as valid JSON:
+{ "plan": [ { "day": "Monday", "hours": 2, "activities": ["..."] }, ... ] }
+`;
+  try {
+    const completion = await openai.createChatCompletion({
+      model: "gpt-4",
+      messages: [{ role: "user", content: prompt }]
+    });
+    const raw = completion.data.choices[0].message.content;
+    const match = raw.match(/{[\s\S]*}/);
+    if (!match) throw new Error("AI returned no JSON");
+    return res.json(JSON.parse(match[0]));
+  } catch (err) {
+    console.error("Study Plan Error:", err);
+    return res.status(500).json({ error: "Study plan generation failed." });
+  }
+});
+
