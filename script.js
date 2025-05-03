@@ -4138,3 +4138,21 @@ qc.innerHTML += `
   <h3>Next Week’s Plan</h3>
   <pre style="color:#ccc;">${JSON.stringify(plan, null, 2)}</pre>`;
 
+  ;(async function loadLeaderboard(){
+  const tbody = document.querySelector('#leaderboard-table tbody');
+  try {
+    const resp = await fetch('/api/leaderboard');
+    const list = await resp.json();
+    tbody.innerHTML = list.map((u,i)=>`
+      <tr>
+        <td>${i+1}</td>
+        <td>${u.name}</td>
+        <td>${u.avg}%</td>
+      </tr>
+    `).join('');
+  } catch(e){
+    tbody.innerHTML = '<tr><td colspan="3">Failed to load leaderboard.</td></tr>';
+  }
+})();
+
+
