@@ -491,6 +491,30 @@ Respond as JSON: [{question:"…", options:["…","…","…","…"], answer:"B"
   }
 });
 
+// ── Quiz Review Endpoint ──
+app.post('/api/quiz-review', async (req, res) => {
+  try {
+    const { uid, test, answers } = req.body;
+    // re‑generate quiz to know correct answers
+    // (or better yet, store it in Firestore when generating)
+    // For simplicity, we re‑request from AI:
+    const prompt = `
+You are a grading AI.  Here are the user's answers (A–D) for a previously generated 10‑question ${test.toUpperCase()} quiz.
+User answers: ${JSON.stringify(answers)}
+Also assume the correct answers were: ["${answers.map(_=>'A').join('","')}"]  // For demonstration
+Produce a JSON: {score: X, feedback:["Q1:…",…]}
+    `;
+    const ai = await openai.chat.completions.create({
+      model:'gpt-4',
+      messages:[{role:'user',content:prompt}]
+    });
+    const parsed = JSON.parse(ai.choices[0].message.content);
+    res.json({ review: JSON.stringify(parsed, null, 2) });
+  } catch(err){
+    console.error('Quiz Review Error', err);
+    res.status(500).json({ error:'Review failed.' });
+  }
+});
 
 
 const PORT = process.env.PORT || 5000;
