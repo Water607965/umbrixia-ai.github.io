@@ -1,5 +1,8 @@
-﻿.env
-node_modules/
-‣敤数摮湥楣獥渊摯彥潭畤敬⽳ਊ‣潬獧渊浰搭扥杵氮杯ਪ慹湲搭扥杵氮杯ਪ慹湲攭牲牯氮杯ਪ潮敤浟摯汵獥ਯ敳癲捩䅥捣畯瑮敋⹹獪湯甊扭楲楸ⵡ楦敲慢敳樮潳੮浵牢硩慩昭物扥獡⹥獪湯�
+# 1. Never commit your .env file
+.env
 
+# 2. Don’t check in third‑party modules
+node_modules/
+
+# 3. Don’t check in your Firebase service account key
 /config/firebase-key.json
