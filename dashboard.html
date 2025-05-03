@@ -18,6 +18,10 @@
   <div id="collab-editor" style="height:200px;"></div>
 </section>
 
+  <button id="voice-tutor" class="btn-glow">🎤 Talk to Tutor</button>
+<audio id="voice-output" hidden></audio>
+
+
 <script>
   // Init Quill
   const quill = new Quill('#collab-editor', {
@@ -832,11 +836,23 @@ Respond in one sentence.
   </div>
 </section>
 
+    <button id="flashcard-blitz" class="btn-glow">⚡ Flashcard Blitz</button>
+<div id="flashcard-modal" class="modal" style="display:none;">
+  <div class="modal-content"><span id="close-flash">&times;</span>
+    <div id="flashcard-question"></div>
+    <button id="show-answer" class="btn-glow">Show Answer</button>
+    <div id="flashcard-answer" style="display:none;"></div>
+  </div>
+</div>
+
+
     <section class="glass-card" id="ai-achievements">
   <h2 class="section-title">🏆 AI Achievements & Streak</h2>
   <p>Your current streak: <strong id="streak-count">0</strong> days</p>
   <ul id="achievements-list" style="list-style:none; padding-left:0; color:white;"></ul>
 </section>
+
+    
 
     <div class="chart-box">
   <canvas id="forecastChart"></canvas>
