@@ -574,6 +574,18 @@ app.get('/api/achievements/:uid', async (req, res) => {
   res.json({ badges });
 });
 
+// ── ELI5 Explanation Endpoint ──
+app.post('/api/eli5', async (req, res) => {
+  const { text } = req.body;
+  if (!text) return res.status(400).json({ error: 'No text provided.' });
+  const prompt = `Explain this like I’m 5:\n\n${text}\n`;
+  const ai = await openai.chat.completions.create({
+    model: 'gpt-4',
+    messages: [{ role:'user', content: prompt }]
+  });
+  res.json({ eli5: ai.choices[0].message.content.trim() });
+});
+
 
 
 const PORT = process.env.PORT || 5000;
