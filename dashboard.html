@@ -710,6 +710,12 @@ h2.section-title {
   <p id="focus-recommendation">Generating recommendation…</p>
 </section>
 
+    <button class="btn-glow elfi-btn" data-content-id="{{QUESTION_ID}}">
+  📖 Explain Like I’m 5
+</button>
+<div class="elfi-response" id="elfi-{{QUESTION_ID}}" style="display:none;"></div>
+
+
 <script>
   async function recommendFocus() {
     const uid = firebase.auth().currentUser.uid;
