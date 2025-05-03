@@ -3,13 +3,12 @@ require('dotenv').config();
 const express     = require('express');
 const cors        = require('cors');
 const { OpenAI }  = require('openai');
-const Joi         = require('joi');
 const killTrigger = require('./middleware/killTrigger');
 
 // ── Firestore admin init ──
 const { initializeApp, cert } = require('firebase-admin/app');
 const { getFirestore }        = require('firebase-admin/firestore');
-const serviceAccount          = JSON.parse(process.env.GOOGLE_APPLICATION_CREDENTIALS);
+export GOOGLE_APPLICATION_CREDENTIALS="/path/to/config/firebase-key.json"
 initializeApp({ credential: cert(serviceAccount) });
 const db = getFirestore();
 
@@ -43,7 +42,6 @@ app.post('/chat', async (req, res) => {
 
 
 
-// Admissions Predictor endpoint
 app.post('/api/admissions-predict', async (req, res) => {
   try {
     const { school, grade, essays, recommendations, transcripts, extracurriculars } = req.body;
@@ -51,12 +49,11 @@ app.post('/api/admissions-predict', async (req, res) => {
       return res.status(400).json({ error: 'Missing school or grade in request.' });
     }
 
-    // Build prompt for GPT-4 model
     const prompt = `A student in grade ${grade} is applying to ${school}.
-Essays: ${essays.slice(0, 200)}...  
-Recommendations: ${recommendations.slice(0, 200)}...  
-Transcripts: ${transcripts.slice(0, 200)}...  
-Extracurriculars: ${extracurriculars.slice(0, 200)}...  
+Essays: ${essays.slice(0,200)}...
+Recommendations: ${recommendations.slice(0,200)}...
+Transcripts: ${transcripts.slice(0,200)}...
+Extracurriculars: ${extracurriculars.slice(0,200)}...
 
 1. What is their predicted chance (as a percentage) of acceptance?
 2. Provide a brief justification.
@@ -68,24 +65,27 @@ Respond in strict JSON:
   "suggestion": "..."
 }`;
 
-       // Call GPT-4 for predictions
     const prediction = await openai.chat.completions.create({
       model: 'gpt-4',
       messages: [{ role: 'user', content: prompt }]
     });
     const raw = prediction.choices[0].message.content.trim();
 
+    // **Extract only the JSON blob, non‑greedy match**
     const jsonMatch = raw.match(/\{[\s\S]*?\}/);
-if (!jsonMatch) throw new Error('Invalid JSON from AI');
-const data = JSON.parse(jsonMatch[0]);
-return res.json(data);
+    if (!jsonMatch) {
+      throw new Error('Invalid JSON from AI');
+    }
+    const data = JSON.parse(jsonMatch[0]);
 
-    res.json(parsed);
+    // **Return it once and only once**
+    return res.json(data);
   } catch (err) {
     console.error('Error in /api/admissions-predict:', err);
-    res.status(500).json({ error: err.message || 'Prediction failed.' });
+    return res.status(500).json({ error: err.message || 'Prediction failed.' });
   }
 });
+
 
 
 
@@ -100,27 +100,26 @@ Respond _only_ with valid JSON in this exact shape:
   "values": [ /* five numeric percentages between 0 and 100, no % sign */ ]
 }`;
 
-    // **capture** the AI response in `completion`
     const completion = await openai.chat.completions.create({
       model: 'gpt-4',
       messages: [{ role: 'user', content: prompt }]
     });
-    // pull out the JSON blob from the AI’s reply
     const raw = completion.choices[0].message.content.trim();
-    
-    const jsonMatch = raw.match(/\{[\s\S]*?\}/);
-if (!jsonMatch) throw new Error('Invalid JSON from AI');
-const data = JSON.parse(jsonMatch[0]);
-return res.json(data);
 
-    // parse and return it
-    const data = JSON.parse(match[0]);
+    // **Extract JSON blob**
+    const jsonMatch = raw.match(/\{[\s\S]*?\}/);
+    if (!jsonMatch) {
+      throw new Error('Invalid JSON from AI');
+    }
+    const data = JSON.parse(jsonMatch[0]);
+
     return res.json(data);
   } catch (err) {
     console.error('Error in /api/demographic-trends:', err);
     return res.status(500).json({ error: 'Failed to generate demographics.' });
   }
 });
+
 
 
 
