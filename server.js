@@ -8,7 +8,7 @@ const killTrigger = require('./middleware/killTrigger');
 // ── Firestore admin init ──
 const { initializeApp, cert } = require('firebase-admin/app');
 const { getFirestore }        = require('firebase-admin/firestore');
-export GOOGLE_APPLICATION_CREDENTIALS="/path/to/config/firebase-key.json"
+const serviceAccount = require(process.env.GOOGLE_APPLICATION_CREDENTIALS);
 initializeApp({ credential: cert(serviceAccount) });
 const db = getFirestore();
 
