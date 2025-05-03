@@ -586,6 +586,42 @@ app.post('/api/eli5', async (req, res) => {
   res.json({ eli5: ai.choices[0].message.content.trim() });
 });
 
+// ── Burnout Prediction Endpoint ──
+app.get('/api/burnout-alert/:uid', async (req, res) => {
+  const uid = req.params.uid;
+  // Simplest heuristic: less activity in last 7 days
+  const weekAgo = Date.now() - 7*24*60*60*1000;
+  const snaps = await db.collection('users').doc(uid)
+    .collection('activity')
+    .where('timestamp','>=', weekAgo)
+    .get();
+  const count = snaps.size;
+  const risk = count < 3 ? 'HIGH' : count < 7 ? 'MEDIUM' : 'LOW';
+  res.json({ risk, count });
+});
+
+// ── Mock Insurance Subscription ──
+app.post('/api/subscribe-insurance', async (req, res) => {
+  const uid = req.body.uid || 'demo-user';
+  await db.collection('users').doc(uid).set({ insurance: true },{merge:true});
+  res.json({ success:true });
+});
+
+// ── Flashcard Generation Endpoint ──
+app.post('/api/flashcards', async (req, res) => {
+  const { text } = req.body;
+  const prompt = `
+Extract up to 5 Q&A flashcards from this lesson text:
+"${text}"
+Return JSON: [ { "q":"…", "a":"…" }, … ]
+`;
+  const ai = await openai.chat.completions.create({
+    model:'gpt-4',
+    messages:[{role:'user',content:prompt}]
+  });
+  const blob = ai.choices[0].message.content.match(/\[[\s\S]*\]/)[0];
+  res.json(JSON.parse(blob));
+});
 
 
 const PORT = process.env.PORT || 5000;
