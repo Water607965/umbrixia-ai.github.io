@@ -1,50 +1,29 @@
-// server.js
+// ── Load env & core deps ──
 require('dotenv').config();
-const express = require('express');
-const cors    = require('cors');
-const { OpenAI } = require('openai');
+const express     = require('express');
+const cors        = require('cors');
+const { OpenAI }  = require('openai');
+const Joi         = require('joi');
+const killTrigger = require('./middleware/killTrigger');
 
-// -- Firestore (admin SDK) setup, single initializeApp call --
+// ── Firestore admin init ──
 const { initializeApp, cert } = require('firebase-admin/app');
 const { getFirestore }        = require('firebase-admin/firestore');
-
-// load but never commit this file
-const serviceAccount = JSON.parse(
-  process.env.GOOGLE_APPLICATION_CREDENTIALS
-);
-
-
-initializeApp({
-  credential: cert(serviceAccount)
-});
+const serviceAccount          = JSON.parse(process.env.GOOGLE_APPLICATION_CREDENTIALS);
+initializeApp({ credential: cert(serviceAccount) });
 const db = getFirestore();
 
-
-// -- OpenAI client --
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY
-});
-
-// -- Express setup --
-const app = express();
+// ── Express & OpenAI clients ──
+const app    = express();
 app.use(express.json());
 app.use(cors());
+app.use('/api', killTrigger);                 // ← mount your kill‑trigger here
+const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+
 
 // Health check
 app.get('/', (req, res) => res.send('✅ Umbrixia AI backend is running.'));
-
-// Your kill-trigger middleware (example)
-app.use('/api', async (req, res, next) => {
-  const userId = req.headers['x-user-id'] || req.body.userId;
-  if (!userId) return res.status(401).json({ error: 'Missing userId' });
-  const doc = await db.collection('users').doc(userId).get();
-  if (!doc.exists || !doc.data().hasTakenTest) {
-    return res.status(403).json({
-      error: 'You must complete at least one practice test before using the API.'
-    });
-  }
-  next();
-});
+ 
 
 // Example chat endpoint
 app.post('/chat', async (req, res) => {
@@ -60,71 +39,9 @@ app.post('/chat', async (req, res) => {
   }
 });
 
-// …add your other /api routes here…
-
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`🚀 Server listening on ${PORT}`));
-
-// ——————————————
-// 1️⃣ Kill-trigger middleware
-app.use('/api', async (req, res, next) => {
-  // You must be sending a userId in headers or body:
-  const userId = req.headers['x-user-id'] || req.body.userId;
-  if (!userId) {
-    return res.status(401).json({ error: 'Missing userId' });
-  }
-  // Fetch user doc
-  const userDoc = await db.collection('users').doc(userId).get();
-  const data    = userDoc.data() || {};
-  if (!data.hasTakenTest) {
-    // Kill the request if they've never done a practice test.
-    return res.status(403).json({
-      error: 'You must complete at least one practice test before using the API.'
-    });
-  }
-  // OK, let it continue to the real handler
-  next();
-});
 
 
-require('dotenv').config();
-const cors = require('cors');
-const { OpenAI } = require('openai');
-const admin = require('firebase-admin');const serviceAccount = require('./serviceAccountKey.json');admin.initializeApp({  credential: admin.credential.cert(serviceAccount)});const db = admin.firestore();
 
-// Initialize Express app
-const app = express();
-app.use(express.json());              // Parse incoming JSON
-app.use(cors());                      // Enable CORS for all routes
-/* ── Kill-trigger middleware: block all /api routes until user hasTakenTest ── */app.use('/api', async (req, res, next) => {  const userId = req.headers['x-user-id'] || req.body.userId;  const userDoc = await db.collection('users').doc(userId).get();  const data = userDoc.data() || {};    return res.status(403).json({ error: 'You must complete at least one practice test before using the API.' });  }  next();});
-
-// Initialize OpenAI client
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY
-});
-
-
-// Health check - verifies server is running
-app.get('/', (req, res) => {
-  res.send('✅ Umbrixia AI backend is running.');
-});
-
-// Chat endpoint powered by GPT-3.5-turbo
-app.post('/chat', async (req, res) => {
-  try {
-    const userMessage = req.body.message;
-    const completion = await openai.chat.completions.create({
-  model: 'gpt-3.5-turbo',
-  messages: [{ role: 'user', content: userMessage }]
-});
-const aiResponse = completion.choices[0].message.content;
-
-    res.json({ response: aiResponse });
-  } catch (err) {
-    console.error('Error in /chat:', err);
-    res.status(500).json({ error: 'Something went wrong with OpenAI' });
-  }
-});
 
 // Admissions Predictor endpoint
 app.post('/api/admissions-predict', async (req, res) => {
@@ -151,16 +68,17 @@ Respond in strict JSON:
   "suggestion": "..."
 }`;
 
-    // Call GPT-4 for predictions
+       // Call GPT-4 for predictions
     const prediction = await openai.chat.completions.create({
-  model: 'gpt-4',
-  messages: [{ role: 'user', content: prompt }]
-});
-const raw = prediction.choices[0].message.content.trim();
+      model: 'gpt-4',
+      messages: [{ role: 'user', content: prompt }]
+    });
+    const raw = prediction.choices[0].message.content.trim();
 
-    const jsonMatch = raw.match(/\{[\s\S]*\}/);
-    if (!jsonMatch) throw new Error('Invalid JSON from AI');
-    const parsed = JSON.parse(jsonMatch[0]);
+    const jsonMatch = raw.match(/\{[\s\S]*?\}/);
+if (!jsonMatch) throw new Error('Invalid JSON from AI');
+const data = JSON.parse(jsonMatch[0]);
+return res.json(data);
 
     res.json(parsed);
   } catch (err) {
@@ -181,6 +99,7 @@ Respond _only_ with valid JSON in this exact shape:
   "labels": ["All Students", "STEM Majors", "Humanities", "Underrepresented Minorities", "International Students"],
   "values": [ /* five numeric percentages between 0 and 100, no % sign */ ]
 }`;
+
     // **capture** the AI response in `completion`
     const completion = await openai.chat.completions.create({
       model: 'gpt-4',
@@ -188,8 +107,12 @@ Respond _only_ with valid JSON in this exact shape:
     });
     // pull out the JSON blob from the AI’s reply
     const raw = completion.choices[0].message.content.trim();
-    const match = raw.match(/\{[\s\S]*\}/);
-    if (!match) throw new Error('AI did not return valid JSON.');
+    
+    const jsonMatch = raw.match(/\{[\s\S]*?\}/);
+if (!jsonMatch) throw new Error('Invalid JSON from AI');
+const data = JSON.parse(jsonMatch[0]);
+return res.json(data);
+
     // parse and return it
     const data = JSON.parse(match[0]);
     return res.json(data);
@@ -223,11 +146,11 @@ Essay:
 `;
 
   try {
-    const completion = await openai.createChatCompletion({
+    const completion = await openai.chat.completions.create({
       model: "gpt-4",
       messages: [{ role: "user", content: prompt }]
     });
-    const raw = completion.data.choices[0].message.content;
+    const raw = completion.choices[0].message.content;
     const match = raw.match(/{[\s\S]*}/);
     if (!match) throw new Error("AI returned no JSON");
     return res.json(JSON.parse(match[0]));
@@ -251,11 +174,11 @@ Generate a 7-day study plan as valid JSON:
 { "plan": [ { "day": "Monday", "hours": 2, "activities": ["..."] }, ... ] }
 `;
   try {
-    const completion = await openai.createChatCompletion({
+    const completion = await openai.chat.completions.create({
       model: "gpt-4",
       messages: [{ role: "user", content: prompt }]
     });
-    const raw = completion.data.choices[0].message.content;
+    const raw = completion.choices[0].message.content;
     const match = raw.match(/{[\s\S]*}/);
     if (!match) throw new Error("AI returned no JSON");
     return res.json(JSON.parse(match[0]));
@@ -290,11 +213,11 @@ Respond with ONLY valid JSON:
 `;
 
   try {
-    const completion = await openai.createChatCompletion({
+    const completion = await openai.chat.completions.create({
       model: "gpt-4",
       messages: [{ role: "user", content: prompt }]
     });
-    const raw = completion.data.choices[0].message.content;
+    const raw = completion.choices[0].message.content;
     const match = raw.match(/{[\s\S]*}/);
     if (!match) throw new Error("No JSON in AI response");
     return res.json(JSON.parse(match[0]));
@@ -319,11 +242,11 @@ Text:
 `;
 
   try {
-    const completion = await openai.createChatCompletion({
+    const completion = await openai.chat.completions.create({
       model: "gpt-4",
       messages: [{ role: "user", content: prompt }]
     });
-    const raw = completion.data.choices[0].message.content;
+    const raw = completion.choices[0].message.content;
     const match = raw.match(/{[\s\S]*}/);
     if (!match) throw new Error("No JSON returned");
     return res.json(JSON.parse(match[0]));
@@ -369,11 +292,11 @@ For each week, list 3 focused activities with estimated daily time.
 Return ONLY JSON: { "path": [ { "week":1, "activities":[{"name":"...","dailyMin":...},...] }, ... ] }
 `;
   try {
-    const c = await openai.createChatCompletion({
-      model:"gpt-4",
-      messages:[{role:"user",content:prompt}]
-    });
-    const raw = c.data.choices[0].message.content;
+    const c = await openai.chat.completions.create({
+  model: "gpt-4",
+  messages: [{ role: "user", content: prompt }]
+});
+const raw = c.choices[0].message.content;
     const m = raw.match(/{[\s\S]*}/);
     if (!m) throw new Error("No JSON");
     res.json(JSON.parse(m[0]));
@@ -395,11 +318,11 @@ ${points.map(p=>`- ${p}`).join('\n')}
 Return only the email body.
 `;
   try {
-    const c = await openai.createChatCompletion({
+    const c = await openai.chat.completions.create({
       model:'gpt-4',
       messages:[{role:'user',content:prompt}]
     });
-    return res.json({ body: c.data.choices[0].message.content.trim() });
+    return res.json({ body: c.choices[0].message.content.trim() });
   } catch(e) {
     console.error(e);
     return res.status(500).json({ error:'Email draft failed' });
@@ -429,12 +352,12 @@ ${docs}
 Return a JSON array of up to 3 objects: [{ excerpt: "...", source: "essay/recommendation/transcript/extracurricular" }, ...]
 `;
   try {
-    await openai.createChatCompletion({
+    const resp = await openai.chat.completions.create({
       model: "gpt-4",
       messages: [{ role: "user", content: prompt }]
     });
-    const raw = ai.choices[0].message.content;
-    const m = raw.match(/\[.*\]/s);
+    const raw  = resp.choices[0].message.content;
+    const m = raw.match(/\[.*?\]/s);
     const results = m ? JSON.parse(m[0]) : [];
     res.json({ results });
   } catch (e) {
