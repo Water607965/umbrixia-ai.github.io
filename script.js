@@ -4123,3 +4123,18 @@ document.getElementById('admissions-form').addEventListener('submit', async func
     }
   });
 })();
+
+  // inside the quiz-review success…
+const planResp = await fetch('/api/study-plan', {
+  method:'POST',
+  headers:{'Content-Type':'application/json'},
+  body: JSON.stringify({
+    goals: `Improve on your quiz weaknesses: ${parsed.feedback.filter(f=>f.includes('wrong')).join(', ')}`,
+    availableHoursPerWeek: 5
+  })
+});
+const { plan } = await planResp.json();
+qc.innerHTML += `
+  <h3>Next Week’s Plan</h3>
+  <pre style="color:#ccc;">${JSON.stringify(plan, null, 2)}</pre>`;
+
