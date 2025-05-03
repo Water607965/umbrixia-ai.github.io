@@ -4155,4 +4155,31 @@ qc.innerHTML += `
   }
 })();
 
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/sw.js').then(reg=>{
+    Notification.requestPermission();
+    // later, when you want to trigger:
+    // reg.showNotification('Title', { body:'Body text' });
+  });
+}
+
+  firebase.auth().onAuthStateChanged(async user=>{
+  if (!user) return;
+  const resp = await fetch(`/api/achievements/${user.uid}`);
+  const { badges } = await resp.json();
+  document.getElementById('badge-container').innerHTML =
+    badges.map(b=>`<span class="badge-glow" style="margin:4px;">${b}</span>`).join('');
+});
+
+function share(score){
+  const text = encodeURIComponent(`I just scored ${score}% on Umbrixia AI! 💪 https://umbrixia.ai`);
+  window.open(`https://twitter.com/intent/tweet?text=${text}`, '_blank');
+}
+document.getElementById('share-twitter').onclick = async ()=>{
+  const user = firebase.auth().currentUser;
+  const snap = await db.collection('users').doc(user.uid).collection('scores')
+    .orderBy('timestamp','desc').limit(1).get();
+  const score = snap.docs[0].data().score;
+  share(score);
+};
 
