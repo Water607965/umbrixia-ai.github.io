@@ -365,6 +365,40 @@ Return a JSON array of up to 3 objects: [{ excerpt: "...", source: "essay/recomm
   }
 });
 
+// ── AI Flashcards Endpoint ──
+app.post('/api/flashcards', async (req, res) => {
+  try {
+    const uid  = req.body.uid;      // from client
+    const test = req.body.test;     // 'shsat' | 'isee' | 'sat'
+
+    // 1) load user's topic breakdown from Firestore
+    const userSnap = await db.collection('users').doc(uid).get();
+    const topics   = userSnap.data()?.[test]?.topics || {}; 
+    // topics: { "Algebra":30, "Geometry":70, ... } percentages correct
+
+    // 2) find weakest topic
+    const weakest = Object.entries(topics)
+      .sort((a,b)=> a[1] - b[1])[0]?.[0] || 'General';
+
+    // 3) ask OpenAI for 5 flashcards on that topic
+    const prompt = `
+You are a test‐prep coach.  Create 5 flashcards (Q&A) for the ${test.toUpperCase()} exam on the weakest topic "${weakest}". 
+Respond as JSON array: [{"front":"…","back":"…"},…].
+    `;
+    const ai = await openai.chat.completions.create({
+      model: 'gpt-4',
+      messages: [{ role:'user', content: prompt }]
+    });
+    const raw = ai.choices[0].message.content;
+    const cards = JSON.parse(raw);
+
+    res.json({ weakest, cards });
+  } catch(err) {
+    console.error('Flashcards Error', err);
+    res.status(500).json({ error:'Couldn’t generate flashcards.' });
+  }
+});
+
 
 
 const PORT = process.env.PORT || 5000;
