@@ -399,6 +399,70 @@ Respond as JSON array: [{"front":"…","back":"…"},…].
   }
 });
 
+// ── AI Achievements Endpoint ──
+app.get('/api/achievements', async (req, res) => {
+  try {
+    const uid = req.query.uid;
+    const test = req.query.test || 'shsat';
+
+    // fetch user's history
+    const userSnap = await db.collection('users').doc(uid).get();
+    const history  = userSnap.data()?.[test]?.scores || []; // [{math, ela, timestamp},...]
+
+    // compute streak = days in a row they've done a test
+    const dates = history.map(d=>new Date(d.timestamp).toDateString());
+    const today = new Date().toDateString();
+    let streak = 0, cur = today;
+    while (dates.includes(cur)) {
+      streak++;
+      cur = new Date(new Date(cur).getTime() - 24*60*60*1000).toDateString();
+    }
+
+    // ask AI to generate badge titles
+    const prompt = `
+You are a gamification expert.  Given this ${test.toUpperCase()} score history:
+${JSON.stringify(history.slice(-5),null,2)}
+Generate up to 3 achievement badges (title + one‑sentence description) and respond as JSON:
+[{"title":"…","desc":"…"},…]
+    `;
+    const ai = await openai.chat.completions.create({
+      model:'gpt-4',
+      messages:[{role:'user',content:prompt}]
+    });
+    const badges = JSON.parse(ai.choices[0].message.content);
+
+    res.json({ streak, badges });
+  } catch(err){
+    console.error('Achievements Error', err);
+    res.status(500).json({ error:'Couldn’t load achievements.' });
+  }
+});
+
+// ── AI Forecast Endpoint ──
+app.post('/api/forecast', async (req, res) => {
+  try {
+    const { uid, test } = req.body;
+    const userSnap = await db.collection('users').doc(uid).get();
+    const scores   = userSnap.data()?.[test]?.scores || []; // array of {math,ela}
+
+    const prompt = `
+You are a data scientist.  Given these ${test.toUpperCase()} math scores (chronologically):
+${JSON.stringify(scores.map(s=>s.math))}
+Forecast the next 3 math scores.  Respond as JSON array of numbers.
+    `;
+    const ai = await openai.chat.completions.create({
+      model:'gpt-4',
+      messages:[{role:'user',content:prompt}]
+    });
+    const forecast = JSON.parse(ai.choices[0].message.content);
+
+    res.json({ forecast });
+  } catch(err){
+    console.error('Forecast Error', err);
+    res.status(500).json({ error:'Forecast failed.' });
+  }
+});
+
 
 
 const PORT = process.env.PORT || 5000;
