@@ -516,6 +516,26 @@ Produce a JSON: {score: X, feedback:["Q1:…",…]}
   }
 });
 
+// ── Leaderboard Endpoint ──
+app.get('/api/leaderboard', async (req, res) => {
+  const users = [];
+  const snap = await db.collection('users').get();
+  for (let doc of snap.docs) {
+    const data = await db.collection('users')
+      .doc(doc.id)
+      .collection('scores')
+      .orderBy('timestamp','asc')
+      .get();
+    const scores = data.docs.map(d=>d.data().score).filter(x=>typeof x==='number');
+    const avg = scores.length
+      ? Math.round(scores.reduce((a,b)=>a+b,0)/scores.length)
+      : 0;
+    users.push({ name: doc.id, avg });
+  }
+  users.sort((a,b)=>b.avg - a.avg);
+  res.json(users.slice(0,10));
+});
+
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`🌐 Server running on port ${PORT}`));
