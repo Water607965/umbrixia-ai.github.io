@@ -463,6 +463,34 @@ Forecast the next 3 math scores.  Respond as JSON array of numbers.
   }
 });
 
+// ── Adaptive Quiz Endpoint ──
+app.post('/api/quiz', async (req, res) => {
+  try {
+    const { uid, test } = req.body;
+    // Fetch user's topic strengths
+    const userSnap = await db.collection('users').doc(uid).get();
+    const topics   = userSnap.data()?.[test]?.topics || {};
+    // Pick 3 medium‐strength topics for challenge
+    const sorted = Object.entries(topics).sort((a,b)=>Math.abs(a[1]-70) - Math.abs(b[1]-70));
+    const selected = sorted.slice(0,3).map(e=>e[0]).join(', ');
+    // Ask AI for a 10‐question quiz
+    const prompt = `
+You are a test‑prep AI.  Create a 10‑question multiple‑choice quiz for the ${test.toUpperCase()} exam covering these topics: ${selected}.
+Each question must have 4 options (A–D) and indicate the correct letter.
+Respond as JSON: [{question:"…", options:["…","…","…","…"], answer:"B"}, …].
+    `;
+    const ai = await openai.chat.completions.create({
+      model:'gpt-4',
+      messages:[{role:'user',content:prompt}]
+    });
+    const quiz = JSON.parse(ai.choices[0].message.content);
+    res.json({ selected, quiz });
+  } catch(err){
+    console.error('Quiz Error', err);
+    res.status(500).json({error:'Failed to generate quiz.'});
+  }
+});
+
 
 
 const PORT = process.env.PORT || 5000;
