@@ -4059,3 +4059,67 @@ document.getElementById('admissions-form').addEventListener('submit', async func
     }
   });
 })();
+
+;(function bindQuiz(){
+  const startBtn = document.getElementById('start-quiz');
+  const qc       = document.getElementById('quiz-container');
+  const topicEl  = document.getElementById('quiz-topic');
+
+  startBtn.onclick = async () => {
+    startBtn.disabled = true;
+    startBtn.textContent = 'Generating…';
+
+    const user = firebase.auth().currentUser;
+    const test = document.querySelector('.test-section.active')?.id || 'shsat';
+
+    try {
+      const resp = await fetch('/api/quiz', {
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({uid:user.uid, test})
+      });
+      const { selected, quiz } = await resp.json();
+      topicEl.textContent = `Topics: ${selected}`;
+
+      // Render quiz
+      qc.innerHTML = quiz.map((q,i)=>`
+        <div class="quiz-q" data-index="${i}">
+          <p><strong>Q${i+1}:</strong> ${q.question}</p>
+          ${q.options.map((o,j)=>`
+            <label style="display:block; margin:4px 0;">
+              <input name="q${i}" type="radio" value="${['A','B','C','D'][j]}"/> ${o}
+            </label>
+          `).join('')}
+        </div>
+      `).join('') + `<button id="submit-quiz" class="btn-glow">Submit</button>`;
+    } catch(e){
+      qc.textContent = '❌ Quiz failed';
+    } finally {
+      startBtn.disabled = false;
+      startBtn.textContent = 'Start Quiz';
+    }
+  };
+
+  qc.addEventListener('click', async e=>{
+    if (e.target.id !== 'submit-quiz') return;
+    const answers = [];
+    qc.querySelectorAll('.quiz-q').forEach(div=>{
+      const idx = div.dataset.index;
+      const sel = div.querySelector(`input[name="q${idx}"]:checked`);
+      answers.push(sel?.value || null);
+    });
+    // Show results via AI
+    const user = firebase.auth().currentUser;
+    try {
+      const resp = await fetch('/api/quiz-review', {
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body: JSON.stringify({uid:user.uid, test, answers})
+      });
+      const { review } = await resp.json();
+      qc.innerHTML = `<h3>Review</h3><pre style="color:#ccc;">${review}</pre>`;
+    } catch {
+      qc.innerHTML = '❌ Couldn’t review quiz.';
+    }
+  });
+})();
