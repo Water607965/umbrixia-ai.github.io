@@ -3908,3 +3908,39 @@ window.toggleTheme = () => {
   const isLight = document.body.classList.toggle("light-mode");
   localStorage.setItem("theme", isLight ? "light" : "dark");
 };
+
+// ── Admissions Predictor Form Handler ──
+document.getElementById('admissions-form').addEventListener('submit', async function(e) {
+  e.preventDefault();
+  const school = document.getElementById('predict-school').value;
+  const grade  = document.getElementById('predict-grade').value;
+  const resultEl = document.getElementById('predict-result');
+  resultEl.textContent = '🔄 Loading…';
+
+  try {
+    const res = await fetch('/api/admissions-predict', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        school,
+        grade,
+        essays:           '',  // autofill if you collect these elsewhere
+        recommendations:  '',
+        transcripts:      '',
+        extracurriculars: ''
+      })
+    });
+    if (!res.ok) throw new Error(await res.text());
+    const { chance, justification, suggestion } = await res.json();
+
+    resultEl.innerHTML = `
+      <p><strong>Acceptance Chance:</strong> ${chance}</p>
+      <p><strong>Why:</strong> ${justification}</p>
+      <p><strong>Focus On:</strong> ${suggestion}</p>
+    `;
+  } catch (err) {
+    console.error(err);
+    resultEl.textContent = '❌ Error fetching prediction.';
+  }
+});
+
