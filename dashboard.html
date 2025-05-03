@@ -822,11 +822,14 @@ Respond in one sentence.
   </div>
 </section>
 
-    <section class="glass-card fade-in">
-  <h2 class="section-title">🃏 Generate Flashcards</h2>
-  <textarea id="flashcard-source" rows="4" placeholder="Paste a paragraph or topic..."></textarea>
-  <button id="gen-flashcards" class="btn-glow">Generate Flashcards</button>
-  <div id="flashcard-container"></div>
+    <section class="glass-card" id="flashcards">
+  <h2 class="section-title">📚 AI Flashcards</h2>
+  <p id="flashcard-topic" style="color:#ccc; font-size:.9rem;"></p>
+  <div id="card-container" style="min-height:120px; padding:1rem; background:#111; border-radius:8px; color:white;"></div>
+  <div style="margin-top:.5rem;">
+    <button id="flip-card"  class="btn-glow">Flip</button>
+    <button id="next-card"  class="btn-glow">Next</button>
+  </div>
 </section>
 
     <section class="glass-card fade-in">
