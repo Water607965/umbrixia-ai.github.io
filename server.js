@@ -536,6 +536,45 @@ app.get('/api/leaderboard', async (req, res) => {
   res.json(users.slice(0,10));
 });
 
+const cron = require('node-cron');
+const nodemailer = require('nodemailer');
+
+// configure your SMTP
+const transporter = nodemailer.createTransport({
+  host: process.env.SMTP_HOST,
+  port: +process.env.SMTP_PORT,
+  auth: {
+    user: process.env.SMTP_USER,
+    pass: process.env.SMTP_PASS
+  }
+});
+// send daily at 8am
+cron.schedule('0 8 * * *', async () => {
+  const usersSnap = await db.collection('users').get();
+  for (let u of usersSnap.docs) {
+    const email = u.data().email;
+    await transporter.sendMail({
+      from: '"Umbrixia AI" <no-reply@umbrixia.ai>',
+      to: email,
+      subject: '📚 Time for today’s practice!',
+      text: 'Hey there! Ready for your daily AI‑powered practice? Log in now 👉 https://umbrixia.ai/dashboard'
+    });
+  }
+});
+
+// ── Achievements Endpoint ──
+app.get('/api/achievements/:uid', async (req, res) => {
+  const { uid } = req.params;
+  const scoresSnap = await db.collection('users').doc(uid).collection('scores').get();
+  const count = scoresSnap.size;
+  const badges = [];
+  if (count >= 1) badges.push('First Practice ✅');
+  if (count >= 5) badges.push('5 Tests Master 🏅');
+  if (count >= 10) badges.push('10x Champion 🏆');
+  res.json({ badges });
+});
+
+
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`🌐 Server running on port ${PORT}`));
