@@ -4253,3 +4253,14 @@ firebase.auth().onAuthStateChanged(async u=>{
   };
 });
 
+  firebase.auth().onAuthStateChanged(async u=>{
+  if(!u) return;
+  const { risk, count } = await fetch(`/api/burnout-alert/${u.uid}`)
+    .then(r=>r.json());
+  if(risk==='HIGH') {
+    alert(`⚠️ We’ve noticed you’ve only done ${count} activities this week. Keep the momentum!`);
+  }
+});
+
+
+
