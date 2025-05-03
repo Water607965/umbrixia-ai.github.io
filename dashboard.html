@@ -1397,10 +1397,17 @@ document.getElementById("prediction-output").appendChild(shareBtn);
 </section>
 
 
-        <section class="glass-card fade-in">
-  <h2 class="section-title">🏅 Your Badges</h2>
+        <div class="glass-card" id="badges">
+  <h2 class="section-title">🎖 Your Badges</h2>
   <div id="badge-container"></div>
+</div>
+
+    <section class="glass-card">
+  <h2 class="section-title">📣 Share Your Progress</h2>
+  <button id="share-twitter" class="btn-glow">Tweet My Score</button>
+  <button id="share-linkedin" class="btn-glow">Share on LinkedIn</button>
 </section>
+
 
 <script>
   async function loadBadges() {
