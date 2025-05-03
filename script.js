@@ -3944,3 +3944,118 @@ document.getElementById('admissions-form').addEventListener('submit', async func
   }
 });
 
+;(async function loadFlashcards(){
+  const uidEl  = firebase.auth().currentUser;
+  if (!uidEl) return;
+  const uid     = uidEl.uid;
+  const testSel = document.querySelector('.test-section.active')?.id || 'shsat';
+
+  const topicLabel = document.getElementById('flashcard-topic');
+  const container  = document.getElementById('card-container');
+  const flipBtn    = document.getElementById('flip-card');
+  const nextBtn    = document.getElementById('next-card');
+
+  let cards = [], idx = 0, showFront = true;
+
+  // Fetch AI flashcards
+  try {
+    const resp = await fetch('/api/flashcards', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({uid, test:testSel})
+    });
+    const { weakest, cards: aiCards } = await resp.json();
+    topicLabel.textContent = `Weakest Topic: ${weakest}`;
+    cards = aiCards;
+  } catch(e) {
+    container.textContent = '❌ Flashcards failed';
+    return;
+  }
+
+  function render(){
+    if (!cards.length) return;
+    const card = cards[idx];
+    container.textContent = showFront ? card.front : card.back;
+  }
+
+  flipBtn.onclick = ()=>{
+    showFront = !showFront;
+    render();
+  };
+  nextBtn.onclick = ()=>{
+    idx = (idx + 1) % cards.length;
+    showFront = true;
+    render();
+  };
+
+  render();
+})();
+
+                          ;(async function loadAchievements(){
+  const user = firebase.auth().currentUser;
+  if (!user) return;
+  const uid    = user.uid;
+  const test   = document.querySelector('.test-section.active')?.id || 'shsat';
+  const outStreak = document.getElementById('streak-count');
+  const listEl    = document.getElementById('achievements-list');
+
+  try {
+    const resp = await fetch(`/api/achievements?uid=${uid}&test=${test}`);
+    const { streak, badges } = await resp.json();
+    outStreak.textContent = streak;
+    listEl.innerHTML = badges.map(b=>`
+      <li>🎖️ <strong>${b.title}</strong>: ${b.desc}</li>
+    `).join('');
+
+  } catch(e){
+    listEl.innerHTML = '<li>❌ Failed to load achievements</li>';
+  }
+})();
+
+                          ;(async function drawForecast(){
+  const user = firebase.auth().currentUser;
+  if (!user) return;
+  const uid  = user.uid;
+  const test = document.querySelector('.test-section.active')?.id || 'shsat';
+
+  // assume you saved your original mathScores & labels
+  const baseScores = mathScores.slice(); 
+  const baseLabels = labels.slice();
+
+  // fetch AI forecast
+  let forecast = [];
+  try {
+    const resp = await fetch('/api/forecast', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({uid, test})
+    });
+    forecast = (await resp.json()).forecast;
+  } catch(e){
+    console.error(e);
+    return;
+  }
+
+  const allLabels = [
+    ...baseLabels,
+    ...forecast.map((_,i)=>`Next ${i+1}`)
+  ];
+  const allData = [...baseScores, ...forecast];
+
+  new Chart(document.getElementById('forecastChart'), {
+    type: 'line',
+    data: {
+      labels: allLabels,
+      datasets: [{
+        label: 'Math + AI Forecast',
+        data: allData,
+        borderDash: [6,3],
+        borderColor: '#ff4d4d',
+        tension: 0.3
+      }]
+    },
+    options: {
+      plugins: { title:{ display:true, text:'📈 AI‑Forecasted Math Progress' } }
+    }
+  });
+})();
