@@ -647,7 +647,63 @@ tabs.forEach(tab => {
 </script>
 
 
-  
+  <script>
+// 1) Footer clock
+;(function() {
+  const footer = document.querySelector('footer');
+  if (!footer) return;
+  const clock = document.createElement('div');
+  clock.id = 'footer-clock';
+  clock.style.textAlign = 'center';
+  clock.style.marginTop = '8px';
+  clock.style.fontSize = '13px';
+  footer.appendChild(clock);
+  setInterval(() => {
+    clock.textContent = new Date().toLocaleString();
+  }, 1000);
+})();
+
+// 2) Scroll‑to‑Top button
+;(function() {
+  const btn = document.createElement('button');
+  btn.id = 'scrollTopBtn';
+  btn.textContent = '⬆ Top';
+  Object.assign(btn.style, {
+    position: 'fixed',
+    bottom: '20px',
+    right: '20px',
+    padding: '8px 12px',
+    fontSize: '14px',
+    display: 'none',
+    border: 'none',
+    borderRadius: '4px',
+    cursor: 'pointer',
+    zIndex: 1000
+  });
+  document.body.appendChild(btn);
+  btn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+  window.addEventListener('scroll', () => {
+    btn.style.display = window.scrollY > 300 ? 'block' : 'none';
+  });
+})();
+
+// 3) Rotating headline
+;(function() {
+  const el = document.getElementById('rotating-text');
+  if (!el) return;
+  const phrases = [
+    'Learning made intelligent.',
+    'Build momentum, not just answers.',
+    'Where AI meets clarity.'
+  ];
+  let i = 0;
+  setInterval(() => {
+    el.textContent = phrases[i++];
+    if (i >= phrases.length) i = 0;
+  }, 3500);
+})();
+</script>
+
 
   
  </body>
