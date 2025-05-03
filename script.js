@@ -4183,3 +4183,73 @@ document.getElementById('share-twitter').onclick = async ()=>{
   share(score);
 };
 
+const synth = window.speechSynthesis;
+document.getElementById('voice-tutor').onclick = async () => {
+  const recog = new webkitSpeechRecognition();
+  recog.lang = 'en-US';
+  recog.start();
+  recog.onresult = async e => {
+    const question = e.results[0][0].transcript;
+    const { response } = await fetch('/api/chat',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({ message: question })
+    }).then(r=>r.json());
+    const utter = new SpeechSynthesisUtterance(response);
+    synth.speak(utter);
+    document.getElementById('voice-output').src = URL.createObjectURL(new Blob([response],{type:'text/plain'}));
+  };
+};
+
+firebase.auth().onAuthStateChanged(async u=>{
+  if(!u) return;
+  const { risk, count } = await fetch(`/api/burnout-alert/${u.uid}`)
+    .then(r=>r.json());
+  if(risk==='HIGH') {
+    alert(`⚠️ We’ve noticed you’ve only done ${count} activities this week. Keep the momentum!`);
+  }
+});
+
+  document.getElementById('buy-insurance').onclick = async ()=>{
+  // you’d integrate Stripe here; for demo:
+  await fetch('/api/subscribe-insurance', { method:'POST' });
+  alert('✅ Streak Insurance activated! Now miss a day worry‑free.');
+};
+
+  document.getElementById('flashcard-blitz').onclick = async ()=>{
+  const text = document.querySelector('.lesson-text').innerText;
+  const cards = await fetch('/api/flashcards',{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({ text })
+  }).then(r=>r.json());
+  let idx = 0;
+  const modal = document.getElementById('flashcard-modal');
+  const qEl = document.getElementById('flashcard-question');
+  const aEl = document.getElementById('flashcard-answer');
+  function showCard() {
+    qEl.innerText = cards[idx].q;
+    aEl.style.display='none';
+  }
+  document.getElementById('show-answer').onclick = ()=>aEl.innerText = cards[idx].a, aEl.style.display='block';
+  document.getElementById('close-flash').onclick = ()=>modal.style.display='none';
+  modal.style.display='block';
+  showCard();
+};
+
+  document.querySelectorAll('.elfi-btn').forEach(btn=>{
+  btn.onclick = async () => {
+    const id = btn.dataset.contentId;
+    const raw = document.getElementById(`question-${id}`).innerText;
+    const respBox = document.getElementById(`elfi-${id}`);
+    respBox.style.display = 'block';
+    respBox.innerText = '🤔 Thinking...';
+    const { eli5 } = await fetch('/api/eli5',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({ text: raw })
+    }).then(r=>r.json());
+    respBox.innerText = eli5;
+  };
+});
+
