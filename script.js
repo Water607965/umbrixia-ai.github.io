@@ -4423,3 +4423,37 @@ document.getElementById('analyze-sentiment').onclick = async () => {
   document.getElementById('sentiment-output').textContent =
     `Mood: ${out.sentiment.toUpperCase()}\n"${out.encouragement}"`;
 };
+
+async function loadNextTest(type) {
+  const data = await fetch(`/api/tests/${type}/next`, authHeaders()).then(r=>r.json());
+  renderQuestions(data);
+}
+async function submitTest(type, answers) {
+  const result = await fetch(`/api/tests/${type}/grade`, {
+    method:'POST',
+    headers: {...authHeaders(), 'Content-Type':'application/json'},
+    body: JSON.stringify({ answers })
+  }).then(r=>r.json());
+  showResults(result);
+}
+
+async function getFeedback(type, result, mistakes) {
+  const fb = await fetch(`/api/tests/${type}/feedback`, {
+    method:'POST',
+    headers:{...authHeaders(),'Content-Type':'application/json'},
+    body: JSON.stringify({ ...result, mistakes })
+  }).then(r=>r.json());
+  displayFeedback(fb);
+}
+
+async function buildPlan() {
+  const goals = document.getElementById('goals').value;
+  const history = await fetch('/api/user-history', authHeaders()).then(r=>r.json());
+  const plan = await fetch('/api/study-plan',{
+    method:'POST',
+    headers:{...authHeaders(),'Content-Type':'application/json'},
+    body:JSON.stringify({ goals, history })
+  }).then(r=>r.json());
+  renderPlan(plan);
+}
+
