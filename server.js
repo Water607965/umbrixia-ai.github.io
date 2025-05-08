@@ -686,6 +686,71 @@ Return JSON array: [ { "q":"…", "choices":["A","B","C","D"], "answer":"A" }, �
 // replace your existing app.listen with http.listen so Socket.IO works:
 http.listen(PORT, () => console.log(`🌐 Server live on port ${PORT}`));
 
+// ── Adaptive Drill by Test Type ──
+app.post('/api/adaptive-question', async (req, res) => {
+  const { uid, testType } = req.body;
+  try {
+    // pull last 10 interactions for this testType
+    const snaps = await db.collection('analytics').doc(uid)
+      .collection('interactions')
+      .where('testType','==', testType)
+      .orderBy('ts','desc').limit(10).get();
+
+    // collect topics where the user was weakest
+    const wrong = snaps.docs
+      .filter(d => !d.data().correct)
+      .map(d => d.data().topic);
+    const topics = [...new Set(wrong)].join(', ') || 'all';
+
+    // prompt the AI for real, test‑specific drills
+    const prompt = `
+      You are an expert tutor for the ${testType.toUpperCase()}.
+      Generate 5 practice questions focused on these weak topics: ${topics}.
+      Each item should be JSON with:
+      { "q": "...", "choices": [...], "answer": "...", "topic": "..." }.
+      Return a JSON array.
+    `;
+
+    const ai = await openai.chat.completions.create({
+      model: 'gpt-4',
+      messages: [{ role: 'user', content: prompt }]
+    });
+
+    const arr = JSON.parse(ai.choices[0].message.content);
+    return res.json(arr);
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ error: 'Adaptive drill failed' });
+  }
+});
+
+// ── Score Forecast by Test Type ──
+app.get('/api/forecast-score', async (req, res) => {
+  const { uid, testType } = req.query;
+  try {
+    // grab past N scores for that test
+    const snaps = await db.collection('users').doc(uid)
+      .collection('scores')
+      .where('testType','==', testType)
+      .orderBy('ts','asc').get();
+
+    const hist = snaps.docs.map(d => d.data().score);
+    const prompt = `
+      Given this history of ${testType.toUpperCase()} scores: ${JSON.stringify(hist)},
+      predict the next 5 scores and give 3 concrete study tips.
+      Respond in JSON: { "forecast":[...], "recommendations":[...] }.
+    `;
+    const ai = await openai.chat.completions.create({
+      model:'gpt-4',
+      messages:[{ role:'user', content:prompt }]
+    });
+
+    return res.json(JSON.parse(ai.choices[0].message.content));
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ error:'Forecast failed' });
+  }
+});
 
 
 const PORT = process.env.PORT || 5000;
