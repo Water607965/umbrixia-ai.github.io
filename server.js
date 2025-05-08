@@ -788,6 +788,39 @@ app.post('/api/flashcards', async (req, res) => {
   }
 });
 
+// ── Automated Essay Scoring & Feedback ──
+app.post('/api/grade-essay', async (req, res) => {
+  const { essay, uid } = req.body;
+  if (!essay) return res.status(400).json({ error:'No essay provided.' });
+
+  const prompt = `
+    You are an expert admissions grader.
+    Grade this essay (0–100) and give:
+      1) score
+      2) 3 strengths
+      3) 3 weakness areas + improvement tip each.
+    Return ONLY JSON:
+    { "score": 0, "strengths": [...], "weaknesses":[{"issue":"…","tip":"…"}] }
+    Essay:
+    """${essay}"""
+  `;
+  try {
+    const ai = await openai.chat.completions.create({
+      model:'gpt-4',
+      messages:[{role:'user', content:prompt}]
+    });
+    const out = JSON.parse(ai.choices[0].message.content);
+    // log score for analytics
+    await db.collection('users').doc(uid)
+      .collection('essay-grades').add({...out, ts: Date.now()});
+    return res.json(out);
+  } catch(e) {
+    console.error(e);
+    res.status(500).json({ error:'Essay grading failed' });
+  }
+});
+
+
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`🌐 Server running on port ${PORT}`));
