@@ -752,6 +752,42 @@ app.get('/api/forecast-score', async (req, res) => {
   }
 });
 
+// ── Flashcard Generator (Spaced‑Repetition) ──
+app.post('/api/flashcards', async (req, res) => {
+  const { uid, testType } = req.body;
+  try {
+    // pull recent wrong items for this user & test
+    const wrongSnap = await db.collection('analytics').doc(uid)
+      .collection('interactions')
+      .where('testType','==', testType)
+      .where('correct','==', false)
+      .orderBy('ts','desc').limit(20).get();
+
+    const mistakes = wrongSnap.docs.map(d => ({
+      q: d.data().question,
+      topic: d.data().topic,
+      answer: d.data().answer
+    }));
+
+    // ask GPT‑4 to turn them into flashcards
+    const prompt = `
+      You are a spaced‑repetition flashcard generator.
+      Given these mistakes from a ${testType.toUpperCase()} practice:
+      ${JSON.stringify(mistakes, null,2)}
+      Produce JSON: [{ "front":"…", "back":"…" }, …] with clear Q/A pairs.
+    `;
+    const ai = await openai.chat.completions.create({
+      model:'gpt-4',
+      messages:[{role:'user', content:prompt}]
+    });
+    const cards = JSON.parse(ai.choices[0].message.content);
+    return res.json(cards);
+  } catch(err) {
+    console.error(err);
+    res.status(500).json({ error:'Flashcards failed' });
+  }
+});
+
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`🌐 Server running on port ${PORT}`));
