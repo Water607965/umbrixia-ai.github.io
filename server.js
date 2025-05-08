@@ -820,6 +820,52 @@ app.post('/api/grade-essay', async (req, res) => {
   }
 });
 
+// ── 30‑Day Adaptive Study Plan ──
+app.post('/api/study-plan-30', async (req, res) => {
+  const { uid, testType, dailyHours } = req.body;
+  if (!testType||!dailyHours) return res.status(400).json({ error:'Missing data' });
+
+  const prompt = `
+    Create a personalized 30‑day ${testType.toUpperCase()} study plan.
+    User can study ${dailyHours}h/day.
+    Each day: { "day":"YYYY‑MM‑DD", "focus":["topic1","topic2"], "minutes":… }.
+    Return ONLY JSON array.
+  `;
+  try {
+    const ai = await openai.chat.completions.create({
+      model:'gpt-4',
+      messages:[{role:'user', content:prompt}]
+    });
+    return res.json(JSON.parse(ai.choices[0].message.content));
+  } catch(e) {
+    console.error(e);
+    res.status(500).json({ error:'Plan generation failed' });
+  }
+});
+
+// ── Sentiment Analysis & Motivator ──
+app.post('/api/sentiment', async (req, res) => {
+  const { message } = req.body;
+  if (!message) return res.status(400).json({ error:'No message.' });
+
+  const prompt = `
+    Analyze the sentiment of: "${message}".
+    If negative, reply with an encouraging line.
+    JSON: { "sentiment":"positive|neutral|negative", "encouragement":"…" }
+  `;
+  try {
+    const ai = await openai.chat.completions.create({
+      model:'gpt-3.5-turbo',
+      messages:[{role:'user', content:prompt}]
+    });
+    res.json(JSON.parse(ai.choices[0].message.content));
+  } catch(e) {
+    console.error(e);
+    res.status(500).json({ error:'Sentiment failed' });
+  }
+});
+
+
 
 
 const PORT = process.env.PORT || 5000;
