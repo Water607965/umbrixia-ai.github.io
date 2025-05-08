@@ -1421,6 +1421,43 @@ document.getElementById("prediction-output").appendChild(shareBtn);
   </table>
 </section>
 
+    <!-- 17) Mood Tracker -->
+<section class="glass-card">
+  <h2 class="section-title">😊 Mood Check</h2>
+  <textarea id="mood-entry" placeholder="How are you feeling today?" rows="3"></textarea>
+  <button id="check-mood" class="btn-glow">Check Mood</button>
+  <div id="mood-result"></div>
+</section>
+
+<!-- 18) Smart Scheduler -->
+<section class="glass-card">
+  <h2 class="section-title">📅 Smart Scheduler</h2>
+  <input id="event-title" placeholder="Study: Algebra" />
+  <input type="datetime-local" id="event-start" />
+  <input type="number" id="event-duration" placeholder="Duration (mins)" />
+  <button id="schedule-btn" class="btn-glow">Schedule & Sync</button>
+</section>
+
+<!-- 19) Peer Help Chatroom -->
+<section class="glass-card">
+  <h2 class="section-title">💬 Peer Help</h2>
+  <input id="chat-room" placeholder="Room name (e.g. algebra)" />
+  <button id="join-room" class="btn-glow">Join Room</button>
+  <div id="chat-window" style="height:200px; overflow:auto; border:1px solid #444; padding:8px;"></div>
+  <input id="chat-input" placeholder="Type your question..." />
+  <button id="send-chat" class="btn-glow">Send</button>
+</section>
+
+<!-- 20) AI‑Generated Tests -->
+<section class="glass-card">
+  <h2 class="section-title">📝 Generate Practice Test</h2>
+  <input id="test-subject" placeholder="Subject (e.g. SAT Math)" />
+  <input type="number" id="test-count" placeholder="Number of Qs" />
+  <button id="make-test" class="btn-glow">Generate</button>
+  <div id="test-container"></div>
+</section>
+
+
 
         <div class="glass-card" id="badges">
   <h2 class="section-title">🎖 Your Badges</h2>
