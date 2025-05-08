@@ -31,3 +31,12 @@ function logout() {
 window.signup = signup;
 window.login = login;
 window.logout = logout;
+
+import { loadStripe } from '@stripe/stripe-js';
+const stripe = await loadStripe('pk_live_YOUR_KEY');
+async function subscribe() {
+  const { sessionId } = await fetch('/api/create-checkout', {
+    method:'POST', headers:{ 'Content-Type':'application/json' }
+  }).then(r=>r.json());
+  await stripe.redirectToCheckout({ sessionId });
+}
