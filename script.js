@@ -4262,5 +4262,67 @@ firebase.auth().onAuthStateChanged(async u=>{
   }
 });
 
+// 17) Mood Check
+document.getElementById('check-mood').onclick = async () => {
+  const entry = document.getElementById('mood-entry').value;
+  const res = await fetch('/api/mood-check', {
+    method:'POST', headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({ journalEntry: entry })
+  }).then(r=>r.json());
+  document.getElementById('mood-result').innerHTML =
+    `<strong>${res.sentiment || 'Error'}:</strong> ${res.message||res.error}`;
+};
+
+// 18) Schedule & Sync
+document.getElementById('schedule-btn').onclick = async () => {
+  const title = document.getElementById('event-title').value;
+  const start = document.getElementById('event-start').value;
+  const dur   = +document.getElementById('event-duration').value;
+  const startISO = new Date(start).toISOString();
+  const endISO   = new Date(new Date(start).getTime() + dur*60000).toISOString();
+  const { href } = await fetch('/api/create-event', {
+    method:'POST', headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({ title, startISO, endISO })
+  }).then(r=>r.json());
+  const a = document.createElement('a');
+  a.href = href; a.download='study.ics'; a.click();
+};
+
+// 19) Peer Chat
+const socket = io();
+document.getElementById('join-room').onclick = () => {
+  const room = document.getElementById('chat-room').value;
+  socket.emit('join', room);
+};
+document.getElementById('send-chat').onclick = () => {
+  const room = document.getElementById('chat-room').value;
+  const text = document.getElementById('chat-input').value;
+  socket.emit('msg', { room, user: 'You', text });
+};
+socket.on('msg', m => {
+  const w = document.getElementById('chat-window');
+  const p = document.createElement('p');
+  p.textContent = `[${new Date(m.ts).toLocaleTimeString()}] ${m.user}: ${m.text}`;
+  w.appendChild(p); w.scrollTop = w.scrollHeight;
+});
+
+// 20) Generate Practice Test
+document.getElementById('make-test').onclick = async () => {
+  const subj = document.getElementById('test-subject').value;
+  const num  = +document.getElementById('test-count').value;
+  const cards = await fetch('/api/generate-test', {
+    method:'POST', headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({ subject: subj, num })
+  }).then(r=>r.json());
+  const cont = document.getElementById('test-container');
+  cont.innerHTML = '';
+  cards.forEach((c,i) => {
+    const div = document.createElement('div');
+    div.className = 'practice-card';
+    div.innerHTML = `<p>${i+1}. ${c.q}</p>` +
+      c.choices.map(ch=>`<label><input type="radio" name="q${i}" value="${ch}"> ${ch}</label><br>`).join('');
+    cont.appendChild(div);
+  });
+};
 
 
