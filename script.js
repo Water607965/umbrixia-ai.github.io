@@ -4372,3 +4372,54 @@ async function loadLeaderboard() {
 }
 document.getElementById('leader-testType').onchange = loadLeaderboard;
 loadLeaderboard();
+
+                          // — Flashcards —
+document.getElementById('load-flashcards').onclick = async () => {
+  const testType = document.getElementById('flash-testType').value;
+  const cards = await fetch('/api/flashcards',{
+    method:'POST', headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({ uid:user.uid, testType })
+  }).then(r=>r.json());
+  const el = document.getElementById('flashcard-container');
+  el.innerHTML = cards.map(c=>`
+    <div class="flashcard">
+      <div class="front">${c.front}</div>
+      <div class="back">${c.back}</div>
+    </div>
+  `).join('');
+};
+
+// — Essay Grader —
+document.getElementById('grade-essay').onclick = async () => {
+  const essay = document.getElementById('essay-input').value;
+  const result = await fetch('/api/grade-essay',{
+    method:'POST',headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({ essay, uid:user.uid })
+  }).then(r=>r.json());
+  document.getElementById('essay-result').textContent = 
+    `Score: ${result.score}\nStrengths:\n- ${result.strengths.join('\n- ')}\nWeaknesses:\n` +
+    result.weaknesses.map(w=>`• ${w.issue}: ${w.tip}`).join('\n');
+};
+
+// — 30‑Day Plan —
+document.getElementById('build-plan').onclick = async () => {
+  const testType = document.getElementById('plan-testType').value;
+  const hours = +document.getElementById('daily-hours').value;
+  const plan = await fetch('/api/study-plan-30',{
+    method:'POST',headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({ uid:user.uid, testType, dailyHours:hours })
+  }).then(r=>r.json());
+  document.getElementById('plan-list').innerHTML =
+    plan.map(d=>`<li>${d.day}: ${d.focus.join(', ')} (${d.minutes} min)</li>`).join('');
+};
+
+// — Sentiment —
+document.getElementById('analyze-sentiment').onclick = async () => {
+  const msg = document.getElementById('sentiment-msg').value;
+  const out = await fetch('/api/sentiment',{
+    method:'POST',headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({ message: msg })
+  }).then(r=>r.json());
+  document.getElementById('sentiment-output').textContent =
+    `Mood: ${out.sentiment.toUpperCase()}\n"${out.encouragement}"`;
+};
