@@ -9766,3 +9766,10 @@ body.light-mode .module-card {
   font-weight: 600;
   height: 1.4em; /* prevent layout shift */
 }
+
+/* ───────── NEW SECTIONS STYLING ───────── */
+.glass-card { margin: 20px 0; padding: 20px; }
+textarea, input { width: 100%; margin: 6px 0; padding: 8px; border-radius:6px; border:1px solid #333; }
+#chat-window { background:#111; }
+.practice-card { background:#222; padding:12px; border-radius:8px; margin:8px 0; }
+
