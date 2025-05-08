@@ -1044,6 +1044,43 @@ Format:
   };
 </script>
 
+    <!-- Adaptive Drill -->
+<section id="adaptive-drill">
+  <h2>🧩 Adaptive Drill</h2>
+  <select id="drill-testType">
+    <option value="isee">ISEE</option>
+    <option value="shsat">SHSAT</option>
+    <option value="sat">SAT</option>
+  </select>
+  <button id="get-adaptive" class="btn-glow">Get Adaptive Questions</button>
+  <div id="adaptive-questions"></div>
+</section>
+
+<!-- Score Forecast -->
+<section id="forecast">
+  <h2>🔮 Score Forecast</h2>
+  <select id="forecast-testType">
+    <option value="isee">ISEE</option>
+    <option value="shsat">SHSAT</option>
+    <option value="sat">SAT</option>
+  </select>
+  <button id="get-forecast" class="btn-glow">Forecast Next 5</button>
+  <canvas id="forecastChart"></canvas>
+  <ul id="forecast-recs"></ul>
+</section>
+
+<!-- Leaderboard -->
+<section id="leaderboard">
+  <h2>🏆 Leaderboard</h2>
+  <select id="leader-testType">
+    <option value="isee">ISEE</option>
+    <option value="shsat">SHSAT</option>
+    <option value="sat">SAT</option>
+  </select>
+  <ol id="leader-list"></ol>
+</section>
+
+
 
 <script>
   document.getElementById("generate-plan").onclick = async () => {
