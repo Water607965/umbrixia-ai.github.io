@@ -623,6 +623,70 @@ Return JSON: [ { "q":"…", "a":"…" }, … ]
   res.json(JSON.parse(blob));
 });
 
+// ───────────── APPEND NEW AI ROUTES HERE ─────────────
+
+// 1) Mood Analysis & Motivation
+app.post('/api/mood-check', async (req, res) => {
+  const { journalEntry } = req.body;
+  if (!journalEntry) return res.status(400).json({ error: 'No entry provided.' });
+  const prompt = `
+Analyze the sentiment of this student journal entry. Respond JSON:
+{ "sentiment":"positive|neutral|negative", "message":"..." }
+Entry:
+"""${journalEntry}"""`;
+  const ai = await openai.chat.completions.create({
+    model: 'gpt-4',
+    messages: [{ role: 'user', content: prompt }]
+  });
+  const raw = ai.choices[0].message.content;
+  const m = raw.match(/\{[\s\S]*\}/);
+  return res.json(m ? JSON.parse(m[0]) : { error: 'Invalid AI response' });
+});
+
+// 2) Calendar Event (ICS) Generator
+app.post('/api/create-event', (req, res) => {
+  const { title, startISO, endISO } = req.body;
+  if (!title || !startISO || !endISO) return res.status(400).json({ error: 'Missing fields.' });
+  const ics = [
+    'BEGIN:VCALENDAR','VERSION:2.0','BEGIN:VEVENT',
+    `DTSTART:${startISO}`, `DTEND:${endISO}`, `SUMMARY:${title}`,
+    'END:VEVENT','END:VCALENDAR'
+  ].join('\n');
+  const href = 'data:text/calendar;charset=utf-8,' + encodeURIComponent(ics);
+  res.json({ href });
+});
+
+// 3) Peer Chat (Socket.IO)
+const http = require('http').createServer(app);
+const io   = require('socket.io')(http);
+io.on('connection', sock => {
+  sock.on('join', room => sock.join(room));
+  sock.on('msg', ({ room, user, text }) => {
+    io.to(room).emit('msg', { user, text, ts: Date.now() });
+  });
+});
+
+// 4) On‑Demand Test Generator
+app.post('/api/generate-test', async (req, res) => {
+  const { subject, num } = req.body;
+  if (!subject || !num) return res.status(400).json({ error: 'Missing subject or count.' });
+  const prompt = `
+Generate ${num} ${subject} multiple‑choice questions.
+Return JSON array: [ { "q":"…", "choices":["A","B","C","D"], "answer":"A" }, … ]
+`;
+  const ai = await openai.chat.completions.create({
+    model: 'gpt-4',
+    messages: [{ role: 'user', content: prompt }]
+  });
+  const raw = ai.choices[0].message.content;
+  const m = raw.match(/\[[\s\S]*\]/);
+  res.json(m ? JSON.parse(m[0]) : []);
+});
+
+// replace your existing app.listen with http.listen so Socket.IO works:
+http.listen(PORT, () => console.log(`🌐 Server live on port ${PORT}`));
+
+
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`🌐 Server running on port ${PORT}`));
