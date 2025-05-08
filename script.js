@@ -4326,3 +4326,49 @@ document.getElementById('make-test').onclick = async () => {
 };
 
 
+// — Adaptive Drill —
+document.getElementById('get-adaptive').onclick = async () => {
+  const testType = document.getElementById('drill-testType').value;
+  const questions = await fetch('/api/adaptive-question', {
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body: JSON.stringify({ uid:user.uid, testType })
+  }).then(r=>r.json());
+
+  document.getElementById('adaptive-questions').innerHTML =
+    questions.map((q,i)=>`
+      <div class="card">
+        <p><strong>${testType.toUpperCase()} Q${i+1}:</strong> ${q.q}</p>
+        ${q.choices.map(c=>`<button class="choice">${c}</button>`).join('')}
+      </div>
+    `).join('');
+};
+
+// — Score Forecast —
+document.getElementById('get-forecast').onclick = async () => {
+  const testType = document.getElementById('forecast-testType').value;
+  const res = await fetch(
+    `/api/forecast-score?uid=${user.uid}&testType=${testType}`
+  ).then(r=>r.json());
+
+  new Chart(document.getElementById('forecastChart'), {
+    type:'line',
+    data:{
+      labels:['+1','+2','+3','+4','+5'],
+      datasets:[{ label:`${testType.toUpperCase()} Forecast`, data:res.forecast, fill:false }]
+    }
+  });
+  document.getElementById('forecast-recs').innerHTML =
+    res.recommendations.map(r=>`<li>${r}</li>`).join('');
+};
+
+// — Leaderboard —
+async function loadLeaderboard() {
+  const testType = document.getElementById('leader-testType').value;
+  const list = await fetch(`/api/get-leaderboard?testType=${testType}`)
+    .then(r=>r.json());
+  document.getElementById('leader-list').innerHTML =
+    list.map((u,i)=>`<li>${i+1}. ${u.name} — ${u.score}</li>`).join('');
+}
+document.getElementById('leader-testType').onchange = loadLeaderboard;
+loadLeaderboard();
