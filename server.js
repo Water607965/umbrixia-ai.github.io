@@ -866,6 +866,102 @@ app.post('/api/sentiment', async (req, res) => {
 });
 
 
+// Middleware to validate Firebase ID tokens
+const { getAuth } = require('firebase-admin/auth');
+async function authGuard(req, res, next) {
+  const idToken = req.headers.authorization?.split('Bearer ')[1];
+  if (!idToken) return res.status(401).send('Unauthorized');
+  try {
+    const decoded = await getAuth().verifyIdToken(idToken);
+    req.uid = decoded.uid;
+    next();
+  } catch {
+    res.status(401).send('Invalid token');
+  }
+}
+
+// Apply globally to all /api routes:
+app.use('/api', authGuard);
+
+// Fetch a new SHSAT/ISEE/SAT question set
+app.get('/api/tests/:type/next', async (req, res) => {
+  const { type } = req.params;       // “shsat”, “isee” or “sat”
+  const pool = await db.collection(`questions_${type}`).get();
+  const all = pool.docs.map(d=>d.data());
+  const next = all[Math.floor(Math.random()*all.length)];
+  res.json(next);
+});
+
+// Grade a submitted test
+app.post('/api/tests/:type/grade', async (req, res) => {
+  const { type } = req.params;
+  const { answers } = req.body;     // { qId: 'A', qId2: 'B', … }
+  const pool = await db.collection(`questions_${type}`).get();
+  let correct = 0, total = 0;
+  pool.docs.forEach(doc => {
+    const { id, answer } = doc.data();
+    if (answers[id] !== undefined) {
+      total++;
+      if (answers[id] === answer) correct++;
+    }
+  });
+  const score = Math.round((correct/total)*100);
+  // save to Firestore
+  await db.collection('users').doc(req.uid)
+    .collection('scores')
+    .add({ type, correct, total, score, timestamp: Date.now() });
+  res.json({ correct, total, score });
+});
+
+app.post('/api/tests/:type/feedback', async (req, res) => {
+  const { type } = req.params;
+  const { correct, total, mistakes } = req.body; // mistakes = [{ id, yourAnswer, correctAnswer, questionText }]
+  const prompt = `
+You are a seasoned tutor. A student just took the ${type.toUpperCase()}:
+Score: ${correct}/${total}.
+They missed these questions:
+${mistakes.map(m=>`• Q: ${m.questionText}\n  Your: ${m.yourAnswer} | Correct: ${m.correctAnswer}`).join('\n')}
+Give them:
+1) A short motivation.
+2) Three targeted tips to improve in ${type}.
+Respond in JSON:
+{ "motivation":"…", "tips":["…","…","…"] }`;
+  const ai = await openai.chat.completions.create({
+    model:'gpt-4', messages:[{role:'user',content:prompt}]
+  });
+  const match = ai.choices[0].message.content.match(/\{[\s\S]*\}/);
+  res.json(JSON.parse(match[0]));
+});
+
+app.post('/api/study-plan', async (req, res) => {
+  const { goals, history } = req.body; 
+  // history = last few scores & feedback summaries
+  const prompt = `
+You are an AI coach. The student’s goals: ${goals}.
+Their recent performance: ${JSON.stringify(history,0,2)}.
+Generate a 4‑week adaptive study plan. Each week has 3–4 focused activities, with daily time estimates.
+Respond ONLY with valid JSON:
+{ "plan":[ { "week":1,"activities":[{"activity":"…","dailyMin":…},…] }, … ] }
+`;
+  const ai = await openai.chat.completions.create({
+    model:'gpt-4', messages:[{role:'user',content:prompt}]
+  });
+  const m = ai.choices[0].message.content.match(/\{[\s\S]*\}/);
+  res.json(JSON.parse(m[0]));
+});
+
+const stripe = require('stripe')(process.env.STRIPE_SECRET);
+app.post('/api/create-checkout', authGuard, async (req, res) => {
+  const session = await stripe.checkout.sessions.create({
+    customer_email: req.user.email,
+    payment_method_types: ['card'],
+    line_items: [{ price: 'price_XXXX', quantity: 1 }],
+    mode: 'subscription',
+    success_url: `${FRONTEND_URL}/thank-you`,
+    cancel_url: `${FRONTEND_URL}/pricing`
+  });
+  res.json({ sessionId: session.id });
+});
 
 
 const PORT = process.env.PORT || 5000;
