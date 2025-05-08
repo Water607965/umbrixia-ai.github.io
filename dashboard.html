@@ -842,6 +842,48 @@ Respond in one sentence.
   </div>
 </section>
 
+    <!-- FLASHCARDS -->
+<section id="flashcards">
+  <h2>🔖 Yours Spaced‑Repetition Flashcards</h2>
+  <select id="flash-testType">
+    <option value="isee">ISEE</option>
+    <option value="shsat">SHSAT</option>
+    <option value="sat">SAT</option>
+  </select>
+  <button id="load-flashcards" class="btn-glow">Load Flashcards</button>
+  <div id="flashcard-container"></div>
+</section>
+
+<!-- ESSAY GRADER -->
+<section id="essay-grader">
+  <h2>📝 Essay Grader & Feedback</h2>
+  <textarea id="essay-input" placeholder="Paste your essay…"></textarea>
+  <button id="grade-essay" class="btn-glow">Grade Essay</button>
+  <pre id="essay-result"></pre>
+</section>
+
+<!-- 30‑DAY PLAN -->
+<section id="study-plan-30">
+  <h2>📆 30‑Day Study Plan</h2>
+  <select id="plan-testType">
+    <option value="isee">ISEE</option>
+    <option value="shsat">SHSAT</option>
+    <option value="sat">SAT</option>
+  </select>
+  <input id="daily-hours" type="number" placeholder="Hours per day" min="1" max="8"/>
+  <button id="build-plan" class="btn-glow">Generate Plan</button>
+  <ul id="plan-list"></ul>
+</section>
+
+<!-- SENTIMENT -->
+<section id="sentiment">
+  <h2>💬 Mood & Motivation</h2>
+  <input id="sentiment-msg" placeholder="How are you feeling today?" />
+  <button id="analyze-sentiment" class="btn-glow">Analyze Mood</button>
+  <p id="sentiment-output"></p>
+</section>
+
+
     <button id="voice-tutor" class="btn-glow">🎤 Talk to Tutor</button>
 <audio id="voice-output" hidden></audio>
 
