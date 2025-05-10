@@ -1329,7 +1329,32 @@ if (!topicData || Object.keys(topicData).length === 0) {
     type: 'bar',
     data: {
       labels: ['Math', 'ELA', 'Logic'],
-      datasets: [{ label: 'Progress', data: [80, 70, 85], backgroundColor: '#ff4d4d' }]
+      const scoresSnap = await firebase.firestore()
+  .collection("users").doc(uid).collection("scores").orderBy("timestamp").get();
+
+const subjects = ["Math", "ELA", "Logic"];
+const userData = subjects.map(subject => {
+  let total = 0, count = 0;
+  scoresSnap.forEach(doc => {
+    if (doc.data()[subject.toLowerCase()] !== undefined) {
+      total += doc.data()[subject.toLowerCase()];
+      count++;
+    }
+  });
+  return count ? Math.round(total / count) : 0;
+});
+
+new Chart(ctx, {
+  type: 'bar',
+  data: {
+    labels: subjects,
+    datasets: [{
+      label: 'Progress',
+      data: userData,
+      backgroundColor: '#ff4d4d'
+    }]
+  },
+
     },
     options: { scales: { y: { beginAtZero: true } } }
   });
