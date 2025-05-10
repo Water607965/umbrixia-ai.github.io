@@ -1,3 +1,5 @@
+const db = firebase.firestore();
+
 firebase.auth().onAuthStateChanged(function(user) {
   if (user) {
     const name = user.displayName || user.email;
@@ -35,27 +37,6 @@ const button = document.querySelector("button");
 function presetQuestion(text) {
     userInput.value = text;
     sendMessage();
-}
-
-try {
-  const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), 10000); // 10s max wait
-
-  let response = await fetch("https://umbrixia-ai-github-io.onrender.com/chat", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ message: userMessage }),
-    signal: controller.signal
-  });
-
-  clearTimeout(timeoutId);
-
-  let data = await response.json();
-  chat.innerHTML += `<p class="message bot"><strong>Umbrixia:</strong> ${data.reply}</p>`;
-  usageCount++;
-  localStorage.setItem("umbrixiaTrialCount", usageCount);
-} catch (error) {
-  chat.innerHTML += `<p class="message bot error"><strong>Umbrixia:</strong> Error getting response. Please try again later.</p>`;
 }
 
 chat.scrollTop = chat.scrollHeight;
@@ -3452,23 +3433,7 @@ document.addEventListener("DOMContentLoaded", () => {
   avatar?.addEventListener("click", toggleUserMenu);
 });
 
-firebase.auth().onAuthStateChanged(user => {
-  if (user) {
-    const greeting = document.getElementById("greeting");
-    const name = user.displayName || user.email.split('@')[0];
-    greeting.innerHTML = `👋 Welcome back, <span style="font-weight: 800;">${name}</span>`;
-    greeting.classList.remove("hidden");
 
-    // Add dashboard buttons below greeting
-    const dashButton = document.createElement("a");
-    dashButton.href = "dashboard.html";
-    dashButton.className = "apple-btn dark";
-    dashButton.innerText = "Go to Dashboard";
-    dashButton.style.marginTop = "1rem";
-    greeting.appendChild(document.createElement("br"));
-    greeting.appendChild(dashButton);
-  }
-});
 
 // 🍎 Apple-style Landing Animation for All Sections
 document.addEventListener("DOMContentLoaded", () => {
@@ -3604,12 +3569,7 @@ function logout() {
   });
 }
 
-firebase.auth().onAuthStateChanged(user => {
-  if (user) {
-    const emailEl = document.getElementById("userEmailDisplay");
-    if (emailEl) emailEl.textContent = `👋 ${user.email}`;
-  }
-});
+
 
 function toggleTheme() {
   document.body.classList.toggle("light-mode");
@@ -3954,6 +3914,11 @@ document.getElementById('admissions-form').addEventListener('submit', async func
   const grade  = document.getElementById('predict-grade').value;
   const resultEl = document.getElementById('predict-result');
   resultEl.textContent = '🔄 Loading…';
+
+  const uid = firebase.auth().currentUser?.uid;
+const userDoc = await firebase.firestore().collection("users").doc(uid).get();
+const { essays, recommendations, transcripts, extracurriculars } = userDoc.data() || {};
+
 
   try {
     const res = await fetch('/api/admissions-predict', {
@@ -4506,3 +4471,12 @@ if (voiceButton) {
 }
 
   loadCard();
+
+  const voiceBtn = document.getElementById("voice-tutor");
+if (voiceBtn) {
+  voiceBtn.addEventListener("click", () => {
+    const utterance = new SpeechSynthesisUtterance("Hi! I'm your AI tutor. What do you need help with?");
+    speechSynthesis.speak(utterance);
+  });
+}
+
