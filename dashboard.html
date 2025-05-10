@@ -817,7 +817,7 @@ Respond in one sentence.
 
     <section class="glass-card fade-in">
   <h2 class="section-title">💬 AI Study Chat</h2>
-  <div id="chat-window" class="chat-window"></div>
+  <div id="chat" class="chat-window"></div>
   <div class="chat-input-wrapper">
     <input type="text" id="chat-input" placeholder="Ask your study question..." />
     <button id="send-chat" class="btn-glow">Send</button>
@@ -831,10 +831,11 @@ Respond in one sentence.
   <div style="margin-top:.5rem;">
     <button id="flip-card"  class="btn-glow">Flip</button>
     <button id="next-card"  class="btn-glow">Next</button>
-   <p id="question"></p>
-<p id="answer" style="display:none;"></p>
-<button id="show-answer"></button>
-<button id="next-flashcard"></button>
+  <p id="question">Loading...</p>
+<p id="answer" style="display:none;">Answer here</p>
+<button id="show-answer" class="btn-glow">Show Answer</button>
+<button id="next-flashcard" class="btn-glow">Next</button>
+
   </div>
 </section>
 
