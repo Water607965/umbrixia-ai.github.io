@@ -385,17 +385,6 @@ h2.section-title {
   });
 </script>
 
-
-  <script>
-  // Redirect to login.html if not authenticated
-  firebase.auth().onAuthStateChanged(user => {
-    if (!user) {
-      alert("❌ You must be logged in to access Umbrixia AI.");
-      window.location.href = "login.html";
-    }
-  });
-</script>
-
   <script>
   firebase.auth().onAuthStateChanged(async user => {
     if (!user) return;
@@ -2484,11 +2473,7 @@ async function runPrediction() {
     });
   }
 
-  // Run on page load once logged in
-  firebase.auth().onAuthStateChanged(user => {
-    if (user) drawDemographics();
-  });
-</script>
+
 
       <script>
 async function drawDemographics() {
