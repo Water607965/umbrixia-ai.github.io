@@ -12,160 +12,11 @@
   <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
 <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
 
-  <section class="glass-card fade-in">
-  <h2 class="section-title">✏️ Collaborative Notes</h2>d
-  <div id="collab-toolbar"></div>
-  <div id="collab-editor" style="height:200px;"></div>
-</section>
-
-  <button id="voice-tutor" class="btn-glow">🎤 Talk to Tutor</button>
-<audio id="voice-output" hidden></audio>
 
 
-<script>
-  // Init Quill
-  const quill = new Quill('#collab-editor', {
-    modules: { toolbar: '#collab-toolbar' },
-    theme: 'snow'
-  });
-  const notesRef = firebase.firestore().collection('notes').doc('shared');
-  
-  // Load existing and listen
-  notesRef.onSnapshot(snap => {
-    const data = snap.data() || {};
-    quill.setContents(data.delta || {});
-  });
-
-  // Save on text-change
-  quill.on('text-change', delta => {
-    notesRef.set({ delta: quill.getContents() });
-  });
-</script>
+ 
 
 
-  <script>
-  // Redirect to login.html if not authenticated
-  firebase.auth().onAuthStateChanged(user => {
-    if (!user) {
-      alert("❌ You must be logged in to access Umbrixia AI.");
-      window.location.href = "login.html";
-    }
-  });
-</script>
-
-  <script>
-  firebase.auth().onAuthStateChanged(async user => {
-    if (!user) return;
-    const doc = await firebase.firestore().collection("users").doc(user.uid).get();
-    const data = doc.data() || {};
-    // If no practice test taken AND no uploads, kick them out
-    if (
-      !data.hasTakenTest &&
-      (!Array.isArray(data.essays)           || data.essays.length === 0) &&
-      (!Array.isArray(data.recommendations)  || data.recommendations.length === 0) &&
-      (!Array.isArray(data.transcripts)      || data.transcripts.length === 0) &&
-      (!Array.isArray(data.extracurriculars) || data.extracurriculars.length === 0)
-    ) {
-      alert("⚠️ You must complete a practice test or upload materials before using Umbrixia.");
-      window.location.href = "practice.html";  // or whichever page lets them start tests
-    }
-  });
-</script>
-
-
- <script>
-  firebase.auth().onAuthStateChanged(u => {
-    if (!u) {
-      alert("❌ Please log in to access Umbrixia.");
-      window.location.href = "login.html";
-    }
-  });
-</script>
-
-  <section class="glass-card fade-in">
-  <h2 class="section-title">⏱️ Pomodoro Timer</h2>
-  <div id="pomodoro-display">25:00</div>
-  <button id="pomodoro-start" class="btn-glow">Start</button>
-  <button id="pomodoro-reset" class="btn-glow">Reset</button>
-</section>
-
-<script>
-  let pomodoroTime = 25 * 60, pomodoroInterval;
-  const display = document.getElementById("pomodoro-display");
-  function updateDisplay() {
-    const m = String(Math.floor(pomodoroTime/60)).padStart(2,'0');
-    const s = String(pomodoroTime%60).padStart(2,'0');
-    display.textContent = `${m}:${s}`;
-  }
-  document.getElementById("pomodoro-start").onclick = () => {
-    if (pomodoroInterval) return;
-    pomodoroInterval = setInterval(() => {
-      pomodoroTime--;
-      updateDisplay();
-      if (pomodoroTime <= 0) {
-        clearInterval(pomodoroInterval);
-        pomodoroInterval = null;
-        new Notification("Pomodoro complete! Time for a 5-minute break.");
-        pomodoroTime = 5*60; // short break
-      }
-    }, 1000);
-  };
-  document.getElementById("pomodoro-reset").onclick = () => {
-    clearInterval(pomodoroInterval);
-    pomodoroInterval = null;
-    pomodoroTime = 25*60;
-    updateDisplay();
-  };
-  updateDisplay();
-  // Request permission for notifications
-  if (Notification.permission !== "granted") Notification.requestPermission();
-</script>
-
-  <section class="glass-card fade-in">
-  <h2 class="section-title">📆 Schedule Study Session</h2>
-  <input type="text" id="cal-title" placeholder="Session Title" />
-  <input type="datetime-local" id="cal-date" />
-  <input type="number" id="cal-duration" placeholder="Duration (min)" />
-  <button id="create-event" class="btn-glow">Create Calendar Event</button>
-  <a id="event-link" class="btn-glow" style="display:none;" download="study.ics">Download .ics</a>
-</section>
-
-<script>
-  document.getElementById("create-event").onclick = async () => {
-    const title = document.getElementById("cal-title").value.trim();
-    const date  = document.getElementById("cal-date").value;
-    const dur   = parseInt(document.getElementById("cal-duration").value,10);
-    if (!title||!date||!dur) return alert("Fill all fields.");
-    const res = await fetch(
-      "https://umbrixia-ai-github-io.onrender.com/api/calendar-event",
-      {
-        method:"POST",
-        headers:{"Content-Type":"application/json"},
-        body:JSON.stringify({title,date,duration:dur})
-      }
-    );
-    const { href } = await res.json();
-    const link = document.getElementById("event-link");
-    link.href = href;
-    link.style.display = "inline-block";
-  };
-</script>
-
-
-  <script>
-  if ("webkitSpeechRecognition" in window) {
-    const recog = new webkitSpeechRecognition();
-    recog.continuous = false;
-    recog.onresult = e => {
-      const text = e.results[0][0].transcript;
-      document.getElementById("chat-input").value = text;
-      document.getElementById("send-chat").click();
-    };
-    document.addEventListener("keydown", e => {
-      if (e.key==="v" && e.altKey) recog.start();
-    });
-  }
-</script>
 
  
  
@@ -456,13 +307,6 @@ h2.section-title {
    <button onclick="logout()">🚪 Logout</button>
  </div>
 
-  <section id="settings" class="glass-card fade-in">
-  <h2 class="section-title">⚙️ Your Settings</h2>
-  <label>Display Name:</label>
-  <input type="text" id="settings-name" />
-  <button id="save-settings" class="btn-glow">Save</button>
-</section>
-
 <script>
   firebase.auth().onAuthStateChanged(async u => {
     if (!u) return;
@@ -519,6 +363,152 @@ h2.section-title {
       <div class="glow-line"></div>
     </div>
    </div>
+
+   
+<script>
+  // Init Quill
+  const quill = new Quill('#collab-editor', {
+    modules: { toolbar: '#collab-toolbar' },
+    theme: 'snow'
+  });
+  const notesRef = firebase.firestore().collection('notes').doc('shared');
+  
+  // Load existing and listen
+  notesRef.onSnapshot(snap => {
+    const data = snap.data() || {};
+    quill.setContents(data.delta || {});
+  });
+
+  // Save on text-change
+  quill.on('text-change', delta => {
+    notesRef.set({ delta: quill.getContents() });
+  });
+</script>
+
+
+  <script>
+  // Redirect to login.html if not authenticated
+  firebase.auth().onAuthStateChanged(user => {
+    if (!user) {
+      alert("❌ You must be logged in to access Umbrixia AI.");
+      window.location.href = "login.html";
+    }
+  });
+</script>
+
+  <script>
+  firebase.auth().onAuthStateChanged(async user => {
+    if (!user) return;
+    const doc = await firebase.firestore().collection("users").doc(user.uid).get();
+    const data = doc.data() || {};
+    // If no practice test taken AND no uploads, kick them out
+    if (
+      !data.hasTakenTest &&
+      (!Array.isArray(data.essays)           || data.essays.length === 0) &&
+      (!Array.isArray(data.recommendations)  || data.recommendations.length === 0) &&
+      (!Array.isArray(data.transcripts)      || data.transcripts.length === 0) &&
+      (!Array.isArray(data.extracurriculars) || data.extracurriculars.length === 0)
+    ) {
+      alert("⚠️ You must complete a practice test or upload materials before using Umbrixia.");
+      window.location.href = "practice.html";  // or whichever page lets them start tests
+    }
+  });
+</script>
+
+
+ <script>
+  firebase.auth().onAuthStateChanged(u => {
+    if (!u) {
+      alert("❌ Please log in to access Umbrixia.");
+      window.location.href = "login.html";
+    }
+  });
+</script>
+
+  <section class="glass-card fade-in">
+  <h2 class="section-title">⏱️ Pomodoro Timer</h2>
+  <div id="pomodoro-display">25:00</div>
+  <button id="pomodoro-start" class="btn-glow">Start</button>
+  <button id="pomodoro-reset" class="btn-glow">Reset</button>
+</section>
+
+<script>
+  let pomodoroTime = 25 * 60, pomodoroInterval;
+  const display = document.getElementById("pomodoro-display");
+  function updateDisplay() {
+    const m = String(Math.floor(pomodoroTime/60)).padStart(2,'0');
+    const s = String(pomodoroTime%60).padStart(2,'0');
+    display.textContent = `${m}:${s}`;
+  }
+  document.getElementById("pomodoro-start").onclick = () => {
+    if (pomodoroInterval) return;
+    pomodoroInterval = setInterval(() => {
+      pomodoroTime--;
+      updateDisplay();
+      if (pomodoroTime <= 0) {
+        clearInterval(pomodoroInterval);
+        pomodoroInterval = null;
+        new Notification("Pomodoro complete! Time for a 5-minute break.");
+        pomodoroTime = 5*60; // short break
+      }
+    }, 1000);
+  };
+  document.getElementById("pomodoro-reset").onclick = () => {
+    clearInterval(pomodoroInterval);
+    pomodoroInterval = null;
+    pomodoroTime = 25*60;
+    updateDisplay();
+  };
+  updateDisplay();
+  // Request permission for notifications
+  if (Notification.permission !== "granted") Notification.requestPermission();
+</script>
+
+  <section class="glass-card fade-in">
+  <h2 class="section-title">📆 Schedule Study Session</h2>
+  <input type="text" id="cal-title" placeholder="Session Title" />
+  <input type="datetime-local" id="cal-date" />
+  <input type="number" id="cal-duration" placeholder="Duration (min)" />
+  <button id="create-event" class="btn-glow">Create Calendar Event</button>
+  <a id="event-link" class="btn-glow" style="display:none;" download="study.ics">Download .ics</a>
+</section>
+
+<script>
+  document.getElementById("create-event").onclick = async () => {
+    const title = document.getElementById("cal-title").value.trim();
+    const date  = document.getElementById("cal-date").value;
+    const dur   = parseInt(document.getElementById("cal-duration").value,10);
+    if (!title||!date||!dur) return alert("Fill all fields.");
+    const res = await fetch(
+      "https://umbrixia-ai-github-io.onrender.com/api/calendar-event",
+      {
+        method:"POST",
+        headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({title,date,duration:dur})
+      }
+    );
+    const { href } = await res.json();
+    const link = document.getElementById("event-link");
+    link.href = href;
+    link.style.display = "inline-block";
+  };
+</script>
+
+
+  <script>
+  if ("webkitSpeechRecognition" in window) {
+    const recog = new webkitSpeechRecognition();
+    recog.continuous = false;
+    recog.onresult = e => {
+      const text = e.results[0][0].transcript;
+      document.getElementById("chat-input").value = text;
+      document.getElementById("send-chat").click();
+    };
+    document.addEventListener("keydown", e => {
+      if (e.key==="v" && e.altKey) recog.start();
+    });
+  }
+</script>
 
     
     <div class="hero-right">
@@ -1854,6 +1844,12 @@ async function runPrediction() {
        </div>
      </div>
 
+      <section class="glass-card fade-in">
+  <h2 class="section-title">✏️ Collaborative Notes</h2>
+  <div id="collab-toolbar"></div>
+  <div id="collab-editor" style="height:200px;"></div>
+</section>
+
     <section class="glass-card fade-in">
   <h2 class="section-title">📅 Daily Check-in</h2>
   <p>Your current streak: <strong id="daily-streak">…</strong> days</p>
@@ -2554,6 +2550,26 @@ firebase.auth().onAuthStateChanged(u => u && drawDemographics());
       n.textContent = text;
       container.appendChild(n);
     });
+  });
+</script>
+
+    <script>
+  firebase.auth().onAuthStateChanged(function(user) {
+    if (user) {
+      const name = user.displayName || user.email;
+      const greeting = document.createElement("div");
+      greeting.innerHTML = `<h3>👋 Welcome, ${name}</h3>`;
+      document.body.insertBefore(greeting, document.body.firstChild);
+    }
+  });
+</script>
+
+    <script>
+  document.getElementById("voice-tutor").addEventListener("click", () => {
+    const message = "Hi! I'm your AI Tutor. What subject do you want help with today?";
+    const synth = window.speechSynthesis;
+    const utterance = new SpeechSynthesisUtterance(message);
+    synth.speak(utterance);
   });
 </script>
 
