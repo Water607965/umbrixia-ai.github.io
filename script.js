@@ -1,3 +1,13 @@
+firebase.auth().onAuthStateChanged(function(user) {
+  if (user) {
+    const name = user.displayName || user.email;
+    const greeting = document.createElement("div");
+    greeting.innerHTML = `<h3>👋 Welcome, ${name}</h3>`;
+    document.body.insertBefore(greeting, document.body.firstChild);
+  }
+});
+
+
 function updateClock() {
   const now = new Date();
   const timeString = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
@@ -26,6 +36,30 @@ function presetQuestion(text) {
     userInput.value = text;
     sendMessage();
 }
+
+try {
+  const controller = new AbortController();
+  const timeoutId = setTimeout(() => controller.abort(), 10000); // 10s max wait
+
+  let response = await fetch("https://umbrixia-ai-github-io.onrender.com/chat", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ message: userMessage }),
+    signal: controller.signal
+  });
+
+  clearTimeout(timeoutId);
+
+  let data = await response.json();
+  chat.innerHTML += `<p class="message bot"><strong>Umbrixia:</strong> ${data.reply}</p>`;
+  usageCount++;
+  localStorage.setItem("umbrixiaTrialCount", usageCount);
+} catch (error) {
+  chat.innerHTML += `<p class="message bot error"><strong>Umbrixia:</strong> Error getting response. Please try again later.</p>`;
+}
+
+chat.scrollTop = chat.scrollHeight;
+
 
 async function sendMessage() {
     if (usageCount >= MAX_FREE_TRIAL) {
@@ -4455,5 +4489,15 @@ async function buildPlan() {
     body:JSON.stringify({ goals, history })
   }).then(r=>r.json());
   renderPlan(plan);
+}
+
+const voiceButton = document.getElementById("voice-tutor");
+if (voiceButton) {
+  voiceButton.addEventListener("click", () => {
+    const message = "Hi! I'm your AI Tutor. What subject do you want help with today?";
+    const synth = window.speechSynthesis;
+    const utterance = new SpeechSynthesisUtterance(message);
+    synth.speak(utterance);
+  });
 }
 
