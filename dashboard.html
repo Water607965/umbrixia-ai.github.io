@@ -831,6 +831,10 @@ Respond in one sentence.
   <div style="margin-top:.5rem;">
     <button id="flip-card"  class="btn-glow">Flip</button>
     <button id="next-card"  class="btn-glow">Next</button>
+   <p id="question"></p>
+<p id="answer" style="display:none;"></p>
+<button id="show-answer"></button>
+<button id="next-flashcard"></button>
   </div>
 </section>
 
@@ -1316,7 +1320,21 @@ if (!topicData || Object.keys(topicData).length === 0) {
  
      </div>
  
-    
+    <canvas id="progress-chart" width="400" height="200"></canvas>
+<script>
+ window.addEventListener("DOMContentLoaded", () => {
+  const ctx = document.getElementById('progress-chart').getContext('2d');
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: ['Math', 'ELA', 'Logic'],
+      datasets: [{ label: 'Progress', data: [80, 70, 85], backgroundColor: '#ff4d4d' }]
+    },
+    options: { scales: { y: { beginAtZero: true } } }
+  });
+});
+
+</script>
  
        <section id="admissions-predictor" class="glass-card">
   <h2 class="section-title">🔮 AI Admissions Predictor</h2>
@@ -2573,6 +2591,14 @@ firebase.auth().onAuthStateChanged(u => u && drawDemographics());
   });
 </script>
 
+    <script>
+     firebase.auth().onAuthStateChanged(user => {
+  if (user) {
+    const name = user.displayName || user.email;
+    document.body.insertAdjacentHTML("afterbegin", `<div style="text-align:center;">👋 Welcome, ${name}</div>`);
+  }
+});
+    </script>
       
 
  </body>
