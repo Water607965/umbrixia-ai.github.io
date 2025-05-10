@@ -812,21 +812,20 @@ Respond in one sentence.
     <button id="send-chat" class="btn-glow">Send</button>
   </div>
 </section>
-
-    <section class="glass-card" id="flashcards">
+    
+<section class="glass-card fade-in" id="flashcards">
   <h2 class="section-title">📚 AI Flashcards</h2>
-  <p id="flashcard-topic" style="color:#ccc; font-size:.9rem;"></p>
-  <div id="card-container" style="min-height:120px; padding:1rem; background:#111; border-radius:8px; color:white;"></div>
-  <div style="margin-top:.5rem;">
-    <button id="flip-card"  class="btn-glow">Flip</button>
-    <button id="next-card"  class="btn-glow">Next</button>
-  <p id="question">Loading...</p>
-<p id="answer" style="display:none;">Answer here</p>
-<button id="show-answer" class="btn-glow">Show Answer</button>
-<button id="next-flashcard" class="btn-glow">Next</button>
-
+  <div id="flashcard" class="glass-card" style="text-align: center; padding: 20px;">
+    <p id="question">Loading...</p>
+    <p id="answer" style="display:none;"></p>
+    <button id="show-answer" class="btn-glow">Show Answer</button>
+    <button id="next-flashcard" class="btn-glow">Next</button>
+    <button id="mark-wrong" class="btn-glow">Mark as Incorrect</button>
+   <p id="topic-suggestion" class="fade-in" style="margin-top: 15px;"></p>
+   <div id="stats-box" style="margin-top: 10px; font-size: 16px;"></div>
   </div>
 </section>
+
 
     <!-- FLASHCARDS -->
 <section id="flashcards">
