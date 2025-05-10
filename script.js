@@ -5,6 +5,7 @@ firebase.auth().onAuthStateChanged(function(user) {
     const name = user.displayName || user.email;
     const greeting = document.createElement("div");
     greeting.innerHTML = `<h3>👋 Welcome, ${name}</h3>`;
+    loadUserChart(user.uid);
     document.body.insertBefore(greeting, document.body.firstChild);
   }
 });
@@ -3370,6 +3371,14 @@ document.getElementById('runPredictor')
       data.map(d => `<p>${d.label}: ${d.pct.toFixed(2)}%</p>`).join('');
   });
 
+document.getElementById("prediction-result").innerHTML = `
+  <h3>${result.chance}% Chance at ${result.bestMatch}</h3>
+  <progress max="100" value="${result.chance}"></progress>
+  <p><strong>Why?</strong> ${result.justification}</p>
+  <p><strong>To Improve:</strong> ${result.suggestion}</p>
+`;
+
+
 // Security stubs
 document.getElementById('sendEmailVerify').onclick = () => {
   auth.currentUser.sendEmailVerification()
@@ -4495,4 +4504,199 @@ if (voiceBtn) {
     speechSynthesis.speak(utterance);
   });
 }
+
+let flashcards = [];
+let currentCard = 0;
+
+async function loadFlashcards(uid) {
+  const snap = await firebase.firestore()
+    .collection("users").doc(uid)
+    .collection("flashcards").orderBy("createdAt").get();
+
+  flashcards = snap.docs.map(doc => doc.data());
+
+  if (flashcards.length > 0) {
+    loadFlashcard();
+  } else {
+    document.getElementById("question").innerText = "No flashcards found.";
+  }
+}
+
+function loadFlashcard() {
+  const card = flashcards[currentCard];
+  document.getElementById("question").innerText = card.question;
+  document.getElementById("answer").innerText = card.answer;
+  document.getElementById("answer").style.display = "none";
+}
+
+document.getElementById("show-answer")?.addEventListener("click", () => {
+  document.getElementById("answer").style.display = "block";
+});
+
+document.getElementById("next-flashcard")?.addEventListener("click", () => {
+  currentCard = (currentCard + 1) % flashcards.length;
+  loadFlashcard();
+});
+
+document.getElementById("predictor-form")?.addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const uid = firebase.auth().currentUser?.uid;
+  if (!uid) return alert("Not logged in");
+
+  const userDoc = await firebase.firestore().collection("users").doc(uid).get();
+  const user = userDoc.data();
+
+  const res = await fetch("/api/predict-chance", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      gpa: user.gpa,
+      score: user.score,
+      essays: user.essays,
+      recommendations: user.recommendations,
+      extracurriculars: user.extracurriculars
+    })
+  });
+
+  const result = await res.json();
+  document.getElementById("prediction-result").innerHTML = `
+    <strong>Chance:</strong> ${result.chance}%<br>
+    <em>${result.justification}</em><br>
+    <small>${result.suggestion}</small>`;
+});
+
+async function loadUserChart(uid) {
+  const scoresSnap = await firebase.firestore()
+    .collection("users").doc(uid).collection("scores").orderBy("timestamp").get();
+
+  const subjects = ["Math", "ELA", "Logic"];
+  const data = subjects.map(subject => {
+    let total = 0, count = 0;
+    scoresSnap.forEach(doc => {
+      const val = doc.data()[subject.toLowerCase()];
+      if (val !== undefined) {
+        total += val;
+        count++;
+      }
+    });
+    return count ? Math.round(total / count) : 0;
+  });
+
+  const ctx = document.getElementById("progress-chart")?.getContext("2d");
+  if (!ctx) return;
+
+  new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: subjects,
+      datasets: [{
+        label: 'Practice Test Scores',
+        data: data,
+        backgroundColor: '#ff4d4d'
+      }]
+    },
+    options: {
+      scales: {
+        y: { beginAtZero: true }
+      }
+    }
+  });
+}
+
+document.getElementById('voice-tutor')?.addEventListener("click", () => {
+  const recog = new webkitSpeechRecognition();
+  recog.lang = 'en-US';
+  recog.start();
+  recog.onresult = async e => {
+    const question = e.results[0][0].transcript;
+    const response = await fetch('/api/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ message: question })
+    }).then(r => r.json());
+
+    const utter = new SpeechSynthesisUtterance(response.reply);
+    speechSynthesis.speak(utter);
+  };
+});
+
+let flashcards = [], currentCard = 0, wrongCards = [];
+
+async function loadFlashcards(uid) {
+  const snap = await firebase.firestore()
+    .collection("users").doc(uid).collection("flashcards")
+    .orderBy("createdAt").get();
+
+  flashcards = snap.docs.map(doc => ({ ...doc.data(), id: doc.id }));
+  loadFlashcard();
+}
+
+function loadFlashcard() {
+  const q = flashcards[currentCard];
+  document.getElementById("question").innerText = q.question;
+  document.getElementById("answer").innerText = q.answer;
+  document.getElementById("answer").style.display = "none";
+  document.getElementById("flashcard").classList.remove("wrong");
+}
+
+document.getElementById("show-answer")?.addEventListener("click", () => {
+  document.getElementById("answer").style.display = "block";
+});
+
+document.getElementById("next-flashcard")?.addEventListener("click", () => {
+  currentCard = (currentCard + 1) % flashcards.length;
+  loadFlashcard();
+});
+
+document.getElementById("mark-wrong")?.addEventListener("click", () => {
+  wrongCards.push(flashcards[currentCard]);
+  document.getElementById("flashcard").classList.add("wrong");
+  alert("❌ Marked for review.");
+});
+
+function updateStats(streak, accuracy) {
+  const box = document.getElementById("stats-box");
+  box.innerHTML = `🔥 Streak: ${streak} • 🎯 Accuracy: ${accuracy}%`;
+}
+
+let correctCount = 0, totalCount = 0;
+
+function markAnswer(isCorrect) {
+  totalCount++;
+  if (isCorrect) correctCount++;
+  const accuracy = Math.round((correctCount / totalCount) * 100);
+  updateStats(correctCount, accuracy);
+}
+
+function suggestTopic() {
+  if (wrongCards.length === 0) return;
+  const topics = wrongCards.map(card => card.topic).filter(Boolean);
+  const count = {};
+  topics.forEach(t => count[t] = (count[t] || 0) + 1);
+
+  const mostCommon = Object.entries(count).sort((a, b) => b[1] - a[1])[0];
+  if (mostCommon) {
+    document.getElementById("topic-suggestion").innerText =
+      `📌 Suggested Topic: ${mostCommon[0]} (${mostCommon[1]} misses)`;
+  }
+}
+
+window.addEventListener("keydown", e => {
+  if (e.key.toLowerCase() === "v") {
+    const recog = new webkitSpeechRecognition();
+    recog.lang = 'en-US';
+    recog.start();
+    recog.onresult = async evt => {
+      const msg = evt.results[0][0].transcript;
+      const reply = await fetch("/api/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message: msg })
+      }).then(r => r.json());
+
+      const speak = new SpeechSynthesisUtterance(reply.reply);
+      speechSynthesis.speak(speak);
+    };
+  }
+});
 
