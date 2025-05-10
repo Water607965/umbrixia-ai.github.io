@@ -3556,7 +3556,26 @@ async function runAIPrediction() {
 
 form.reset(); // at the end of the predictor submit handler
 
-if (!gpa || !score || isNaN(gpa) || isNaN(score)) return alert("Fill out all fields properly!");
+const uid = firebase.auth().currentUser.uid;
+const userDoc = await firebase.firestore().collection("users").doc(uid).get();
+const user = userDoc.data();
+
+const res = await fetch("/api/predict-chance", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({
+    gpa: user.gpa,
+    testScore: user.score,
+    essays: user.essays,
+    recs: user.recommendations
+  })
+});
+const { chance, justification, suggestion } = await res.json();
+
+document.getElementById("chance").textContent = `${chance}%`;
+document.getElementById("justification").textContent = justification;
+document.getElementById("suggestion").textContent = suggestion;
+
 
 function toggleProfileMenu() {
   const menu = document.getElementById("profileMenu");
