@@ -204,13 +204,10 @@ window.addEventListener("DOMContentLoaded", () => {
 // 🧠 Rotating Quotes in Header
 const rotatingText = document.getElementById("rotating-text");
 const quotes = [
-  "Learning made intelligent.",
-  "Build momentum, not just answers.",
-  "Where AI meets clarity.",
-  "You grow. We adapt.",
-  "Daily habits. Lifelong success.",
-  "Confidence through mastery.",
-];
+  const snap = await firebase.firestore().collection("quotes").get();
+const quotes = snap.docs.map(doc => doc.data().text);
+rotateQuotes(quotes);
+
 if (rotatingText) {
   let i = 0;
   setInterval(() => {
