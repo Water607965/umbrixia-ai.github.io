@@ -9859,3 +9859,66 @@ textarea, input { width: 100%; margin: 6px 0; padding: 8px; border-radius:6px; b
     max-width: 100%;
   }
 }
+
+/* === Umbrixia Layout Fix: Apple-Style Grid Dashboard === */
+
+.dashboard {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+  gap: 40px;
+  max-width: 1440px;
+  margin: 60px auto;
+  padding: 60px;
+  box-sizing: border-box;
+  justify-content: center;
+  align-items: start;
+}
+
+/* Maintain responsive layout with spacing */
+.dashboard-row {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 40px;
+  margin-bottom: 60px;
+}
+
+/* Standard card spacing & max width */
+.glass-card,
+.practice-card,
+.section-card {
+  width: 100%;
+  max-width: 100%;
+  min-width: 320px;
+  box-sizing: border-box;
+}
+
+/* Hero title spacing */
+.gradient-heading {
+  margin-top: 40px;
+  margin-bottom: 20px;
+}
+
+/* Improve section spacing visually */
+.section-title {
+  margin-top: 40px;
+  margin-bottom: 20px;
+}
+
+/* Center any lone elements (like charts) */
+.chart-box,
+.chart-container {
+  margin: 0 auto;
+  max-width: 100%;
+}
+
+/* Prevent stretched cards on large displays */
+.glass-card.double,
+.practice-card.double {
+  grid-column: span 2;
+}
+
+/* Add breathing room below all sections */
+section {
+  margin-bottom: 40px;
+}
