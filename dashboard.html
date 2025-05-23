@@ -177,10 +177,14 @@
    }
 
     .dashboard {
-  max-width: 880px;
-  margin: 60px auto;
-  padding: 0 20px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+  gap: 40px;
+  padding: 60px 40px;
+  max-width: 1440px;
+  margin: auto;
 }
+
 
     .glass-card {
   background: rgba(255, 255, 255, 0.05);
@@ -274,7 +278,108 @@ h2.section-title {
   to { visibility: hidden; }
 }
 
-    
+    :root {
+  --primary: #ff3d3d;
+  --glass: rgba(255, 255, 255, 0.05);
+  --blur: blur(12px);
+  --radius: 18px;
+  --shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+  --font: 'Inter', sans-serif;
+}
+
+.dashboard {
+  padding: 60px 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  font-family: var(--font);
+}
+
+h1, h2 {
+  font-weight: 800;
+  line-height: 1.2;
+  color: white;
+  text-align: center;
+}
+
+.glass-card {
+  background: var(--glass);
+  backdrop-filter: var(--blur);
+  border-radius: var(--radius);
+  padding: 30px;
+  box-shadow: var(--shadow);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.cta-btn {
+  background: var(--primary);
+  color: white;
+  padding: 14px 28px;
+  border-radius: var(--radius);
+  border: none;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 0 15px var(--primary);
+  transition: 0.3s ease all;
+}
+
+.cta-btn:hover {
+  background: #e83434;
+  box-shadow: 0 0 25px var(--primary);
+}
+
+.practice-card {
+  background: var(--glass);
+  backdrop-filter: var(--blur);
+  border-radius: var(--radius);
+  padding: 25px;
+  box-shadow: var(--shadow);
+  transition: all 0.3s ease-in-out;
+  border: 1px solid rgba(255,255,255,0.07);
+}
+
+.practice-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 24px rgba(255, 61, 61, 0.3);
+}
+
+.test-buttons button {
+  background: var(--glass);
+  border: 1px solid var(--primary);
+  padding: 14px 28px;
+  color: white;
+  border-radius: var(--radius);
+  font-size: 1rem;
+  transition: all 0.3s ease;
+}
+
+.test-buttons button:hover {
+  background: var(--primary);
+  color: black;
+}
+
+.puzzle-section {
+  background: var(--glass);
+  padding: 20px;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+@media (max-width: 768px) {
+  .dashboard {
+    padding: 30px 20px;
+  }
+
+  h1 {
+    font-size: 2rem;
+  }
+
+  .cta-btn {
+    width: 100%;
+  }
+}
+
 
 
  
@@ -425,12 +530,16 @@ h2.section-title {
   });
 </script>
 
+   <div class="dashboard-row">
+
   <section class="glass-card fade-in">
   <h2 class="section-title">⏱️ Pomodoro Timer</h2>
   <div id="pomodoro-display">25:00</div>
   <button id="pomodoro-start" class="btn-glow">Start</button>
   <button id="pomodoro-reset" class="btn-glow">Reset</button>
 </section>
+
+   </div>
 
 <script>
   let pomodoroTime = 25 * 60, pomodoroInterval;
@@ -605,15 +714,23 @@ h2.section-title {
   </div>
 </section>
 
+    <div class="dashboard-row">
+
     <section class="glass-card fade-in">
   <h2 class="section-title">📈 Performance by Test Type</h2>
   <canvas id="byTestChart"></canvas>
 </section>
 
+    </div>
+
+    <div class="dashboard-row">
+
     <section class="glass-card fade-in">
   <h2 class="section-title">🕸️ Topic Radar</h2>
   <canvas id="topicRadar"></canvas>
 </section>
+
+    </div>
 
 <script>
   async function drawTopicRadar() {
@@ -696,11 +813,15 @@ h2.section-title {
     }
   };
 </script>
+
+    <div class="dashboard-row">
     
     <section class="glass-card fade-in">
   <h2 class="section-title">🔍 AI Test Focus</h2>
   <p id="focus-recommendation">Generating recommendation…</p>
 </section>
+
+    </div>
 
     <button class="btn-glow elfi-btn" data-content-id="{{QUESTION_ID}}">
   📖 Explain Like I’m 5
@@ -813,7 +934,7 @@ Respond in one sentence.
   };
 </script>
 
-
+<div class="dashboard-row">
 
     <section class="glass-card fade-in">
   <h2 class="section-title">💬 AI Study Chat</h2>
@@ -822,6 +943,7 @@ Respond in one sentence.
     <input type="text" id="chat-input" placeholder="Ask your study question..." />
     <button id="send-chat" class="btn-glow">Send</button>
   </div>
+</div>
 </section>
 
     <section class="glass-card" id="flashcards">
@@ -908,6 +1030,8 @@ Respond in one sentence.
   <button id="start-quiz" class="btn-glow">Start Quiz</button>
 </section>
 
+    <div class="dashboard-row">
+
     <section class="glass-card fade-in">
   <h2 class="section-title">📧 Draft Admissions Email</h2>
   <input type="email" id="email-to" placeholder="Recipient email" />
@@ -917,6 +1041,8 @@ Respond in one sentence.
   <button id="draft-email" class="btn-glow">Draft Email</button>
   <div id="email-result" class="plan-result"></div>
 </section>
+
+    </div>
 
 <script>
   document.getElementById('draft-email').onclick = async () => {
@@ -975,6 +1101,7 @@ Format:
   };
 </script>
 
+    <div class="dashboard-row">
 
     <section class="glass-card fade-in">
   <h2 class="section-title">📝 Essay Feedback</h2>
@@ -982,6 +1109,10 @@ Format:
   <button id="essay-feedback-btn" class="btn-glow">Get Feedback</button>
   <div id="essay-feedback-result" class="feedback-result"></div>
 </section>
+
+    </div>
+
+    <div class="dashboard-row">
 
     <section class="glass-card fade-in">
   <h2 class="section-title">📚 AI Study Plan</h2>
@@ -993,6 +1124,10 @@ Format:
   <pre id="study-plan-result" class="plan-result"></pre>
 </section>
 
+    </div>
+
+    <div class="dashboard-row">
+
     <section class="glass-card fade-in">
   <h2 class="section-title">🚀 Multi-Week Path</h2>
   <input type="text" id="lp-goal" placeholder="Your goal (e.g. 700 SAT)" />
@@ -1000,6 +1135,8 @@ Format:
   <button id="gen-path" class="btn-glow">Generate Path</button>
   <pre id="lp-result" class="plan-result"></pre>
 </section>
+
+    </div>
 
 <script>
   document.getElementById("gen-path").onclick = async () => {
@@ -1020,6 +1157,7 @@ Format:
   };
 </script>
 
+    <div class="dashboard-row">
 
     <section class="glass-card fade-in">
   <h2 class="section-title">✍️ Grammar Checker</h2>
@@ -1028,12 +1166,18 @@ Format:
   <div id="grammar-output" class="proof-result"></div>
 </section>
 
+    </div>
+
+    <div class="dashboard-row">
+
     <section class="glass-card fade-in">
   <h2 class="section-title">🔍 AI Document Search</h2>
   <input type="text" id="doc-search-input" placeholder="Search your uploads…" />
   <button id="doc-search-btn" class="btn-glow">Search</button>
   <ul id="doc-search-results"></ul>
 </section>
+
+    </div>
 
 <script>
   document.getElementById("doc-search-btn").onclick = async () => {
@@ -1476,6 +1620,8 @@ document.getElementById("prediction-output").appendChild(shareBtn);
 }
 </script>
 
+    <div class="dashboard-row">
+
         <section class="glass-card fade-in">
   <h2 class="section-title">🕑 Prediction History</h2>
   <table id="prediction-history">
@@ -1485,6 +1631,8 @@ document.getElementById("prediction-output").appendChild(shareBtn);
     <tbody></tbody>
   </table>
 </section>
+
+    </div>
 
        <section class="glass-card" id="leaderboard">
   <h2 class="section-title">🏆 Global Leaderboard</h2>
@@ -1566,6 +1714,7 @@ document.getElementById("prediction-output").appendChild(shareBtn);
   firebase.auth().onAuthStateChanged(u => u && loadBadges());
 </script>
 
+    <div class="dashboard-row">
 
         <!-- Focus Sessions -->
 <section class="glass-card fade-in">
@@ -1573,11 +1722,17 @@ document.getElementById("prediction-output").appendChild(shareBtn);
   <canvas id="focusChart"></canvas>
 </section>
 
+    </div>
+
+    <div class="dashboard-row">
+
         <section class="glass-card fade-in">
   <h2 class="section-title">🗒️ Weekly Summary</h2>
   <button id="generate-summary" class="btn-glow">Generate Weekly Summary</button>
   <div id="weekly-summary-result" class="plan-result"></div>
 </section>
+
+    </div>
 
 <script>
   document.getElementById("generate-summary").onclick = async () => {
@@ -1714,6 +1869,7 @@ document.getElementById("prediction-output").appendChild(shareBtn);
   firebase.auth().onAuthStateChanged((u) => u && loadLeaderboard());
 </script>
 
+    <div class="dashboard-row">
 
         <section class="glass-card fade-in">
   <h2 class="section-title">⏰ Study Reminders</h2>
@@ -1721,6 +1877,8 @@ document.getElementById("prediction-output").appendChild(shareBtn);
   <input type="date" id="reminder-date" />
   <button id="set-reminder" class="btn-glow">Set Reminder</button>
 </section>
+
+    </div>
 
 <script>
   document.getElementById("set-reminder").onclick = async () => {
@@ -1844,17 +2002,25 @@ async function runPrediction() {
        </div>
      </div>
 
+    <div class="dashboard-row">
+
       <section class="glass-card fade-in">
   <h2 class="section-title">✏️ Collaborative Notes</h2>
   <div id="collab-toolbar"></div>
   <div id="collab-editor" style="height:200px;"></div>
 </section>
 
+    </div>
+
+    <div class="dashboard-row">
+
     <section class="glass-card fade-in">
   <h2 class="section-title">📅 Daily Check-in</h2>
   <p>Your current streak: <strong id="daily-streak">…</strong> days</p>
   <button id="checkin-btn" class="btn-glow">Check In</button>
 </section>
+
+    </div>
 
 <script>
   document.getElementById("checkin-btn").onclick = async () => {
@@ -2487,10 +2653,14 @@ firebase.auth().onAuthStateChanged(u => u && drawDemographics());
   firebase.auth().onAuthStateChanged(u => u && loadPuzzle("shsat"));
 </script>
 
+    <div class="dashboard-row">
+
       <section class="glass-card fade-in">
   <h2 class="section-title">✏️ Whiteboard</h2>
   <canvas id="whiteboard" width="600" height="400" style="border:1px solid #333;"></canvas>
 </section>
+
+    </div>
 
 <script>
   const canvas = document.getElementById("whiteboard");
@@ -2522,10 +2692,14 @@ firebase.auth().onAuthStateChanged(u => u && drawDemographics());
     });
 </script>
 
+    <div class="dashboard-row">
+
       <section class="glass-card fade-in">
   <h2 class="section-title">🗺️ Mind-Map</h2>
   <div id="mindmap-container" class="mindmap"></div>
 </section>
+
+    </div>
 
 <script>
   const mmRef = firebase.firestore().collection("mindmap");
