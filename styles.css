@@ -9819,3 +9819,43 @@ textarea, input { width: 100%; margin: 6px 0; padding: 8px; border-radius:6px; b
   margin-bottom: 20px;
   color: #ffffff;
 }
+
+.dashboard-row {
+  display: flex;
+  gap: 40px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.section-divider {
+  font-size: 2rem;
+  text-align: center;
+  margin: 60px auto 20px;
+  border-bottom: 2px solid #ff4d4d;
+  width: fit-content;
+}
+
+.glass-card.double {
+  grid-column: span 2;
+}
+
+.dashboard-row {
+  display: flex;
+  gap: 30px;
+  justify-content: space-between;
+  margin-bottom: 40px;
+  flex-wrap: wrap;
+}
+
+.dashboard-row .glass-card {
+  flex: 1;
+  min-width: 320px;
+  max-width: 48%;
+  box-sizing: border-box;
+}
+
+@media (max-width: 768px) {
+  .dashboard-row .glass-card {
+    max-width: 100%;
+  }
+}
