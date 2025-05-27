@@ -1283,11 +1283,6 @@ h2::after, h3::after {
 
     </div>
 
-    <button class="btn-glow elfi-btn" data-content-id="{{QUESTION_ID}}">
-  📖 Explain Like I’m 5
-</button>
-<div class="elfi-response" id="elfi-{{QUESTION_ID}}" style="display:none;"></div>
-
 
 <script>
   async function recommendFocus() {
@@ -1406,28 +1401,33 @@ Respond in one sentence.
 </div>
 </section>
 
-    <section class="glass-card" id="flashcards">
-  <h2 class="section-title">📚 AI Flashcards</h2>
-  <p id="flashcard-topic" style="color:#ccc; font-size:.9rem;"></p>
-  <div id="card-container" style="min-height:120px; padding:1rem; background:#111; border-radius:8px; color:white;"></div>
-  <div style="margin-top:.5rem;">
-    <button id="flip-card"  class="btn-glow">Flip</button>
-    <button id="next-card"  class="btn-glow">Next</button>
-  </div>
-</section>
-
-    <!-- FLASHCARDS -->
-<section id="flashcards">
-  <h2>🔖 Yours Spaced‑Repetition Flashcards</h2>
-  <select id="flash-testType">
-    <option value="isee">ISEE</option>
-    <option value="shsat">SHSAT</option>
-    <option value="sat">SAT</option>
+    <div class="flashcard-section">
+  <h2>🧠 AI Flashcards</h2>
+  <select id="examType" class="dropdown">
+    <option value="">Select Exam</option>
+    <option value="SHSAT">SHSAT</option>
+    <option value="ISEE">ISEE</option>
+    <option value="SAT">SAT</option>
   </select>
-  <button id="load-flashcards" class="btn-glow">Load Flashcards</button>
-  <div id="flashcard-container"></div>
-</section>
 
+  <select id="subjectType" class="dropdown">
+    <option value="">Select Subject</option>
+    <option value="English">English</option>
+    <option value="Math">Math</option>
+    <option value="Other">Other</option>
+  </select>
+
+  <textarea id="flashcardPrompt" placeholder="Enter a topic or question for AI to explain..." class="prompt-box"></textarea>
+
+  <div class="button-row">
+    <button onclick="generateFlashcard()" class="btn-pink">Generate Flashcard</button>
+    <button onclick="explainLike5()" class="btn-glow">Explain Like I’m 5</button>
+  </div>
+
+  <div id="flashcardOutput" class="flashcard-output"></div>
+</div>
+
+ 
 <!-- ESSAY GRADER -->
 <section id="essay-grader">
   <h2>📝 Essay Grader & Feedback</h2>
