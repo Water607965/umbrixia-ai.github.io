@@ -1042,15 +1042,6 @@ h2::after, h3::after {
   if (Notification.permission !== "granted") Notification.requestPermission();
 </script>
 
-  <section class="glass-card fade-in">
-  <h2 class="section-title">📆 Schedule Study Session</h2>
-  <input type="text" id="cal-title" placeholder="Session Title" />
-  <input type="datetime-local" id="cal-date" />
-  <input type="number" id="cal-duration" placeholder="Duration (min)" />
-  <button id="create-event" class="btn-glow">Create Calendar Event</button>
-  <a id="event-link" class="btn-glow" style="display:none;" download="study.ics">Download .ics</a>
-</section>
-
 <script>
   document.getElementById("create-event").onclick = async () => {
     const title = document.getElementById("cal-title").value.trim();
