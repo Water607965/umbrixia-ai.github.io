@@ -1417,6 +1417,15 @@ Respond in one sentence.
     <option value="Other">Other</option>
   </select>
 
+     <div class="upload-area" style="margin-top: 20px;">
+  <label for="imageUpload">📁 Upload Screenshot:</label>
+  <input type="file" id="imageUpload" accept="image/png, image/jpeg, image/webp" onchange="handleImageUpload(event)" />
+
+  <label for="cameraInput">📷 Take a Picture:</label>
+  <input type="file" id="cameraInput" accept="image/*" capture="environment" onchange="handleImageUpload(event)" />
+</div>
+
+
   <textarea id="flashcardPrompt" placeholder="Enter a topic or question for AI to explain..." class="prompt-box"></textarea>
 
   <div class="button-row">
@@ -3276,6 +3285,55 @@ async function explainLike5() {
   .catch(err => {
     output.innerHTML = `<p style='color: #ff4b4b;'>❌ Error: ${err.message}</p>`;
   });
+}
+</script>
+
+
+    <script>
+function handleImageUpload(event) {
+  const file = event.target.files[0];
+  const output = document.getElementById('flashcardOutput');
+
+  if (!file) return;
+
+  const allowedTypes = ["image/png", "image/jpeg", "image/webp"];
+  if (!allowedTypes.includes(file.type)) {
+    output.innerHTML = "<p style='color: #ff4b4b;'>❌ Invalid file format. Please upload PNG, JPEG, or WEBP.</p>";
+    return;
+  }
+
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    output.innerHTML = `
+      <h3>🖼️ Uploaded Image:</h3>
+      <img src="${e.target.result}" alt="Uploaded Screenshot" style="max-width: 100%; border-radius: 12px; box-shadow: 0 0 20px rgba(255,0,0,0.2);" />
+      <p>⏳ Sending image to AI for analysis...</p>
+    `;
+
+    // Send image to your Replit backend (replace this with actual OCR endpoint)
+    fetch("https://umbrixia-ai-chatbot--water607965.repl.co/image-ocr", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ image: e.target.result })
+    })
+    .then(res => res.text())
+    .then(text => {
+      output.innerHTML += `<h3>🧠 AI Response:</h3><p>${text}</p>`;
+
+      // Save to Firebase
+      firebase.firestore().collection("flashcards").add({
+        type: "image",
+        fileName: file.name,
+        ocrText: text,
+        createdAt: new Date()
+      });
+    })
+    .catch(err => {
+      output.innerHTML += `<p style='color: #ff4b4b;'>❌ OCR error: ${err.message}</p>`;
+    });
+  };
+
+  reader.readAsDataURL(file);
 }
 </script>
 
