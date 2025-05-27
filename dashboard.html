@@ -3208,12 +3208,6 @@ firebase.auth().onAuthStateChanged(u => u && drawDemographics());
 </script>
 
     <script>
-// ✅ Real AI + Firebase Firestore Flashcard Logic
-// Replace your existing <script> block with this full script
-
-// 🔥 Initialize Firebase (You must have Firebase SDK and config loaded already)
-const db = firebase.firestore();
-
 async function generateFlashcard() {
   const exam = document.getElementById('examType').value;
   const subject = document.getElementById('subjectType').value;
@@ -3227,30 +3221,29 @@ async function generateFlashcard() {
 
   output.innerHTML = `<p>⏳ Generating flashcard...</p>`;
 
-  try {
-    const res = await fetch("https://your-replit-url.replit.app/chat", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        prompt: `${exam} ${subject} question: ${prompt}. Explain morally and clearly.`
-      })
-    });
+  fetch("https://umbrixia-ai-chatbot--water607965.repl.co/chat", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      prompt: `${exam} ${subject} question: ${prompt}. Explain morally and clearly.`
+    })
+  })
+  .then(res => res.text())
+  .then(text => {
+    const html = `<h3>${exam} - ${subject}</h3><p><strong>AI Explanation:</strong> ${text}</p>`;
+    output.innerHTML = html;
 
-    const text = await res.text();
-    const flashcardHTML = `<h3>${exam} - ${subject}</h3><p><strong>AI Explanation:</strong> ${text}</p>`;
-    output.innerHTML = flashcardHTML;
-
-    // Save to Firestore
-    await db.collection("flashcards").add({
+    firebase.firestore().collection("flashcards").add({
       exam,
       subject,
       prompt,
       response: text,
       createdAt: new Date()
     });
-  } catch (err) {
+  })
+  .catch(err => {
     output.innerHTML = `<p style='color: #ff4b4b;'>❌ Error: ${err.message}</p>`;
-  }
+  });
 }
 
 async function explainLike5() {
@@ -3264,26 +3257,25 @@ async function explainLike5() {
 
   output.innerHTML = `<p>🍼 Explaining like you're 5...</p>`;
 
-  try {
-    const res = await fetch("https://your-replit-url.replit.app/chat", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ prompt: `Explain this like I'm 5 years old: ${prompt}` })
-    });
-
-    const text = await res.text();
+  fetch("https://umbrixia-ai-chatbot--water607965.repl.co/chat", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ prompt: `Explain this like I'm 5 years old: ${prompt}` })
+  })
+  .then(res => res.text())
+  .then(text => {
     output.innerHTML = `<h3>🍼 Explain Like I'm 5:</h3><p>${text}</p>`;
 
-    // Save to Firestore
-    await db.collection("flashcards_eli5").add({
+    firebase.firestore().collection("flashcards_eli5").add({
       type: "ELI5",
       prompt,
       response: text,
       createdAt: new Date()
     });
-  } catch (err) {
+  })
+  .catch(err => {
     output.innerHTML = `<p style='color: #ff4b4b;'>❌ Error: ${err.message}</p>`;
-  }
+  });
 }
 </script>
 
