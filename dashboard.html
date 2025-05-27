@@ -3208,7 +3208,13 @@ firebase.auth().onAuthStateChanged(u => u && drawDemographics());
 </script>
 
     <script>
-function generateFlashcard() {
+// ✅ Real AI + Firebase Firestore Flashcard Logic
+// Replace your existing <script> block with this full script
+
+// 🔥 Initialize Firebase (You must have Firebase SDK and config loaded already)
+const db = firebase.firestore();
+
+async function generateFlashcard() {
   const exam = document.getElementById('examType').value;
   const subject = document.getElementById('subjectType').value;
   const prompt = document.getElementById('flashcardPrompt').value.trim();
@@ -3219,10 +3225,35 @@ function generateFlashcard() {
     return;
   }
 
-  output.innerHTML = `<h3>${exam} - ${subject}</h3><p><strong>AI Explanation:</strong> ${generateExplanation(prompt, subject)}</p>`;
+  output.innerHTML = `<p>⏳ Generating flashcard...</p>`;
+
+  try {
+    const res = await fetch("https://your-replit-url.replit.app/chat", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        prompt: `${exam} ${subject} question: ${prompt}. Explain morally and clearly.`
+      })
+    });
+
+    const text = await res.text();
+    const flashcardHTML = `<h3>${exam} - ${subject}</h3><p><strong>AI Explanation:</strong> ${text}</p>`;
+    output.innerHTML = flashcardHTML;
+
+    // Save to Firestore
+    await db.collection("flashcards").add({
+      exam,
+      subject,
+      prompt,
+      response: text,
+      createdAt: new Date()
+    });
+  } catch (err) {
+    output.innerHTML = `<p style='color: #ff4b4b;'>❌ Error: ${err.message}</p>`;
+  }
 }
 
-function explainLike5() {
+async function explainLike5() {
   const prompt = document.getElementById('flashcardPrompt').value.trim();
   const output = document.getElementById('flashcardOutput');
 
@@ -3231,22 +3262,28 @@ function explainLike5() {
     return;
   }
 
-  output.innerHTML = `<h3>🍼 Explain Like I'm 5:</h3><p>${generateELI5(prompt)}</p>`;
-}
+  output.innerHTML = `<p>🍼 Explaining like you're 5...</p>`;
 
-function generateExplanation(topic, subject) {
-  // Simulated AI response for realism
-  if (subject === "Math") {
-    return `Let’s break down ${topic}. Imagine it like a puzzle — every piece (number) must fit. We'll walk through real-world examples to make it clear.`;
-  } else if (subject === "English") {
-    return `Think of ${topic} as telling a story. Each grammar rule or technique helps your story be understood better.`;
-  } else {
-    return `Here's a practical take on ${topic} with real-world applications and moral reasoning where needed.`;
+  try {
+    const res = await fetch("https://your-replit-url.replit.app/chat", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ prompt: `Explain this like I'm 5 years old: ${prompt}` })
+    });
+
+    const text = await res.text();
+    output.innerHTML = `<h3>🍼 Explain Like I'm 5:</h3><p>${text}</p>`;
+
+    // Save to Firestore
+    await db.collection("flashcards_eli5").add({
+      type: "ELI5",
+      prompt,
+      response: text,
+      createdAt: new Date()
+    });
+  } catch (err) {
+    output.innerHTML = `<p style='color: #ff4b4b;'>❌ Error: ${err.message}</p>`;
   }
-}
-
-function generateELI5(topic) {
-  return `Okay kiddo, ${topic} is like your toy box – simple rules, fun results! Let's make it easy and clear, like playing a game.`;
 }
 </script>
 
