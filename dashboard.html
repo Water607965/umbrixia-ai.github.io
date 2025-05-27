@@ -3207,6 +3207,49 @@ firebase.auth().onAuthStateChanged(u => u && drawDemographics());
   });
 </script>
 
+    <script>
+function generateFlashcard() {
+  const exam = document.getElementById('examType').value;
+  const subject = document.getElementById('subjectType').value;
+  const prompt = document.getElementById('flashcardPrompt').value.trim();
+  const output = document.getElementById('flashcardOutput');
+
+  if (!exam || !subject || !prompt) {
+    output.innerHTML = "<p style='color: #ff4b4b;'>Please select an exam, a subject, and enter a prompt.</p>";
+    return;
+  }
+
+  output.innerHTML = `<h3>${exam} - ${subject}</h3><p><strong>AI Explanation:</strong> ${generateExplanation(prompt, subject)}</p>`;
+}
+
+function explainLike5() {
+  const prompt = document.getElementById('flashcardPrompt').value.trim();
+  const output = document.getElementById('flashcardOutput');
+
+  if (!prompt) {
+    output.innerHTML = "<p style='color: #ff4b4b;'>Type something first!</p>";
+    return;
+  }
+
+  output.innerHTML = `<h3>🍼 Explain Like I'm 5:</h3><p>${generateELI5(prompt)}</p>`;
+}
+
+function generateExplanation(topic, subject) {
+  // Simulated AI response for realism
+  if (subject === "Math") {
+    return `Let’s break down ${topic}. Imagine it like a puzzle — every piece (number) must fit. We'll walk through real-world examples to make it clear.`;
+  } else if (subject === "English") {
+    return `Think of ${topic} as telling a story. Each grammar rule or technique helps your story be understood better.`;
+  } else {
+    return `Here's a practical take on ${topic} with real-world applications and moral reasoning where needed.`;
+  }
+}
+
+function generateELI5(topic) {
+  return `Okay kiddo, ${topic} is like your toy box – simple rules, fun results! Let's make it easy and clear, like playing a game.`;
+}
+</script>
+
       
 
  </body>
