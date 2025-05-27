@@ -9948,3 +9948,74 @@ section {
     max-width: 100%;
   }
 }
+
+.flashcard-section {
+  padding: 2rem;
+  background: #111;
+  border-radius: 1.5rem;
+  box-shadow: 0 0 12px rgba(255, 0, 85, 0.3);
+  max-width: 800px;
+  margin: 2rem auto;
+  text-align: center;
+}
+
+.dropdown {
+  width: 45%;
+  padding: 0.75rem;
+  margin: 0.5rem;
+  border-radius: 12px;
+  background-color: #222;
+  color: #fff;
+  border: 1px solid #444;
+  font-size: 1rem;
+}
+
+.prompt-box {
+  width: 90%;
+  height: 100px;
+  margin: 1rem 0;
+  padding: 1rem;
+  border-radius: 12px;
+  background-color: #222;
+  color: #fff;
+  border: 1px solid #555;
+  font-size: 1rem;
+}
+
+.button-row {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.btn-pink, .btn-glow {
+  background: linear-gradient(to right, #ff416c, #ff4b2b);
+  border: none;
+  padding: 0.75rem 1.5rem;
+  color: white;
+  border-radius: 25px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.btn-glow {
+  background: linear-gradient(to right, #ff4b2b, #ff416c);
+  box-shadow: 0 0 12px #ff4b2b;
+}
+
+.btn-pink:hover, .btn-glow:hover {
+  transform: scale(1.05);
+}
+
+.flashcard-output {
+  margin-top: 2rem;
+  color: #eee;
+  font-size: 1.1rem;
+  background: #1a1a1a;
+  padding: 1rem;
+  border-radius: 1rem;
+  box-shadow: 0 0 10px rgba(255, 0, 85, 0.2);
+}
+
