@@ -9922,3 +9922,29 @@ textarea, input { width: 100%; margin: 6px 0; padding: 8px; border-radius:6px; b
 section {
   margin-bottom: 40px;
 }
+
+/* Force dashboard rows to wrap cards horizontally */
+.dashboard-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 30px;
+  justify-content: center;
+  align-items: flex-start;
+  margin-bottom: 40px;
+}
+
+/* Ensure each card takes up 30–33% of the row space */
+.dashboard-row > .glass-card {
+  flex: 1 1 calc(33.333% - 30px);
+  max-width: 420px;
+  min-width: 280px;
+  box-sizing: border-box;
+}
+
+/* Fallback for very narrow screens */
+@media (max-width: 900px) {
+  .dashboard-row > .glass-card {
+    flex: 1 1 100%;
+    max-width: 100%;
+  }
+}
