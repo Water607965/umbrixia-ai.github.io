@@ -4493,3 +4493,35 @@ async function generateFlashcard() {
     output.innerHTML = `<p style='color: #ff4b4b;'>❌ Error: ${err.message}</p>`;
   }
 }
+
+<script>
+  document.getElementById("generate-flashcard").addEventListener("click", async () => {
+    const exam = document.getElementById('examType').value;
+    const subject = document.getElementById('subjectType').value;
+    const prompt = document.getElementById('flashcardPrompt').value.trim();
+    const output = document.getElementById('flashcardOutput');
+
+    if (!exam || !subject || !prompt) {
+      output.innerHTML = "<p style='color: #ff4b4b;'>Please select an exam, a subject, and enter a prompt.</p>";
+      return;
+    }
+
+    output.innerHTML = `<p>⏳ Generating flashcard...</p>`;
+
+    try {
+      const res = await fetch("https://umbrixia-ai-github-io.onrender.com/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          message: `${exam} ${subject} question: ${prompt}. Explain it simply and clearly.`
+        })
+      });
+
+      const text = await res.text();
+      output.innerHTML = `<h3>${exam} - ${subject}</h3><p><strong>AI Explanation:</strong> ${text}</p>`;
+    } catch (err) {
+      output.innerHTML = `<p style='color: #ff4b4b;'>❌ Error: ${err.message}</p>`;
+    }
+  });
+</script>
+
