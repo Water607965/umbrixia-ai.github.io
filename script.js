@@ -4457,3 +4457,39 @@ async function buildPlan() {
   renderPlan(plan);
 }
 
+async function generateFlashcard() {
+  const exam = document.getElementById('examType').value;
+  const subject = document.getElementById('subjectType').value;
+  const prompt = document.getElementById('flashcardPrompt').value.trim();
+  const output = document.getElementById('flashcardOutput');
+
+  if (!exam || !subject || !prompt) {
+    output.innerHTML = "<p style='color: #ff4b4b;'>Please select an exam, a subject, and enter a prompt.</p>";
+    return;
+  }
+
+  output.innerHTML = `<p>⏳ Generating flashcard...</p>`;
+
+  try {
+    const res = await fetch("https://umbrixia-ai-github-io.onrender.com/chat", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        message: `${exam} ${subject} question: ${prompt}. Explain it in a flashcard format.`
+      })
+    });
+
+    const { response } = await res.json();
+    output.innerHTML = `<h3>${exam} - ${subject}</h3><p><strong>AI Flashcard:</strong> ${response}</p>`;
+
+    firebase.firestore().collection("flashcards").add({
+      exam,
+      subject,
+      prompt,
+      response,
+      createdAt: new Date()
+    });
+  } catch (err) {
+    output.innerHTML = `<p style='color: #ff4b4b;'>❌ Error: ${err.message}</p>`;
+  }
+}
