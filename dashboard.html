@@ -3219,7 +3219,7 @@ firebase.auth().onAuthStateChanged(u => u && drawDemographics());
 </script>
 
     <script>
-async function generateFlashcard() {
+     async function generateFlashcard() {
   const exam = document.getElementById('examType').value;
   const subject = document.getElementById('subjectType').value;
   const prompt = document.getElementById('flashcardPrompt').value.trim();
@@ -3231,9 +3231,8 @@ async function generateFlashcard() {
   }
 
   output.innerHTML = `<p>⏳ Generating flashcard...</p>`;
- 
-   fetch("https://umbrixia-ai-github-io.onrender.com/image-ocr,") {
 
+  fetch("https://umbrixia-ai-github-io.onrender.com/image-ocr", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
@@ -3258,39 +3257,7 @@ async function generateFlashcard() {
   });
 }
 
-async function explainLike5() {
-  const prompt = document.getElementById('flashcardPrompt').value.trim();
-  const output = document.getElementById('flashcardOutput');
-
-  if (!prompt) {
-    output.innerHTML = "<p style='color: #ff4b4b;'>Type something first!</p>";
-    return;
-  }
-
-  output.innerHTML = `<p>🍼 Explaining like you're 5...</p>`;
-
-  fetch("https://umbrixia-ai-chatbot--water607965.repl.co/chat", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ prompt: `Explain this like I'm 5 years old: ${prompt}` })
-  })
-  .then(res => res.text())
-  .then(text => {
-    output.innerHTML = `<h3>🍼 Explain Like I'm 5:</h3><p>${text}</p>`;
-
-    firebase.firestore().collection("flashcards_eli5").add({
-      type: "ELI5",
-      prompt,
-      response: text,
-      createdAt: new Date()
-    });
-  })
-  .catch(err => {
-    output.innerHTML = `<p style='color: #ff4b4b;'>❌ Error: ${err.message}</p>`;
-  });
-}
-</script>
-
+    </script>
 
     <script>
 function handleImageUpload(event) {
