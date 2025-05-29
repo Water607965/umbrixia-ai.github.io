@@ -43,3 +43,34 @@ app.post('/flashcard', async (req, res) => {
 app.listen(port, () => {
   console.log(`Flashcard server running on port ${port}`);
 });
+
+// server.js — ADD this near other endpoints
+app.post('/flashcard', async (req, res) => {
+  const { message } = req.body;
+
+  if (!message) return res.status(400).json({ error: 'No message provided.' });
+
+  try {
+    const openaiResp = await fetch("https://api.openai.com/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${process.env.OPENAI_API_KEY}`,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        model: "gpt-3.5-turbo",
+        messages: [{ role: "user", content: message }]
+      })
+    });
+
+    const data = await openaiResp.json();
+
+    // Defensive parse
+    const text = data.choices?.[0]?.message?.content;
+    res.json({ response: text || "No response." });
+
+  } catch (err) {
+    console.error("❌ Error in /flashcard:", err);
+    res.status(500).json({ error: "Internal server error." });
+  }
+});
