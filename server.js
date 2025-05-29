@@ -1022,5 +1022,31 @@ app.post('/flashcard', async (req, res) => {
 });
 
 
+// ── Flashcard generation endpoint ──
+app.post('/flashcard', async (req, res) => {
+  try {
+    const { exam, subject, prompt } = req.body;
+
+    if (!exam || !subject || !prompt) {
+      return res.status(400).json({ error: 'Missing required fields' });
+    }
+
+    const systemPrompt = `You're a world-class teacher. Generate a concise but effective flashcard explaining "${prompt}" for a student preparing for the ${exam} exam in the subject of ${subject}. Use relatable, moral, and real-world scenarios.`;
+
+    const completion = await openai.chat.completions.create({
+      model: 'gpt-3.5-turbo',
+      messages: [{ role: 'user', content: systemPrompt }],
+    });
+
+    const explanation = completion.choices[0].message.content;
+    res.json({ explanation });
+
+  } catch (err) {
+    console.error('Flashcard error:', err);
+    res.status(500).json({ error: 'Failed to generate flashcard' });
+  }
+});
+
+
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`🌐 Server running on port ${PORT}`));
