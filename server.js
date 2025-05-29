@@ -997,6 +997,30 @@ app.post('/flashcard', async (req, res) => {
   }
 });
 
+app.post('/flashcard', async (req, res) => {
+  const { exam, subject, prompt } = req.body;
+
+  if (!exam || !subject || !prompt) {
+    return res.status(400).json({ error: 'Missing exam, subject, or prompt' });
+  }
+
+  try {
+    const completion = await openai.chat.completions.create({
+      model: 'gpt-3.5-turbo',
+      messages: [{
+        role: 'user',
+        content: `You are a flashcard tutor for the ${exam} exam, focused on ${subject}. Generate a clear, memorable answer with moral reasoning and real-world examples. Topic: "${prompt}".`
+      }]
+    });
+
+    const aiReply = completion.choices[0].message.content;
+    res.json({ response: aiReply });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'OpenAI error' });
+  }
+});
+
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`🌐 Server running on port ${PORT}`));
