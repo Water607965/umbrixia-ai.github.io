@@ -3219,7 +3219,10 @@ firebase.auth().onAuthStateChanged(u => u && drawDemographics());
 </script>
 
     <script>
-     async function generateFlashcard() {
+     <script>
+const renderURL = 'https://umbrixia-ai-github-io.onrender.com';
+
+function generateFlashcard() {
   const exam = document.getElementById('examType').value;
   const subject = document.getElementById('subjectType').value;
   const prompt = document.getElementById('flashcardPrompt').value.trim();
@@ -3230,32 +3233,65 @@ firebase.auth().onAuthStateChanged(u => u && drawDemographics());
     return;
   }
 
-  output.innerHTML = `<p>⏳ Generating flashcard...</p>`;
+  output.innerHTML = "<p><em>Loading...</em></p>";
 
-  fetch("https://umbrixia-ai-github-io.onrender.com/image-ocr", {
+  fetch(`${renderURL}/flashcard`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      prompt: `${exam} ${subject} question: ${prompt}. Explain morally and clearly.`
-    })
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({ exam, subject, prompt })
   })
-  .then(res => res.text())
-  .then(text => {
-    const html = `<h3>${exam} - ${subject}</h3><p><strong>AI Explanation:</strong> ${text}</p>`;
-    output.innerHTML = html;
-
-    firebase.firestore().collection("flashcards").add({
-      exam,
-      subject,
-      prompt,
-      response: text,
-      createdAt: new Date()
-    });
+  .then(res => res.json())
+  .then(data => {
+    if (data.response) {
+      output.innerHTML = `<h3>${exam} - ${subject}</h3><p><strong>AI Explanation:</strong> ${data.response}</p>`;
+    } else {
+      output.innerHTML = "<p style='color: red;'>No response received from server.</p>";
+    }
   })
   .catch(err => {
-    output.innerHTML = `<p style='color: #ff4b4b;'>❌ Error: ${err.message}</p>`;
+    console.error(err);
+    output.innerHTML = "<p style='color: red;'>Server error or invalid response.</p>";
   });
 }
+
+function explainLike5() {
+  const prompt = document.getElementById('flashcardPrompt').value.trim();
+  const output = document.getElementById('flashcardOutput');
+
+  if (!prompt) {
+    output.innerHTML = "<p style='color: #ff4b4b;'>Type something first!</p>";
+    return;
+  }
+
+  output.innerHTML = "<p><em>Loading explanation...</em></p>";
+
+  fetch(`${renderURL}/flashcard`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      exam: "ELI5",
+      subject: "Simple",
+      prompt: `Explain like I'm 5: ${prompt}`
+    })
+  })
+  .then(res => res.json())
+  .then(data => {
+    if (data.response) {
+      output.innerHTML = `<h3>🍼 Explain Like I'm 5:</h3><p>${data.response}</p>`;
+    } else {
+      output.innerHTML = "<p style='color: red;'>No explanation received.</p>";
+    }
+  })
+  .catch(err => {
+    console.error(err);
+    output.innerHTML = "<p style='color: red;'>Error generating explanation.</p>";
+  });
+}
+</script>
 
     </script>
 
