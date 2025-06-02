@@ -1104,6 +1104,30 @@ app.post('/flashcard', (req, res) => {
 });
 
 
+app.post('/flashcard', async (req, res) => {
+  const { exam, subject, prompt } = req.body;
+
+  if (!prompt) {
+    return res.status(400).json({ error: 'Missing prompt.' });
+  }
+
+  const systemPrompt = `You are a flashcard AI. Create an answer for a ${subject} question in the ${exam} exam. Use real-world examples and moral clarity.`;
+
+  try {
+    const completion = await openai.chat.completions.create({
+      messages: [
+        { role: 'system', content: systemPrompt },
+        { role: 'user', content: prompt }
+      ],
+      model: 'gpt-3.5-turbo'
+    });
+
+    res.json({ response: completion.choices[0].message.content });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Failed to generate flashcard' });
+  }
+});
 
 
 // Ensure your server actually starts
