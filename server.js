@@ -6,11 +6,10 @@ const { OpenAI }  = require('openai');
 const killTrigger = require('./middleware/killTrigger');
 
 const admin = require("firebase-admin");
-const serviceAccount = require("./firebase-service-account.json");
-
 admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount)
+  credential: admin.credential.cert(JSON.parse(process.env.GOOGLE_APPLICATION_CREDENTIALS))
 });
+
 
 // ── Express & OpenAI clients ──
 const app    = express();
