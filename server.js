@@ -1129,6 +1129,36 @@ app.post('/flashcard', async (req, res) => {
   }
 });
 
+app.post('/flashcard', async (req, res) => {
+  const { exam, subject, prompt } = req.body;
+  if (!exam || !subject || !prompt) {
+    return res.status(400).json({ error: 'Missing exam, subject, or prompt' });
+  }
+
+  try {
+    const explanation = await openai.chat.completions.create({
+      model: 'gpt-3.5-turbo',
+      messages: [
+        {
+          role: 'system',
+          content: `You are an AI tutor helping a student prepare for the ${exam} in ${subject}.`
+        },
+        {
+          role: 'user',
+          content: prompt
+        }
+      ],
+      temperature: 0.7
+    });
+
+    const output = explanation.choices[0].message.content;
+    res.json({ output });
+  } catch (error) {
+    console.error('Flashcard AI error:', error);
+    res.status(500).json({ error: 'AI failed to generate flashcard' });
+  }
+});
+
 
 // Ensure your server actually starts
 const PORT = process.env.PORT || 5000;
