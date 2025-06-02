@@ -1090,6 +1090,20 @@ app.post('/flashcard', async (req, res) => {
   }
 });
 
+app.post('/flashcard', (req, res) => {
+  const { exam, subject, prompt } = req.body;
+
+  if (!exam || !subject || !prompt) {
+    return res.status(400).json({ error: 'Missing required fields.' });
+  }
+
+  // Simulate AI explanation
+  const explanation = `Here's your flashcard:\n\nExam: ${exam}\nSubject: ${subject}\nPrompt: ${prompt}\n\nExplanation: Imagine you're learning this for the first time. This concept means...`;
+
+  res.json({ response: explanation });
+});
+
+
 
 
 const PORT = process.env.PORT || 5000;
