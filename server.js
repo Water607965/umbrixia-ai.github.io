@@ -17,6 +17,7 @@ const app    = express();
 app.use(express.json());
 app.use(cors());
 app.use('/api', killTrigger);                 // ← mount your kill‑trigger here
+const OpenAI = require("openai");
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
 
