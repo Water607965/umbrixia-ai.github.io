@@ -4468,31 +4468,27 @@ async function generateFlashcard() {
     return;
   }
 
-  output.innerHTML = `<p>⏳ Generating flashcard...</p>`;
-
   try {
-    const res = await fetch("https://umbrixia-ai-github-io.onrender.com/chat", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        message: `${exam} ${subject} question: ${prompt}. Explain it in a flashcard format.`
-      })
+    const response = await fetch('https://umbrixia-ai-github-io.onrender.com/flashcard', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ prompt, exam, subject })
     });
 
-    const { response } = await res.json();
-    output.innerHTML = `<h3>${exam} - ${subject}</h3><p><strong>AI Flashcard:</strong> ${response}</p>`;
+    const data = await response.json();
 
-    firebase.firestore().collection("flashcards").add({
-      exam,
-      subject,
-      prompt,
-      response,
-      createdAt: new Date()
-    });
-  } catch (err) {
-    output.innerHTML = `<p style='color: #ff4b4b;'>❌ Error: ${err.message}</p>`;
+    if (data.explanation) {
+      output.innerHTML = `<h3>${exam} - ${subject}</h3><p><strong>AI Explanation:</strong> ${data.explanation}</p>`;
+    } else {
+      output.innerHTML = "<p style='color: red;'>Failed to get a valid explanation.</p>";
+    }
+  } catch (error) {
+    output.innerHTML = "<p style='color: red;'>Error connecting to the server.</p>";
   }
 }
+
 
 <script>
   document.getElementById("generate-flashcard").addEventListener("click", async () => {
