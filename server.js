@@ -5,6 +5,14 @@ const cors        = require('cors');
 const { OpenAI }  = require('openai');
 const killTrigger = require('./middleware/killTrigger');
 
+const admin = require("firebase-admin");
+const serviceAccount = require("./firebase-service-account.json");
+
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount)
+});
+
+
 // ── Firestore admin init ──
 const { initializeApp, cert } = require('firebase-admin/app');
 const { getFirestore }        = require('firebase-admin/firestore');
@@ -967,60 +975,7 @@ app.post('/api/create-checkout', authGuard, async (req, res) => {
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.post('/flashcard', async (req, res) => {
-  const prompt = req.body.prompt;
-  const apiKey = process.env.OPENAI_API_KEY;
 
-  if (!prompt) {
-    return res.status(400).json({ error: 'Prompt is required' });
-  }
-
-  try {
-    const response = await fetch('https://api.openai.com/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${apiKey}`,
-      },
-      body: JSON.stringify({
-        model: 'gpt-3.5-turbo',
-        messages: [{ role: 'user', content: prompt }],
-      }),
-    });
-
-    const data = await response.json();
-    const reply = data.choices[0].message.content;
-    res.json({ flashcard: reply });
-
-  } catch (error) {
-    console.error('Error:', error);
-    res.status(500).json({ error: 'Internal server error' });
-  }
-});
-
-app.post('/flashcard', async (req, res) => {
-  const { exam, subject, prompt } = req.body;
-
-  if (!exam || !subject || !prompt) {
-    return res.status(400).json({ error: 'Missing exam, subject, or prompt' });
-  }
-
-  try {
-    const completion = await openai.chat.completions.create({
-      model: 'gpt-3.5-turbo',
-      messages: [{
-        role: 'user',
-        content: `You are a flashcard tutor for the ${exam} exam, focused on ${subject}. Generate a clear, memorable answer with moral reasoning and real-world examples. Topic: "${prompt}".`
-      }]
-    });
-
-    const aiReply = completion.choices[0].message.content;
-    res.json({ response: aiReply });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'OpenAI error' });
-  }
-});
 
 
 // ── Flashcard generation endpoint ──
@@ -1048,117 +1003,11 @@ app.post('/flashcard', async (req, res) => {
   }
 });
 
-// Append before app.listen()
-app.post('/flashcard', async (req, res) => {
-  const { prompt, exam, subject } = req.body;
-
-  if (!prompt || !exam || !subject) {
-    return res.status(400).json({ error: "Missing prompt, exam, or subject" });
-  }
-
-  try {
-    const explanation = `🧠 AI Response for ${exam} - ${subject}: This is a simulated intelligent answer for the prompt "${prompt}" with real-world context and moral reasoning.`;
-    res.json({ explanation });
-  } catch (err) {
-    console.error("Error generating flashcard:", err);
-    res.status(500).json({ error: "Internal Server Error" });
-  }
-});
-
-// ── Flashcard endpoint ──
-app.post('/flashcard', async (req, res) => {
-  const { exam, subject, prompt } = req.body;
-
-  if (!prompt || !exam || !subject) {
-    return res.status(400).json({ error: 'Prompt, exam, and subject are required.' });
-  }
-
-  try {
-    const completion = await openai.chat.completions.create({
-      model: 'gpt-4',
-      messages: [
-        {
-          role: 'user',
-          content: `Create a flashcard for the following prompt in ${exam} ${subject}: ${prompt}`,
-        },
-      ],
-    });
-
-    res.json({ result: completion.choices[0].message.content });
-  } catch (error) {
-    console.error('OpenAI error:', error);
-    res.status(500).json({ error: 'Failed to generate flashcard.' });
-  }
-});
-
-app.post('/flashcard', (req, res) => {
-  const { exam, subject, prompt } = req.body;
-
-  if (!exam || !subject || !prompt) {
-    return res.status(400).json({ error: 'Missing required fields.' });
-  }
-
-  // Simulate AI explanation
-  const explanation = `Here's your flashcard:\n\nExam: ${exam}\nSubject: ${subject}\nPrompt: ${prompt}\n\nExplanation: Imagine you're learning this for the first time. This concept means...`;
-
-  res.json({ response: explanation });
-});
 
 
-app.post('/flashcard', async (req, res) => {
-  const { exam, subject, prompt } = req.body;
 
-  if (!prompt) {
-    return res.status(400).json({ error: 'Missing prompt.' });
-  }
 
-  const systemPrompt = `You are a flashcard AI. Create an answer for a ${subject} question in the ${exam} exam. Use real-world examples and moral clarity.`;
 
-  try {
-    const completion = await openai.chat.completions.create({
-      messages: [
-        { role: 'system', content: systemPrompt },
-        { role: 'user', content: prompt }
-      ],
-      model: 'gpt-3.5-turbo'
-    });
-
-    res.json({ response: completion.choices[0].message.content });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Failed to generate flashcard' });
-  }
-});
-
-app.post('/flashcard', async (req, res) => {
-  const { exam, subject, prompt } = req.body;
-  if (!exam || !subject || !prompt) {
-    return res.status(400).json({ error: 'Missing exam, subject, or prompt' });
-  }
-
-  try {
-    const explanation = await openai.chat.completions.create({
-      model: 'gpt-3.5-turbo',
-      messages: [
-        {
-          role: 'system',
-          content: `You are an AI tutor helping a student prepare for the ${exam} in ${subject}.`
-        },
-        {
-          role: 'user',
-          content: prompt
-        }
-      ],
-      temperature: 0.7
-    });
-
-    const output = explanation.choices[0].message.content;
-    res.json({ output });
-  } catch (error) {
-    console.error('Flashcard AI error:', error);
-    res.status(500).json({ error: 'AI failed to generate flashcard' });
-  }
-});
 
 
 // Ensure your server actually starts
