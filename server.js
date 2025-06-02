@@ -12,14 +12,6 @@ admin.initializeApp({
   credential: admin.credential.cert(serviceAccount)
 });
 
-
-// ── Firestore admin init ──
-const { initializeApp, cert } = require('firebase-admin/app');
-const { getFirestore }        = require('firebase-admin/firestore');
-const serviceAccount = require('./firebase-service-account.json'); // ← adjust this if you placed it in a folder
-initializeApp({ credential: cert(serviceAccount) });
-const db = getFirestore();
-
 // ── Express & OpenAI clients ──
 const app    = express();
 app.use(express.json());
