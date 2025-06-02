@@ -1047,6 +1047,24 @@ app.post('/flashcard', async (req, res) => {
   }
 });
 
+// Append before app.listen()
+app.post('/flashcard', async (req, res) => {
+  const { prompt, exam, subject } = req.body;
+
+  if (!prompt || !exam || !subject) {
+    return res.status(400).json({ error: "Missing prompt, exam, or subject" });
+  }
+
+  try {
+    const explanation = `🧠 AI Response for ${exam} - ${subject}: This is a simulated intelligent answer for the prompt "${prompt}" with real-world context and moral reasoning.`;
+    res.json({ explanation });
+  } catch (err) {
+    console.error("Error generating flashcard:", err);
+    res.status(500).json({ error: "Internal Server Error" });
+  }
+});
+
+
 
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => console.log(`🌐 Server running on port ${PORT}`));
