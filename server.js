@@ -4,9 +4,13 @@ const express     = require('express');
 const cors        = require('cors');
 const killTrigger = require('./middleware/killTrigger');
 const admin = require("firebase-admin");
-admin.initializeApp({
-  credential: admin.credential.cert(JSON.parse(process.env.GOOGLE_APPLICATION_CREDENTIALS))
-});
+const serviceAccount = require("./firebase.json");
+
+if (!admin.apps.length) {
+  admin.initializeApp({
+    credential: admin.credential.cert(serviceAccount),
+  });
+}
 
 
 // ── Express & OpenAI clients ──
