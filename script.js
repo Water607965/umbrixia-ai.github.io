@@ -4457,6 +4457,7 @@ async function buildPlan() {
   renderPlan(plan);
 }
 
+<script>
 async function generateFlashcard() {
   const exam = document.getElementById('examType').value;
   const subject = document.getElementById('subjectType').value;
@@ -4468,26 +4469,40 @@ async function generateFlashcard() {
     return;
   }
 
-  try {
-    const response = await fetch('https://umbrixia-ai-github-io.onrender.com/flashcard', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ prompt, exam, subject })
-    });
+  output.innerHTML = "<p><em>Generating flashcard...</em></p>";
 
-    const data = await response.json();
+  const response = await fetch('/flashcard', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ exam, subject, prompt })
+  });
 
-    if (data.explanation) {
-      output.innerHTML = `<h3>${exam} - ${subject}</h3><p><strong>AI Explanation:</strong> ${data.explanation}</p>`;
-    } else {
-      output.innerHTML = "<p style='color: red;'>Failed to get a valid explanation.</p>";
-    }
-  } catch (error) {
-    output.innerHTML = "<p style='color: red;'>Error connecting to the server.</p>";
-  }
+  const data = await response.json();
+  output.innerHTML = `<h3>${exam} - ${subject}</h3><p><strong>AI Explanation:</strong> ${data.response}</p>`;
 }
+
+async function explainLike5() {
+  const prompt = document.getElementById('flashcardPrompt').value.trim();
+  const output = document.getElementById('flashcardOutput');
+
+  if (!prompt) {
+    output.innerHTML = "<p style='color: #ff4b4b;'>Type something first!</p>";
+    return;
+  }
+
+  output.innerHTML = "<p><em>Explaining simply...</em></p>";
+
+  const response = await fetch('/flashcard', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ exam: "ELI5", subject: "simple", prompt })
+  });
+
+  const data = await response.json();
+  output.innerHTML = `<h3>🍼 Explain Like I'm 5:</h3><p>${data.response}</p>`;
+}
+</script>
+
 
 
 <script>
