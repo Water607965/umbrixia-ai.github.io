@@ -2,9 +2,7 @@
 require('dotenv').config();
 const express     = require('express');
 const cors        = require('cors');
-const { OpenAI }  = require('openai');
 const killTrigger = require('./middleware/killTrigger');
-
 const admin = require("firebase-admin");
 admin.initializeApp({
   credential: admin.credential.cert(JSON.parse(process.env.GOOGLE_APPLICATION_CREDENTIALS))
