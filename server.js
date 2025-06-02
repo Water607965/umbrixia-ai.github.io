@@ -1064,6 +1064,32 @@ app.post('/flashcard', async (req, res) => {
   }
 });
 
+// ── Flashcard endpoint ──
+app.post('/flashcard', async (req, res) => {
+  const { exam, subject, prompt } = req.body;
+
+  if (!prompt || !exam || !subject) {
+    return res.status(400).json({ error: 'Prompt, exam, and subject are required.' });
+  }
+
+  try {
+    const completion = await openai.chat.completions.create({
+      model: 'gpt-4',
+      messages: [
+        {
+          role: 'user',
+          content: `Create a flashcard for the following prompt in ${exam} ${subject}: ${prompt}`,
+        },
+      ],
+    });
+
+    res.json({ result: completion.choices[0].message.content });
+  } catch (error) {
+    console.error('OpenAI error:', error);
+    res.status(500).json({ error: 'Failed to generate flashcard.' });
+  }
+});
+
 
 
 const PORT = process.env.PORT || 5000;
