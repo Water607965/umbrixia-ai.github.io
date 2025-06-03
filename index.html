@@ -33,6 +33,7 @@
       <a href="signup.html" class="btn-solid">Get Started</a>
     </div>
   </div>
+  <div id="auth-status" class="auth-status"></div>
 </header>
 
   <div class="rotating-headline">
@@ -327,45 +328,8 @@
        // Redirect or lock features here
      }
    };
- </script>
- 
- <script>
-   function loginHandler() {
-     const email = document.getElementById("email").value;
-     const password = document.getElementById("password").value;
-     login(email, password);
-   }
- 
-   function signupHandler() {
-     const email = document.getElementById("email").value;
-     const password = document.getElementById("password").value;
-     signup(email, password);
-   }
- 
-   function logoutHandler() {
-  logout().then(() => {
-    document.getElementById("dropdownName").innerText = "User";
-    localStorage.removeItem("displayName");
-    localStorage.removeItem("userEmail");
-    alert("👋 Logged out.");
-  });
-}
 
-  
-
- 
-   // Optional: Automatically check trial on load
-   document.addEventListener("DOMContentLoaded", () => {
-     if (typeof checkTrial === "function") {
-       checkTrial();
-     }
-    const savedName = localStorage.getItem("displayName");
-  if (savedName) {
-    document.getElementById("auth-status").innerText = `👋 Welcome, ${savedName}`;
-  }
-   });
-
- </script>
+</script>
  
  
  <!-- ✅ Your main site logic AFTER all auth -->
@@ -470,34 +434,7 @@ firebase.auth().onAuthStateChanged(user => {
 });
 
 
- function unifiedAuthHandler() {
-  const email = document.getElementById("email").value;
-  const password = document.getElementById("password").value;
-  const name = document.getElementById("name-auth").value;
-
-  auth.fetchSignInMethodsForEmail(email)
-    .then(methods => {
-      if (methods.length > 0) {
-        return login(email, password);
-      } else {
-        return auth.createUserWithEmailAndPassword(email, password).then(userCred => {
-          return userCred.user.updateProfile({ displayName: name }).then(() => {
-            auth.currentUser.sendEmailVerification();
-            return userCred;
-          });
-        });
-      }
-    })
-    .then(userCred => {
-      showWelcome(userCred.user);
-    })
-    .catch(err => {
-      alert("❌ Auth error: " + err.message);
-    });
-}
-
- 
-  function toggleUserMenu() {
+function toggleUserMenu() {
   const menu = document.getElementById("userDropdownPanel");
   if (menu) {
     menu.classList.toggle("hidden");
@@ -704,7 +641,7 @@ tabs.forEach(tab => {
 })();
 </script>
 
+<div id="time-tracker" class="time-tracker"></div>
 
-  
- </body>
- </html>
+</body>
+</html>
