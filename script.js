@@ -761,7 +761,8 @@ function startTimeTracking() {
   setInterval(() => {
     const elapsed = Date.now() - startTime;
     const minutes = Math.floor(elapsed / 60000);
-    document.getElementById("time-tracker")?.textContent = `Time Spent: ${minutes} min`;
+    const tracker = document.getElementById("time-tracker");
+    if (tracker) tracker.textContent = `Time Spent: ${minutes} min`;
   }, 60000);
 }
 
@@ -901,10 +902,8 @@ function toggleUserMenu() {
 async function unifiedAuthHandler() {
   const email = document.getElementById("email").value.trim();
   const password = document.getElementById("password").value.trim();
-  const name = document.getElementById("name").value.trim();
-  ...
-}
-
+  const nameEl = document.getElementById("name");
+  const name = nameEl ? nameEl.value.trim() : "";
 
   try {
     // 1️⃣ Try to sign in (existing user)
@@ -3726,38 +3725,6 @@ for (let i = 0; i < 40; i++) {
   document.body.appendChild(dot);
 }
 
-// === Hero Welcome Typing Line ===
-const heroSentences = [
-  "Welcome to Umbrixia.",
-  "AI-Powered. Student-Centered.",
-  "Where Smarter Prep Meets Success.",
-  "Built to Elevate. Designed to Win."
-];
-let sentenceIndex = 0;
-let charIndex = 0;
-let direction = 1;
-
-const heroText = document.getElementById("typed-text");
-if (heroText) {
-  setInterval(() => {
-    if (direction === 1) {
-      if (charIndex < heroSentences[sentenceIndex].length) {
-        heroText.innerText = heroSentences[sentenceIndex].slice(0, ++charIndex);
-      } else {
-        direction = -1;
-        setTimeout(() => {}, 1500);
-      }
-    } else {
-      if (charIndex > 0) {
-        heroText.innerText = heroSentences[sentenceIndex].slice(0, --charIndex);
-      } else {
-        direction = 1;
-        sentenceIndex = (sentenceIndex + 1) % heroSentences.length;
-      }
-    }
-  }, 80);
-}
-
 // === Real-time Auto Save Feedback ===
 function showAutoSaveMessage() {
   const saveBadge = document.createElement("div");
@@ -3845,20 +3812,6 @@ document.querySelectorAll("input, select").forEach(el => {
 
 // === Scroll Smooth Behavior Everywhere ===
 document.documentElement.style.scrollBehavior = "smooth";
-
-// ───── Apple-Style Entry Animation on Scroll ─────
-const observer = new IntersectionObserver((entries) => {
-  entries.forEach(entry => {
-    if (entry.isIntersecting) {
-      entry.target.classList.add('fade-in');
-      observer.unobserve(entry.target);
-    }
-  });
-}, { threshold: 0.1 });
-
-document.querySelectorAll('.dashboard-card-container').forEach(el => {
-  observer.observe(el);
-});
 
 // ───── Auto Welcome Message with User Progress ─────
 document.addEventListener("DOMContentLoaded", () => {
@@ -4124,19 +4077,10 @@ document.getElementById('admissions-form').addEventListener('submit', async func
   });
 })();
 
+
   // inside the quiz-review success…
-const planResp = await fetch('/api/study-plan', {
-  method:'POST',
-  headers:{'Content-Type':'application/json'},
-  body: JSON.stringify({
-    goals: `Improve on your quiz weaknesses: ${parsed.feedback.filter(f=>f.includes('wrong')).join(', ')}`,
-    availableHoursPerWeek: 5
-  })
-});
-const { plan } = await planResp.json();
-qc.innerHTML += `
-  <h3>Next Week’s Plan</h3>
-  <pre style="color:#ccc;">${JSON.stringify(plan, null, 2)}</pre>`;
+  // (disabled offline planning logic)
+
 
   ;(async function loadLeaderboard(){
   const tbody = document.querySelector('#leaderboard-table tbody');
@@ -4457,7 +4401,6 @@ async function buildPlan() {
   renderPlan(plan);
 }
 
-<script>
 async function generateFlashcard() {
   const exam = document.getElementById('examType').value;
   const subject = document.getElementById('subjectType').value;
@@ -4501,11 +4444,10 @@ async function explainLike5() {
   const data = await response.json();
   output.innerHTML = `<h3>🍼 Explain Like I'm 5:</h3><p>${data.response}</p>`;
 }
-</script>
 
 
 
-<script>
+
   document.getElementById("generate-flashcard").addEventListener("click", async () => {
     const exam = document.getElementById('examType').value;
     const subject = document.getElementById('subjectType').value;
@@ -4534,5 +4476,4 @@ async function explainLike5() {
       output.innerHTML = `<p style='color: #ff4b4b;'>❌ Error: ${err.message}</p>`;
     }
   });
-</script>
 

@@ -867,12 +867,13 @@ h2::after, h3::after {
        <a href="signup.html">Free Demo</a>
       <a href="dashboard.html">Dashboard</a>
      </nav>
-     <div class="nav-actions">
-       <a href="login.html" class="btn-link">Login</a>
-       <a href="signup.html" class="btn-solid">Get Started</a>
-       <button onclick="toggleTheme()" class="theme-toggle">🌙</button>
+      <div class="nav-actions">
+        <a href="login.html" class="btn-link">Login</a>
+        <a href="signup.html" class="btn-solid">Get Started</a>
+        <button onclick="toggleTheme()" class="theme-toggle">🌙</button>
+      </div>
      </div>
-    </div>
+    <div id="auth-status" class="auth-status"></div>
     
      <div class="profile-icon" onclick="toggleProfileMenu()">👤</div>
  <div id="profileMenu" class="profile-menu">
@@ -3405,5 +3406,6 @@ function explainLike5() {
 
       
 
- </body>
+  <div id="time-tracker" class="time-tracker"></div>
+</body>
  </html>

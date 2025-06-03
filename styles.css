@@ -3414,6 +3414,16 @@ input:focus {
   font-weight: 600;
 }
 
+#time-tracker {
+  position: fixed;
+  bottom: 16px;
+  right: 16px;
+  font-size: 0.9rem;
+  color: #fff;
+  opacity: 0.8;
+  z-index: 1000;
+}
+
 /* Glow Pulse for Buttons */
 .glow {
   color: white;
