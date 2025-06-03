@@ -5,6 +5,8 @@ const cors        = require('cors');
 const killTrigger = require('./middleware/killTrigger');
 const admin = require("firebase-admin");
 const { getFirestore } = require('firebase-admin/firestore');
+const axios = require('axios');
+const cheerio = require('cheerio');
 
 admin.initializeApp({
   credential: admin.credential.cert({
@@ -998,6 +1000,27 @@ app.post('/flashcard', async (req, res) => {
   } catch (err) {
     console.error('Flashcard error:', err);
     res.status(500).json({ error: 'Failed to generate flashcard' });
+  }
+});
+
+// ── Summarize Article by URL ──
+app.post('/api/summarize-url', async (req, res) => {
+  const { url } = req.body;
+  if (!url) return res.status(400).json({ error: 'Missing url' });
+  try {
+    const resp = await axios.get(url);
+    const $ = cheerio.load(resp.data);
+    const text = $('body').text().replace(/\s+/g, ' ').trim();
+    const prompt = `Summarize this article in five bullet points:\n${text}`;
+    const ai = await openai.chat.completions.create({
+      model: 'gpt-4',
+      messages: [{ role: 'user', content: prompt }]
+    });
+    const summary = ai.choices[0].message.content.trim();
+    res.json({ summary });
+  } catch (err) {
+    console.error('Summarize URL Error:', err);
+    res.status(500).json({ error: 'Failed to summarize article.' });
   }
 });
 
