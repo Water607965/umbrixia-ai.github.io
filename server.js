@@ -4,6 +4,9 @@ const express     = require('express');
 const cors        = require('cors');
 const killTrigger = require('./middleware/killTrigger');
 const admin = require("firebase-admin");
+const { getFirestore } = require('firebase-admin/firestore');
+const axios = require('axios');
+const cheerio = require('cheerio');
 
 admin.initializeApp({
   credential: admin.credential.cert({
@@ -12,6 +15,7 @@ admin.initializeApp({
     privateKey: process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n'),
   }),
 });
+const db = getFirestore();
 
 
 
@@ -369,8 +373,8 @@ Return a JSON array of up to 3 objects: [{ excerpt: "...", source: "essay/recomm
   }
 });
 
-// ── AI Flashcards Endpoint ──
-app.post('/api/flashcards', async (req, res) => {
+// ── AI Flashcards by Weakest Topic ──
+app.post('/api/flashcards-topic', async (req, res) => {
   try {
     const uid  = req.body.uid;      // from client
     const test = req.body.test;     // 'shsat' | 'isee' | 'sat'
@@ -611,8 +615,8 @@ app.post('/api/subscribe-insurance', async (req, res) => {
   res.json({ success:true });
 });
 
-// ── Flashcard Generation Endpoint ──
-app.post('/api/flashcards', async (req, res) => {
+// ── Flashcards from Lesson Text ──
+app.post('/api/flashcards-text', async (req, res) => {
   const { text } = req.body;
   const prompt = `
 Extract up to 5 Q&A flashcards from this lesson text:
@@ -688,6 +692,7 @@ Return JSON array: [ { "q":"…", "choices":["A","B","C","D"], "answer":"A" }, �
 });
 
 // replace your existing app.listen with http.listen so Socket.IO works:
+const PORT = process.env.PORT || 5000;
 http.listen(PORT, () => console.log(`🌐 Server live on port ${PORT}`));
 
 // ── Adaptive Drill by Test Type ──
@@ -757,7 +762,7 @@ app.get('/api/forecast-score', async (req, res) => {
 });
 
 // ── Flashcard Generator (Spaced‑Repetition) ──
-app.post('/api/flashcards', async (req, res) => {
+app.post('/api/flashcards-spaced', async (req, res) => {
   const { uid, testType } = req.body;
   try {
     // pull recent wrong items for this user & test
@@ -998,15 +1003,32 @@ app.post('/flashcard', async (req, res) => {
   }
 });
 
-
-
-
-
-
-
-
-// Ensure your server actually starts
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
-  console.log(`🚀 Server running on http://localhost:${PORT}`);
+// ── Summarize Article by URL ──
+app.post('/api/summarize-url', async (req, res) => {
+  const { url } = req.body;
+  if (!url) return res.status(400).json({ error: 'Missing url' });
+  try {
+    const resp = await axios.get(url);
+    const $ = cheerio.load(resp.data);
+    const text = $('body').text().replace(/\s+/g, ' ').trim();
+    const prompt = `Summarize this article in five bullet points:\n${text}`;
+    const ai = await openai.chat.completions.create({
+      model: 'gpt-4',
+      messages: [{ role: 'user', content: prompt }]
+    });
+    const summary = ai.choices[0].message.content.trim();
+    res.json({ summary });
+  } catch (err) {
+    console.error('Summarize URL Error:', err);
+    res.status(500).json({ error: 'Failed to summarize article.' });
+  }
 });
+
+
+
+
+
+
+
+
+// Server started above with http.listen()
