@@ -3233,7 +3233,7 @@ async function generateFlashcard() {
   }
 
   try {
-    const response = await fetch('https://umbrixia-ai-github-io.onrender.com/flashcard', {
+    const response = await fetch(API_BASE + '/flashcard', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -3242,7 +3242,7 @@ async function generateFlashcard() {
     });
 
     const data = await response.json();
-    output.innerHTML = `<h3>${exam} - ${subject}</h3><p><strong>AI Explanation:</strong> ${data.response}</p>`;
+    output.innerHTML = `<h3>${exam} - ${subject}</h3><p><strong>AI Explanation:</strong> ${data.explanation}</p>`;
   } catch (err) {
     console.error('Error generating flashcard:', err);
     output.innerHTML = "<p style='color: red;'>Failed to generate flashcard. Check server logs or your prompt.</p>";
@@ -3259,7 +3259,7 @@ async function explainLike5() {
   }
 
   try {
-    const response = await fetch('https://umbrixia-ai-github-io.onrender.com/flashcard', {
+    const response = await fetch(API_BASE + '/flashcard', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -3272,7 +3272,7 @@ async function explainLike5() {
     });
 
     const data = await response.json();
-    output.innerHTML = `<h3>🍼 Explain Like I'm 5:</h3><p>${data.response}</p>`;
+    output.innerHTML = `<h3>🍼 Explain Like I'm 5:</h3><p>${data.explanation}</p>`;
   } catch (err) {
     console.error('Error with ELI5:', err);
     output.innerHTML = "<p style='color: red;'>Couldn’t explain. Server issue or bad input.</p>";
@@ -3377,7 +3377,7 @@ document.getElementById('generate-flashcard').addEventListener('click', async ()
   output.innerHTML = "<p style='color: white;'>Generating flashcard...</p>";
 
   try {
-    const response = await fetch('https://umbrixia-ai-github-io.onrender.com/flashcard', {
+   const response = await fetch(API_BASE + '/flashcard', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ exam, subject, prompt })
@@ -3385,7 +3385,7 @@ document.getElementById('generate-flashcard').addEventListener('click', async ()
 
     const data = await response.json();
 
-    output.innerHTML = `<h3>${exam} - ${subject}</h3><p><strong>AI Explanation:</strong> ${data.result || 'No explanation returned.'}</p>`;
+   output.innerHTML = `<h3>${exam} - ${subject}</h3><p><strong>AI Explanation:</strong> ${data.explanation || 'No explanation returned.'}</p>`;
   } catch (err) {
     output.innerHTML = `<p style='color: red;'>Error: ${err.message}</p>`;
   }
