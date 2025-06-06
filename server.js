@@ -13,6 +13,10 @@ admin.initializeApp({
   }),
 });
 
+// Firestore reference used throughout API routes
+const db = admin.firestore();
+
+
 
 
 // ── Express & OpenAI clients ──
@@ -22,6 +26,9 @@ app.use(cors());
 app.use('/api', killTrigger);                 // ← mount your kill‑trigger here
 const OpenAI = require("openai");
 const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+
+// Port configuration must be defined before the server starts
+const PORT = process.env.PORT || 5000;
 
 
 // Health check
@@ -687,8 +694,7 @@ Return JSON array: [ { "q":"…", "choices":["A","B","C","D"], "answer":"A" }, �
   res.json(m ? JSON.parse(m[0]) : []);
 });
 
-// replace your existing app.listen with http.listen so Socket.IO works:
-http.listen(PORT, () => console.log(`🌐 Server live on port ${PORT}`));
+
 
 // ── Adaptive Drill by Test Type ──
 app.post('/api/adaptive-question', async (req, res) => {
@@ -999,14 +1005,7 @@ app.post('/flashcard', async (req, res) => {
 });
 
 
-
-
-
-
-
-
-// Ensure your server actually starts
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
+// Ensure your server actually starts using the Socket.IO server instance
+http.listen(PORT, () => {
   console.log(`🚀 Server running on http://localhost:${PORT}`);
 });
