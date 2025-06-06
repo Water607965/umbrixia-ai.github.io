@@ -12,6 +12,13 @@ if (typeof checkTrial === "function") {
   checkTrial();
 }
 
+const auth = firebase.auth();
+const db   = firebase.firestore();
+let user   = null;
+auth.onAuthStateChanged(u => {
+  user = u;
+  if (u) u.getIdToken().then(t => localStorage.setItem('idToken', t));
+});
 
 
 let usageCount = localStorage.getItem("umbrixiaTrialCount") || 0;
@@ -21,6 +28,14 @@ const trialWarning = document.getElementById("trial-warning");
 const userInput = document.getElementById("userInput");
 const chat = document.getElementById("chat");
 const button = document.querySelector("button");
+
+async function authHeaders() {
+  const u = auth.currentUser;
+  if (!u) return {};
+  const token = await u.getIdToken();
+  return { Authorization: `Bearer ${token}` };
+}
+
 
 function presetQuestion(text) {
     userInput.value = text;
@@ -3130,7 +3145,7 @@ document.addEventListener('DOMContentLoaded', () => {
       this.ol=this.el.querySelector('ol'); this.fetch();
     },
     async fetch(){
-      let data=[]; try{ const r=await fetch('/api/leaderboard'); data=await r.json(); }catch{ data=[{name:'Alex',xp:5200},{name:'Sam',xp:4800},{name:'Jordan',xp:4500}]; }
+      let data=[]; try{ const r=await fetch('/api/leaderboard', { headers: await authHeaders() }); data=await r.json(); }catch{ data=[{name:'Alex',xp:5200},{name:'Sam',xp:4800},{name:'Jordan',xp:4500}]; }
       this.render(data);
     },
     render(d){ this.ol.innerHTML=''; d.slice(0,10).forEach(u=>{const li=document.createElement('li');li.textContent=`${u.name} — ${u.xp} XP`;this.ol.append(li);}); }
@@ -3873,7 +3888,7 @@ document.getElementById('admissions-form').addEventListener('submit', async func
   try {
     const res = await fetch('/api/admissions-predict', {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: { ...(await authHeaders()), 'Content-Type': 'application/json' },
       body: JSON.stringify({
         school,
         grade,
@@ -3914,7 +3929,7 @@ document.getElementById('admissions-form').addEventListener('submit', async func
   try {
     const resp = await fetch('/api/flashcards', {
       method:'POST',
-      headers:{'Content-Type':'application/json'},
+      headers:{ ...(await authHeaders()), 'Content-Type':'application/json'},
       body: JSON.stringify({uid, test:testSel})
     });
     const { weakest, cards: aiCards } = await resp.json();
@@ -3953,7 +3968,7 @@ document.getElementById('admissions-form').addEventListener('submit', async func
   const listEl    = document.getElementById('achievements-list');
 
   try {
-    const resp = await fetch(`/api/achievements?uid=${uid}&test=${test}`);
+    const resp = await fetch(`/api/achievements?uid=${uid}&test=${test}`, { headers: await authHeaders() });
     const { streak, badges } = await resp.json();
     outStreak.textContent = streak;
     listEl.innerHTML = badges.map(b=>`
@@ -3980,7 +3995,7 @@ document.getElementById('admissions-form').addEventListener('submit', async func
   try {
     const resp = await fetch('/api/forecast', {
       method:'POST',
-      headers:{'Content-Type':'application/json'},
+      headers:{ ...(await authHeaders()), 'Content-Type':'application/json'},
       body: JSON.stringify({uid, test})
     });
     forecast = (await resp.json()).forecast;
@@ -4028,7 +4043,7 @@ document.getElementById('admissions-form').addEventListener('submit', async func
     try {
       const resp = await fetch('/api/quiz', {
         method:'POST',
-        headers:{'Content-Type':'application/json'},
+        headers:{ ...(await authHeaders()), 'Content-Type':'application/json'},
         body: JSON.stringify({uid:user.uid, test})
       });
       const { selected, quiz } = await resp.json();
@@ -4066,7 +4081,7 @@ document.getElementById('admissions-form').addEventListener('submit', async func
     try {
       const resp = await fetch('/api/quiz-review', {
         method:'POST',
-        headers:{'Content-Type':'application/json'},
+        headers:{ ...(await authHeaders()), 'Content-Type':'application/json'},
         body: JSON.stringify({uid:user.uid, test, answers})
       });
       const { review } = await resp.json();
@@ -4085,7 +4100,7 @@ document.getElementById('admissions-form').addEventListener('submit', async func
   ;(async function loadLeaderboard(){
   const tbody = document.querySelector('#leaderboard-table tbody');
   try {
-    const resp = await fetch('/api/leaderboard');
+    const resp = await fetch('/api/leaderboard', { headers: await authHeaders() });
     const list = await resp.json();
     tbody.innerHTML = list.map((u,i)=>`
       <tr>
@@ -4109,7 +4124,7 @@ if ('serviceWorker' in navigator) {
 
   firebase.auth().onAuthStateChanged(async user=>{
   if (!user) return;
-  const resp = await fetch(`/api/achievements/${user.uid}`);
+  const resp = await fetch(`/api/achievements/${user.uid}`, { headers: await authHeaders() });
   const { badges } = await resp.json();
   document.getElementById('badge-container').innerHTML =
     badges.map(b=>`<span class="badge-glow" style="margin:4px;">${b}</span>`).join('');
@@ -4147,7 +4162,7 @@ document.getElementById('voice-tutor').onclick = async () => {
 
 firebase.auth().onAuthStateChanged(async u=>{
   if(!u) return;
-  const { risk, count } = await fetch(`/api/burnout-alert/${u.uid}`)
+  const { risk, count } = await fetch(`/api/burnout-alert/${u.uid}`, { headers: await authHeaders() })
     .then(r=>r.json());
   if(risk==='HIGH') {
     alert(`⚠️ We’ve noticed you’ve only done ${count} activities this week. Keep the momentum!`);
@@ -4156,7 +4171,7 @@ firebase.auth().onAuthStateChanged(async u=>{
 
   document.getElementById('buy-insurance').onclick = async ()=>{
   // you’d integrate Stripe here; for demo:
-  await fetch('/api/subscribe-insurance', { method:'POST' });
+  await fetch('/api/subscribe-insurance', { method:'POST', headers: await authHeaders() });
   alert('✅ Streak Insurance activated! Now miss a day worry‑free.');
 };
 
@@ -4164,7 +4179,7 @@ firebase.auth().onAuthStateChanged(async u=>{
   const text = document.querySelector('.lesson-text').innerText;
   const cards = await fetch('/api/flashcards',{
     method:'POST',
-    headers:{'Content-Type':'application/json'},
+    headers:{ ...(await authHeaders()), 'Content-Type':'application/json'},
     body:JSON.stringify({ text })
   }).then(r=>r.json());
   let idx = 0;
@@ -4190,7 +4205,7 @@ firebase.auth().onAuthStateChanged(async u=>{
     respBox.innerText = '🤔 Thinking...';
     const { eli5 } = await fetch('/api/eli5',{
       method:'POST',
-      headers:{'Content-Type':'application/json'},
+      headers:{ ...(await authHeaders()), 'Content-Type':'application/json'},
       body:JSON.stringify({ text: raw })
     }).then(r=>r.json());
     respBox.innerText = eli5;
@@ -4199,7 +4214,7 @@ firebase.auth().onAuthStateChanged(async u=>{
 
   firebase.auth().onAuthStateChanged(async u=>{
   if(!u) return;
-  const { risk, count } = await fetch(`/api/burnout-alert/${u.uid}`)
+  const { risk, count } = await fetch(`/api/burnout-alert/${u.uid}`, { headers: await authHeaders() })
     .then(r=>r.json());
   if(risk==='HIGH') {
     alert(`⚠️ We’ve noticed you’ve only done ${count} activities this week. Keep the momentum!`);
@@ -4210,7 +4225,7 @@ firebase.auth().onAuthStateChanged(async u=>{
 document.getElementById('check-mood').onclick = async () => {
   const entry = document.getElementById('mood-entry').value;
   const res = await fetch('/api/mood-check', {
-    method:'POST', headers:{'Content-Type':'application/json'},
+   method:'POST', headers:{ ...(await authHeaders()), 'Content-Type':'application/json'},
     body:JSON.stringify({ journalEntry: entry })
   }).then(r=>r.json());
   document.getElementById('mood-result').innerHTML =
@@ -4225,7 +4240,7 @@ document.getElementById('schedule-btn').onclick = async () => {
   const startISO = new Date(start).toISOString();
   const endISO   = new Date(new Date(start).getTime() + dur*60000).toISOString();
   const { href } = await fetch('/api/create-event', {
-    method:'POST', headers:{'Content-Type':'application/json'},
+    method:'POST', headers:{ ...(await authHeaders()), 'Content-Type':'application/json'},
     body:JSON.stringify({ title, startISO, endISO })
   }).then(r=>r.json());
   const a = document.createElement('a');
@@ -4255,7 +4270,7 @@ document.getElementById('make-test').onclick = async () => {
   const subj = document.getElementById('test-subject').value;
   const num  = +document.getElementById('test-count').value;
   const cards = await fetch('/api/generate-test', {
-    method:'POST', headers:{'Content-Type':'application/json'},
+    method:'POST', headers:{ ...(await authHeaders()), 'Content-Type':'application/json'},
     body:JSON.stringify({ subject: subj, num })
   }).then(r=>r.json());
   const cont = document.getElementById('test-container');
@@ -4275,7 +4290,7 @@ document.getElementById('get-adaptive').onclick = async () => {
   const testType = document.getElementById('drill-testType').value;
   const questions = await fetch('/api/adaptive-question', {
     method:'POST',
-    headers:{'Content-Type':'application/json'},
+    headers:{ ...(await authHeaders()), 'Content-Type':'application/json'},
     body: JSON.stringify({ uid:user.uid, testType })
   }).then(r=>r.json());
 
@@ -4292,7 +4307,8 @@ document.getElementById('get-adaptive').onclick = async () => {
 document.getElementById('get-forecast').onclick = async () => {
   const testType = document.getElementById('forecast-testType').value;
   const res = await fetch(
-    `/api/forecast-score?uid=${user.uid}&testType=${testType}`
+     `/api/forecast-score?uid=${user.uid}&testType=${testType}`,
+    { headers: await authHeaders() }
   ).then(r=>r.json());
 
   new Chart(document.getElementById('forecastChart'), {
@@ -4309,7 +4325,7 @@ document.getElementById('get-forecast').onclick = async () => {
 // — Leaderboard —
 async function loadLeaderboard() {
   const testType = document.getElementById('leader-testType').value;
-  const list = await fetch(`/api/get-leaderboard?testType=${testType}`)
+  const list = await fetch(`/api/leaderboard?testType=${testType}`)
     .then(r=>r.json());
   document.getElementById('leader-list').innerHTML =
     list.map((u,i)=>`<li>${i+1}. ${u.name} — ${u.score}</li>`).join('');
@@ -4321,7 +4337,8 @@ loadLeaderboard();
 document.getElementById('load-flashcards').onclick = async () => {
   const testType = document.getElementById('flash-testType').value;
   const cards = await fetch('/api/flashcards',{
-    method:'POST', headers:{'Content-Type':'application/json'},
+    method:'POST',
+    headers:{ ...(await authHeaders()), 'Content-Type':'application/json'},
     body: JSON.stringify({ uid:user.uid, testType })
   }).then(r=>r.json());
   const el = document.getElementById('flashcard-container');
@@ -4337,7 +4354,8 @@ document.getElementById('load-flashcards').onclick = async () => {
 document.getElementById('grade-essay').onclick = async () => {
   const essay = document.getElementById('essay-input').value;
   const result = await fetch('/api/grade-essay',{
-    method:'POST',headers:{'Content-Type':'application/json'},
+    method:'POST',
+    headers:{ ...(await authHeaders()), 'Content-Type':'application/json'},
     body: JSON.stringify({ essay, uid:user.uid })
   }).then(r=>r.json());
   document.getElementById('essay-result').textContent = 
@@ -4350,7 +4368,8 @@ document.getElementById('build-plan').onclick = async () => {
   const testType = document.getElementById('plan-testType').value;
   const hours = +document.getElementById('daily-hours').value;
   const plan = await fetch('/api/study-plan-30',{
-    method:'POST',headers:{'Content-Type':'application/json'},
+    method:'POST',
+    headers:{ ...(await authHeaders()), 'Content-Type':'application/json'},
     body: JSON.stringify({ uid:user.uid, testType, dailyHours:hours })
   }).then(r=>r.json());
   document.getElementById('plan-list').innerHTML =
@@ -4369,13 +4388,13 @@ document.getElementById('analyze-sentiment').onclick = async () => {
 };
 
 async function loadNextTest(type) {
-  const data = await fetch(`/api/tests/${type}/next`, authHeaders()).then(r=>r.json());
+  const data = await fetch(`/api/tests/${type}/next`, await authHeaders()).then(r=>r.json());
   renderQuestions(data);
 }
 async function submitTest(type, answers) {
   const result = await fetch(`/api/tests/${type}/grade`, {
     method:'POST',
-    headers: {...authHeaders(), 'Content-Type':'application/json'},
+    headers: { ...(await authHeaders()), 'Content-Type':'application/json'},
     body: JSON.stringify({ answers })
   }).then(r=>r.json());
   showResults(result);
@@ -4384,7 +4403,7 @@ async function submitTest(type, answers) {
 async function getFeedback(type, result, mistakes) {
   const fb = await fetch(`/api/tests/${type}/feedback`, {
     method:'POST',
-    headers:{...authHeaders(),'Content-Type':'application/json'},
+    headers:{ ...(await authHeaders()),'Content-Type':'application/json'},
     body: JSON.stringify({ ...result, mistakes })
   }).then(r=>r.json());
   displayFeedback(fb);
@@ -4392,10 +4411,11 @@ async function getFeedback(type, result, mistakes) {
 
 async function buildPlan() {
   const goals = document.getElementById('goals').value;
-  const history = await fetch('/api/user-history', authHeaders()).then(r=>r.json());
+  const history = await fetch('/api/user-history', await authHeaders()).then(r=>r.json());
+  const plan = await fetch('/api/study-plan',{
   const plan = await fetch('/api/study-plan',{
     method:'POST',
-    headers:{...authHeaders(),'Content-Type':'application/json'},
+    headers:{ ...(await authHeaders()),'Content-Type':'application/json'},
     body:JSON.stringify({ goals, history })
   }).then(r=>r.json());
   renderPlan(plan);
@@ -4421,7 +4441,7 @@ async function generateFlashcard() {
   });
 
   const data = await response.json();
-  output.innerHTML = `<h3>${exam} - ${subject}</h3><p><strong>AI Explanation:</strong> ${data.response}</p>`;
+  output.innerHTML = `<h3>${exam} - ${subject}</h3><p><strong>AI Explanation:</strong> ${data.explanation}</p>`;
 }
 
 async function explainLike5() {
@@ -4442,7 +4462,7 @@ async function explainLike5() {
   });
 
   const data = await response.json();
-  output.innerHTML = `<h3>🍼 Explain Like I'm 5:</h3><p>${data.response}</p>`;
+  output.innerHTML = `<h3>🍼 Explain Like I'm 5:</h3><p>${data.explanation}</p>`;
 }
 
 
