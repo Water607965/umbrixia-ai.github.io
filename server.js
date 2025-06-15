@@ -376,39 +376,6 @@ Return a JSON array of up to 3 objects: [{ excerpt: "...", source: "essay/recomm
   }
 });
 
-// ── AI Flashcards Endpoint ──
-app.post('/api/flashcards', async (req, res) => {
-  try {
-    const uid  = req.body.uid;      // from client
-    const test = req.body.test;     // 'shsat' | 'isee' | 'sat'
-
-    // 1) load user's topic breakdown from Firestore
-    const userSnap = await db.collection('users').doc(uid).get();
-    const topics   = userSnap.data()?.[test]?.topics || {}; 
-    // topics: { "Algebra":30, "Geometry":70, ... } percentages correct
-
-    // 2) find weakest topic
-    const weakest = Object.entries(topics)
-      .sort((a,b)=> a[1] - b[1])[0]?.[0] || 'General';
-
-    // 3) ask OpenAI for 5 flashcards on that topic
-    const prompt = `
-You are a test‐prep coach.  Create 5 flashcards (Q&A) for the ${test.toUpperCase()} exam on the weakest topic "${weakest}". 
-Respond as JSON array: [{"front":"…","back":"…"},…].
-    `;
-    const ai = await openai.chat.completions.create({
-      model: 'gpt-4',
-      messages: [{ role:'user', content: prompt }]
-    });
-    const raw = ai.choices[0].message.content;
-    const cards = JSON.parse(raw);
-
-    res.json({ weakest, cards });
-  } catch(err) {
-    console.error('Flashcards Error', err);
-    res.status(500).json({ error:'Couldn’t generate flashcards.' });
-  }
-});
 
 // ── AI Achievements Endpoint ──
 app.get('/api/achievements', async (req, res) => {
@@ -618,21 +585,7 @@ app.post('/api/subscribe-insurance', async (req, res) => {
   res.json({ success:true });
 });
 
-// ── Flashcard Generation Endpoint ──
-app.post('/api/flashcards', async (req, res) => {
-  const { text } = req.body;
-  const prompt = `
-Extract up to 5 Q&A flashcards from this lesson text:
-"${text}"
-Return JSON: [ { "q":"…", "a":"…" }, … ]
-`;
-  const ai = await openai.chat.completions.create({
-    model:'gpt-4',
-    messages:[{role:'user',content:prompt}]
-  });
-  const blob = ai.choices[0].message.content.match(/\[[\s\S]*\]/)[0];
-  res.json(JSON.parse(blob));
-});
+// Legacy flashcard routes consolidated below
 
 // ───────────── APPEND NEW AI ROUTES HERE ─────────────
 
@@ -698,7 +651,7 @@ Return JSON array: [ { "q":"…", "choices":["A","B","C","D"], "answer":"A" }, �
 
 // ── Adaptive Drill by Test Type ──
 app.post('/api/adaptive-question', async (req, res) => {
-  const { uid, testType } = req.body;
+  const { uid, test, testType, text } = req.body;
   try {
     // pull last 10 interactions for this testType
     const snaps = await db.collection('analytics').doc(uid)
@@ -762,14 +715,31 @@ app.get('/api/forecast-score', async (req, res) => {
   }
 });
 
-// ── Flashcard Generator (Spaced‑Repetition) ──
+// ── Unified Flashcards Endpoint ──
 app.post('/api/flashcards', async (req, res) => {
   const { uid, testType } = req.body;
   try {
-    // pull recent wrong items for this user & test
+    if (text) {
+      // Generate flashcards from raw text
+      const prompt = `Extract up to 5 Q&A flashcards from this lesson text:\n"${text}"\nReturn JSON: [ { "q":"...", "a":"..." }, ... ]`;
+      const ai = await openai.chat.completions.create({
+        model: 'gpt-4',
+        messages: [{ role: 'user', content: prompt }]
+      });
+      const blob = ai.choices[0].message.content.match(/\[[\s\S]*\]/);
+      if (!blob) throw new Error('Invalid AI response');
+      return res.json(JSON.parse(blob[0]));
+    }
+
+    const exam = testType || test;
+    if (!uid || !exam) {
+      return res.status(400).json({ error: 'Missing parameters' });
+    }
+
+    // Try spaced‑repetition based on recent mistakes
     const wrongSnap = await db.collection('analytics').doc(uid)
       .collection('interactions')
-      .where('testType','==', testType)
+      .where('testType','==', exam)
       .where('correct','==', false)
       .orderBy('ts','desc').limit(20).get();
 
@@ -779,22 +749,30 @@ app.post('/api/flashcards', async (req, res) => {
       answer: d.data().answer
     }));
 
-    // ask GPT‑4 to turn them into flashcards
-    const prompt = `
-      You are a spaced‑repetition flashcard generator.
-      Given these mistakes from a ${testType.toUpperCase()} practice:
-      ${JSON.stringify(mistakes, null,2)}
-      Produce JSON: [{ "front":"…", "back":"…" }, …] with clear Q/A pairs.
-    `;
+if (mistakes.length > 0) {
+      const prompt = `You are a spaced-repetition flashcard generator. Given these mistakes from a ${exam.toUpperCase()} practice:\n${JSON.stringify(mistakes, null,2)}\nProduce JSON: [{ "front":"...", "back":"..." }, ...]`;
+      const ai = await openai.chat.completions.create({
+        model: 'gpt-4',
+        messages: [{ role: 'user', content: prompt }]
+      });
+      return res.json(JSON.parse(ai.choices[0].message.content));
+    }
+
+    // Fallback to weakest topic
+    const userSnap = await db.collection('users').doc(uid).get();
+    const topics   = userSnap.data()?.[exam]?.topics || {};
+    const weakest = Object.entries(topics).sort((a,b)=>a[1]-b[1])[0]?.[0] || 'General';
+    const prompt = `You are a test-prep coach. Create 5 flashcards (Q&A) for the ${exam.toUpperCase()} exam on the weakest topic "${weakest}". Respond as JSON array: [{"front":"...","back":"..."},...]`;
+    
     const ai = await openai.chat.completions.create({
-      model:'gpt-4',
-      messages:[{role:'user', content:prompt}]
+      model: 'gpt-4',
+      messages: [{ role: 'user', content: prompt }]
     });
     const cards = JSON.parse(ai.choices[0].message.content);
-    return res.json(cards);
-  } catch(err) {
-    console.error(err);
-    res.status(500).json({ error:'Flashcards failed' });
+    return res.json({ weakest, cards });
+  } catch (err) {
+    console.error('Flashcards Error', err);
+    res.status(500).json({ error: 'Flashcards failed' });
   }
 });
 
