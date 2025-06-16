@@ -9575,21 +9575,44 @@ body.light-mode .module-card {
 
 /* Chat Window */
 .chat-window {
-  background: #121212;
-  border: 1px solid #333;
+   background: #0d0d0d;
+  border: 1px solid #222;
+  border-radius: 16px;
   padding: 1rem;
-  max-height: 300px;
+  max-height: 360px;
   overflow-y: auto;
   margin-bottom: 0.5rem;
+   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+}
 }
 .chat-input-wrapper {
   display: flex;
   gap: 0.5rem;
+   margin-top: 0.5rem;
+}
+.chat-input-wrapper input {
+  flex: 1;
+  background: #1a1a1a;
+  border: 1px solid #333;
+  border-radius: 12px;
+  padding: 0.75rem 1rem;
+  color: #fff;
+  font-family: 'Inter', sans-serif;
+}
+.chat-input-wrapper button {
+  border-radius: 12px;
+}
+.chat-window .message {
+  margin-bottom: 0.75rem;
+  padding: 0.5rem 0.75rem;
+  border-radius: 12px;
 }
 .chat-window .message.user {
-  color: #34d399;
+   background: #222;
+   color: #34d399;
 }
 .chat-window .message.bot {
+  background: #141414;
   color: #60a5fa;
 }
 
